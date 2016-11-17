@@ -1,0 +1,124 @@
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2016.  Georg Beier. All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+{{define "work"}}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DKFAI App</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <!-- Optional Bootstrap theme -->
+    <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+</head>
+<body>
+<!--<h1>Hello, {{ . }}!</h1>-->
+<!--<form class="form-horizontal" style="margin-right: 0; margin-top: 15px;" method="POST" action="logout" name="logout">-->
+<!--<div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">-->
+<!--<button type="submit" class="btn btn-primary">Logout</button>-->
+<!--</div>-->
+<!--</form>-->
+{{template "finder"}}
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+{{template "fscript"}}
+</body>
+</html>
+{{end}}
+
+{{define "finder"}}
+<div style="margin: 5px">
+    <nav role="navigation" class="navbar navbar-default">
+        <a href="/logout" class="navbar-brand navbar-right">
+            <span class="sr-only">Logout</span>
+            <span class="glyphicon glyphicon-off" style="margin-right: 5 px"></span>
+            &nbsp;
+        </a>
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <form role="search" class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input id="ln" type="text" placeholder="LastName" class="form-control">
+                    <input id="fn" type="text" placeholder="FirstName" class="form-control">
+                    <button id="find" type="button" class="btn btn-default">
+                        <span class="sr-only">Find</span>
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <div id="qapps" class="form-group">
+                        <select id="noresult" class="form-control" style="width: 16em;" disabled="disabled">
+                            <option value="0">----------</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </nav>
+</div>
+
+<div id="workarea" style="margin: 20px">
+    <p id="found"></p>
+</div>
+{{end}}
+
+{{define "qresult"}}
+<select id="sresult" class="form-control" style="width: 16em;" onchange="showSelect(this)" onclick="showSelect(this)">
+    {{range .}}
+    <option value="{{.ID}}">{{.Data.LastName}}, {{.Data.FirstName}}</option>
+    {{else}}
+    <option value="0">not found</option>
+    {{end}}
+</select>
+{{end}}
+
+{{define "fscript"}}
+<script type="text/javascript">
+    $(document).ready(function(){
+        //
+        $("#find").click(function(){
+            var ln = $("input#ln").val()
+            var fn = $("input#fn").val()
+            $("#qapps").load("/find", {lastname: ln, firstname: fn});
+        });
+        //
+        $("#noresult").on('change click', function() {
+            alert('Please find some students before selecting');
+        });
+    });
+
+    //
+    function showSelect(sel) {
+        var selid = sel.value;
+        $("#workarea").load("/enrol/show", {appid: selid, cmd: "show"});
+    }
+
+</script>
+{{end}}

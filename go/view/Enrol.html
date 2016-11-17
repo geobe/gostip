@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2016.  Georg Beier. All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+{{define "work_enrol"}}
+<form class="form-horizontal" style="margin: 0;" method="POST" action="{{.enrolaction}}">
+    <div class="ncontainer" style="padding-right: 15px;">
+        {{template "registrationfields" .}}
+        <!--</div>-->
+        <!--<div class="ncontainer" style="padding: 8em 15px;">-->
+        <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">
+            Bitte bestätigen oder korrigieren Sie folgende Angaben:
+        </h3>
+        {{template "enrol_fields" .}}
+    </div>
+    <!--<form class="form-horizontal" style="margin: 0;" method="POST" action="{{.checkaction}}">-->
+    <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
+        <button id="change-enrol" type="button" class="btn btn-default">Angaben berichtigen
+        </button>
+        <button id="submit-enrol" type="submit" class="btn btn-primary">Angaben bestätigen</button>
+    </div>
+</form>
+<script type="text/javascript">
+    // called when this html fragment is loaded,
+    // so all element configurations can be done here
+    $(document).ready(function () {
+        // initially disable submit button
+        $('#submit-enrol').attr('disabled', 'disabled');
+        // set action listener functions
+        $('#change-enrol').click(enableAll);
+        $('input[type=checkbox]').on('change', checkAllOk);
+    });
+
+    // enable all input fields
+    function enableAll() {
+        $('input[disabled]').removeAttr("disabled");
+        $('select[disabled]').removeAttr("disabled");
+        $('#change-enrol').attr('disabled', 'disabled');
+    }
+
+    // test if all checkboxes are checked to activate submit button
+    function checkAllOk() {
+        var ok = true;
+        $('input[type="checkbox"]').each(function(index, element) {
+            if( ! this.checked) {
+                ok = false;
+                return false;
+            }
+        });
+        if(ok) {
+            $('#submit-enrol').removeAttr('disabled');
+        } else {
+            $('#submit-enrol').attr('disabled', 'disabled');
+        }
+    }
+</script>
+{{end}}
+
+{{define "enrol_fields"}}
+<label class="control-label col-xs-5 col-sm-5 col-md-5 col-lg-3">
+    Schule: {{.school}}
+</label>
+<label class="checkbox col-xs-3 col-sm-2 col-md-1 col-lg-1">
+    <input type="checkbox" name="schoolok" value="ok" required> richtig
+</label>
+<div class="clearfix"></div>
+<label class="control-label col-xs-5 col-sm-5 col-md-5 col-lg-3">
+    Oblast: {{.districtname}}
+</label>
+<label class="checkbox col-xs-3 col-sm-2 col-md-1 col-lg-1">
+    <input type="checkbox" name="districtok" value="ok" required> richtig
+</label>
+<div class="clearfix"></div>
+<label class="control-label col-xs-5 col-sm-5 col-md-5 col-lg-3">
+    ORT: {{.ort}}, {{.ortmath}}, {{.ortphys}} (Gesamt,&nbsp;Mathematik,&nbsp;Physik)
+</label>
+<label class="checkbox col-xs-3 col-sm-2 col-md-1 col-lg-1">
+    <input type="checkbox" name="oblastok" value="ok" required> richtig
+</label>
+<div class="clearfix"></div>
+{{end}}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2016.  Georg Beier. All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+{{define "registration"}}
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DKFAI Registration</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <!-- Optional Bootstrap theme -->
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class="col-xs-12" style="padding-left: 0px;">
+    <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1">
+        DKFAI-Registration
+    </h3>
+</div>
+<div class="ncontainer" style="padding-right: 15px;">
+    {{template "registrationform" .}}
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+</body>
+</html>
+{{end}}
+
+{{define "registrationform"}}
+<form class="form-horizontal" style="margin-right: 0;"  method="POST" action="{{.action}}">
+    {{template "registrationfields" .}}
+    <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1"
+         style ="display: {{.displaystyle}};">
+        <button type="reset" class="btn btn-default">Reset</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+{{end}}
+
+{{define "registrationfields"}}
+<label for="lastname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Nachname:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+        <input class="form-control" value="{{.lastname}}" id="lastname" name="lastname"
+               placeholder="Nachname" required {{.disabled}} >
+    </div>
+</div>
+<label for="firstname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Vorname:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+        <input class="form-control" value="{{.firstname}}" id="firstname" name="firstname"
+               placeholder="Vorname" required {{.disabled}} >
+    </div>
+</div>
+<label for="fathersname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Vorname:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+        <input class="form-control" value="{{.fathersname}}" id="fathersname" name="fathersname"
+               placeholder="Vatersname" required {{.disabled}} >
+    </div>
+</div>
+<label for="phone" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Telefon:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-phone"></span></span>
+        <input type="tel" class="form-control" value="{{.phone}}" id="phone" name="phone"
+               placeholder="0550550005" required {{.disabled}}
+        >
+    </div>
+</div>
+<label for="email" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Email:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+        <input type="email" class="form-control" value="{{.email}}" id="email" name="email"
+               placeholder="du@mail.ru" {{.disabled}} >
+    </div>
+</div>
+<label for="home" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Wohnort:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
+        <input type="text" class="form-control" value="{{.home}}" id="home" name="home"
+               placeholder="Bishkek" required {{.disabled}} >
+    </div>
+</div>
+<label for="school" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Abitur-Schule:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
+        <input type="text" class="form-control" value="{{.school}}" id="school" name="school"
+               placeholder="" required {{.disabled}} >
+    </div>
+</div>
+<label for="district" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Oblast:
+</label>
+<div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-tent"></span></span>
+        <select class="form-control" value="{{.district}}" id="district" name="district"
+                required {{.disabled}} >
+            {{ range .oblasts }}
+            <option value="{{.ID}}" {{if eq .ID $.district}} selected="true" {{end}}>{{.Name}}</option>
+            {{end}}
+        </select>
+    </div>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
+    <label for="ort" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+        ORT:
+    </label>
+    <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
+            <input type="number" class="form-control" value="{{.ort}}" id="ort" name="ort" min="100"
+                   step="1" value="99" max="250" required {{.disabled}} >
+        </div>
+    </div>
+    <label for="ortmath" class="control-label col-xs-4 col-xs-offset-0
+                    col-sm-2 col-sm-offset-2 col-md-2 col-lg-offset-0  col-lg-1">
+        ORT Mathe:
+    </label>
+    <div class="col-xs-6 col-sm-2 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
+            <input type="number" class="form-control" value="{{.ortmath}}" id="ortmath"
+                   name="ortmath" min="0"
+                   step="1" value="0" max="100" {{.disabled}} >
+        </div>
+    </div>
+    <label for="ortphys" class="control-label col-xs-4 col-xs-offset-0
+                    col-sm-2 col-sm-offset-6 col-md-2 col-md-offset-6 col-lg-offset-0 col-lg-1">
+        ORT Physik:
+    </label>
+    <div class="col-xs-6 col-sm-2 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
+            <input type="number" class="form-control" value="{{.ortphys}}" id="ortphys"
+                   name="ortphys" min="0"
+                   step="1" value="0" max="100" {{.disabled}} >
+        </div>
+    </div>
+</div>
+<input type="hidden" name="applicantid" value="{{.applicantid}}">
+{{end}}

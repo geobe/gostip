@@ -1,0 +1,38 @@
+{
+  "db": {
+    "type": "postgres",
+    "connect": "user=dkfaiapp dbname=dkfaidev password=more4stud sslmode=disable"
+  },
+  "users": [
+    {
+      "login": "admin",
+      "fullname": "Der Meister",
+      "password": "boss",
+      "roles": [ 1, 2, 4, 8, 255]
+    },
+    {
+      "login": "stino",
+      "fullname": "ein stino user",
+      "password": "stino",
+      "roles": [1]
+    },
+    {
+      "login": "enrol",
+      "fullname": "Student enrolment",
+      "password": "enrol",
+      "roles": [1,2]
+    },
+    {
+      "login": "proj",
+      "fullname": "Project office member",
+      "password": "proj",
+      "roles": [1, 2, 4]
+    },
+    {
+      "login": "uadmin",
+      "fullname": "User admin",
+      "password": "uadmin",
+      "roles": [1, 8]
+    }
+  ]
+}
