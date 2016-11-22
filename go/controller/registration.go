@@ -21,8 +21,9 @@ func HandleRegistration(w http.ResponseWriter, r *http.Request) {
 		"disabled":     template.HTMLAttr(""),
 		"action":       "register",
 		"oblasts":      model.Oblasts(),
+		"district":     0,
 		"buttons":      true,
-		"displaystyle": "",
+		"displaystyle": "block",
 	}
 	if r.Method == http.MethodGet {
 		view.Views().ExecuteTemplate(w, "registration", values)
@@ -59,6 +60,9 @@ func HandleRegistration(w http.ResponseWriter, r *http.Request) {
 			values["disabled"] = template.HTMLAttr("disabled")
 			values["displaystyle"] = "none"
 			values["thankyou"] = true
+			values["buttons"] = false
+			setViewModel(app, values)
+			//values["district"] = appdata.OblastID
 		}
 		view.Views().ExecuteTemplate(w, "registration", values)
 	}

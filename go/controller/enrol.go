@@ -27,28 +27,13 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 	action := html.EscapeString(r.PostFormValue("action"))
 	enrol := action == "enrol"
 
-	data := app.Data
+	//data := app.Data
 	values := viewmodel{
 		"enrolaction":  "/enrol/submit",
 		"displaystyle": "none",
-		"applicantid":  app.ID,
-		"lastname":     data.LastName,
-		"firstname":    data.FirstName,
-		"fathersname":  data.FathersName,
-		"phone":        data.Phone,
-		"email":        data.Email,
-		"home":         data.Home,
-		"school":       data.School,
 		"oblasts":      model.Oblasts(),
-		"district":     data.Oblast.ID,
-		"districtname": data.Oblast.Name,
-		"ort":          data.OrtSum,
-		"ortmath":      data.OrtMath,
-		"ortphys":      data.OrtPhys,
 	}
-	//if err = addRoles(r, values); err != nil {
-	//	return
-	//}
+	setViewModel(app, values)
 	if enrol {
 		values["disabled"] = template.HTMLAttr("disabled='true'")
 		view.Views().ExecuteTemplate(w, "work_enrol", values)
@@ -141,4 +126,23 @@ func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string) (a
 		http.Error(w, "Data integrity error", http.StatusInternalServerError)
 	}
 	return
+}
+
+// set applicant data into viewmodel
+func setViewModel(app model.Applicant, vmod viewmodel) {
+	data := app.Data
+	vmod["applicantid"] = app.ID
+	vmod["lastname"] = data.LastName
+	vmod["firstname"] = data.FirstName
+	vmod["fathersname"] = data.FathersName
+	vmod["phone"] = data.Phone
+	vmod["email"] = data.Email
+	vmod["home"] = data.Home
+	vmod["school"] = data.School
+	vmod["district"] = data.OblastID
+	vmod["districtname"] = data.Oblast.Name
+	vmod["ort"] = data.OrtSum
+	vmod["ortmath"] = data.OrtMath
+	vmod["ortphys"] = data.OrtPhys
+
 }
