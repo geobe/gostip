@@ -10,33 +10,21 @@ import (
 
 var sessionStore = makeStore()
 
+// key for the session store
 const S_DKFAI = "DKFAI-App-Session"
 
+// map transports values from go code to templates
 type viewmodel map[string]interface{}
-type appvm struct {
-	number      uint `gorm:"AUTO_INCREMENT"`
-	lastname    string
-	firstname   string
-	fathersname string
-	phone       string
-	email       string
-	home        string
-	school      string
-	schoolok    bool
-	district    string
-	districtok  bool
-	ortsum      int16
-	ortmath     int16
-	ortphys     int16
-	ortok       bool
-}
 
+// helper function to create a gorilla session store with
+// a strong set of keys
 func makeStore() sessions.Store {
 	return sessions.NewCookieStore(
 		scc.GenerateRandomKey(32),
 		scc.GenerateRandomKey(32))
 }
 
+// accessor for the gorilla session store
 func SessionStore() sessions.Store {
 	return sessionStore
 }

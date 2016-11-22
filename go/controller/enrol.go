@@ -1,3 +1,5 @@
+// enrol.go implements handler and helper functions for enrolment.
+// I.e. for tabs enrol and edit.
 package controller
 
 import (
@@ -11,6 +13,9 @@ import (
 	"time"
 )
 
+// Handler function to show the selected applicant from the
+// search select element for enrol and edit tabs. It returns
+// an html page fragment that is inserted into the respective tab area.
 func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 	if err := onlyPostAllowed(w, r); err != nil {
 		return
@@ -19,10 +24,12 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+	action := html.EscapeString(r.PostFormValue("action"))
+	enrol := action == "enrol"
+
 	data := app.Data
 	values := viewmodel{
 		"enrolaction":  "/enrol/submit",
-		"disabled":     template.HTMLAttr("disabled='true'"),
 		"displaystyle": "none",
 		"applicantid":  app.ID,
 		"lastname":     data.LastName,
@@ -39,15 +46,38 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 		"ortmath":      data.OrtMath,
 		"ortphys":      data.OrtPhys,
 	}
-	view.Views().ExecuteTemplate(w, "work_enrol", values)
+	//if err = addRoles(r, values); err != nil {
+	//	return
+	//}
+	if enrol {
+		values["disabled"] = template.HTMLAttr("disabled='true'")
+		view.Views().ExecuteTemplate(w, "work_enrol", values)
+	} else {
+		view.Views().ExecuteTemplate(w, "work_edit", values)
+	}
 }
 
+// Handler function that accepts form submissions from the enrol tab.
+// Only http POST method is accepted.
 func SubmitEnrol(w http.ResponseWriter, r *http.Request) {
+	saveSubmission(w, r, true)
+}
+
+// Handler function that accepts form submissions from the edit tab.
+// Only http POST method is accepted.
+func SubmitEdit(w http.ResponseWriter, r *http.Request) {
+	saveSubmission(w, r, false)
+}
+
+// save edited applicant data to database
+func saveSubmission(w http.ResponseWriter, r *http.Request, enrol bool) {
 	if err := onlyPostAllowed(w, r); err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 	app, err := fetchApplicant(w, r, "applicantid")
 	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
@@ -61,16 +91,18 @@ func SubmitEnrol(w http.ResponseWriter, r *http.Request) {
 	app.Data.Email = html.EscapeString(r.PostFormValue("email"))
 	app.Data.Home = html.EscapeString(r.PostFormValue("home"))
 	app.Data.School = html.EscapeString(r.PostFormValue("school"))
-	app.Data.OrtSum = ortint(html.EscapeString(r.PostFormValue("ort")))
-	app.Data.OrtMath = ortint(html.EscapeString(r.PostFormValue("ortmath")))
-	app.Data.OrtPhys = ortint(html.EscapeString(r.PostFormValue("ortphys")))
-	app.Data.SchoolOk = r.PostFormValue("schoolok") != ""
-	app.Data.OblastOk = r.PostFormValue("oblastok") != ""
-	app.Data.OrtOk = r.PostFormValue("ortok") != ""
+	app.Data.OrtSum = atoint16(html.EscapeString(r.PostFormValue("ort")))
+	app.Data.OrtMath = atoint16(html.EscapeString(r.PostFormValue("ortmath")))
+	app.Data.OrtPhys = atoint16(html.EscapeString(r.PostFormValue("ortphys")))
+	if enrol {
+		app.Data.SchoolOk = r.PostFormValue("schoolok") != ""
+		app.Data.OblastOk = r.PostFormValue("district") != ""
+		app.Data.OrtOk = r.PostFormValue("ortok") != ""
+	}
 
-	oblastID := oblastid(html.EscapeString(r.PostFormValue("district")))
-	if app.Data.Enrolled.IsZero() {
-		app.Data.Enrolled = time.Now()
+	oblastID := atouint(html.EscapeString(r.PostFormValue("district")))
+	if app.Data.EnrolledAt.IsZero() {
+		app.Data.EnrolledAt = time.Now()
 	}
 	if app.Data.OblastID != oblastID {
 		var o model.Oblast
@@ -78,9 +110,11 @@ func SubmitEnrol(w http.ResponseWriter, r *http.Request) {
 		app.Data.Oblast = o
 	}
 	model.Db().Save(&app)
-	view.Views().ExecuteTemplate(w, "work", "")
+	w.WriteHeader(http.StatusNoContent)
+
 }
 
+// allow only http POST methods
 func onlyPostAllowed(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -89,6 +123,7 @@ func onlyPostAllowed(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// fetch an applicant by its primary key that was submitted in form field "fieldname".
 func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string) (app model.Applicant, err error) {
 	if err = r.ParseForm(); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

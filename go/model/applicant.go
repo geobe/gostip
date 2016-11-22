@@ -57,8 +57,8 @@ type ApplicantData struct {
 	Resultsave    string
 	LaguageResult int
 	Language      Lang
-	Enrolled      time.Time
-	Cancelled     time.Time
+	EnrolledAt    time.Time
+	CancelledAt   time.Time
 }
 
 // a district in Kyrgyzstan

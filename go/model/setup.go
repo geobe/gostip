@@ -7,14 +7,20 @@ import (
 	"sync"
 )
 
+// llok here for config files
+const Base = "./github.com/geobe/gostip/config"
+
+// setting up viper configuration lib
 func Setup(cfgfile string) {
 	if cfgfile == "" {
-		cfgfile = "devconfig.json"
+		cfgfile = "devconfig"
 	}
-	viper.SetConfigFile(cfgfile)
-	viper.AddConfigPath(".")    // for config in the working directory
+	viper.SetConfigName(cfgfile)
+	//viper.AddConfigPath(docbase+Base)    // for config in the working directory
+	viper.AddConfigPath(Base)
 	err := viper.ReadInConfig() // Find and read the config file
-	if err != nil {             // Handle errors reading the config file
+	if err != nil {
+		// Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 }
@@ -23,6 +29,7 @@ var db *gorm.DB
 var dbsem, oblsem sync.Mutex
 var oblasts []Oblast
 
+// make database connection available as a singleton
 func Db() *gorm.DB {
 	dbsem.Lock()
 	defer dbsem.Unlock()
@@ -32,6 +39,7 @@ func Db() *gorm.DB {
 	return db
 }
 
+// connect to database using values from config file
 func ConnectDb() *gorm.DB {
 	db, err := gorm.Open(viper.GetString("db.type"), viper.GetString("db.connect"))
 	if err != nil {
@@ -40,6 +48,7 @@ func ConnectDb() *gorm.DB {
 	return db
 }
 
+// make some initial users available for testing and bootstrap
 func InitialUsers() (users []User) {
 	uv := viper.Get("users").([]interface{})
 	for _, v := range uv {
@@ -61,6 +70,7 @@ func InitialUsers() (users []User) {
 	return
 }
 
+// cache oblasts in memory instead of reading every time from database
 func Oblasts() []Oblast {
 	oblsem.Lock()
 	defer oblsem.Unlock()
@@ -70,6 +80,7 @@ func Oblasts() []Oblast {
 	return oblasts
 }
 
+// helper function to read roles from config file
 func roles(r []interface{}) (res []int) {
 	for _, rv := range r {
 		switch rt := rv.(type) {

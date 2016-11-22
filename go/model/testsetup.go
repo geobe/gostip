@@ -1,3 +1,4 @@
+// a couple of predefined data for development time
 package model
 
 import (
@@ -15,6 +16,7 @@ var classes = []interface{}{
 	ExamReference{},
 }
 
+// create some test applicants in a developpment db
 func InitTestDb(db *gorm.DB) *gorm.DB {
 
 	// Migrate the schema
@@ -125,6 +127,24 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 		goose = Applicant{Data: data}
 		// create a new object with its dependents
 		db.Create(&goose)
+		data = ApplicantData{
+			LastName:    "Quack",
+			FirstName:   "Primus",
+			FathersName: "Disneyvich",
+			Phone:       "04055443322",
+			Home:        "Hamburg",
+			School:      "Nr. 1",
+			Email:       "Primus.Quack@disney.com",
+			Oblast:      oblasts[5],
+			OrtSum:      245,
+			OrtMath:     100,
+			OrtPhys:     100,
+			EnrolledAt:  time.Now(),
+			Results:     [NQESTION]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+		}
+		goose = Applicant{Data: data}
+		// create a new object with its dependents
+		db.Create(&goose)
 	}
 	var nuser int
 	if db.Model(&User{}).Count(&nuser); nuser < 1 {
@@ -136,6 +156,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 	return db
 }
 
+// clear development db
 func ClearTestDb(db *gorm.DB) {
 
 	for _, class := range classes {

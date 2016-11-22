@@ -32,18 +32,14 @@
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <!-- Optional Bootstrap theme -->
     <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
 </head>
 <body>
-<!--<h1>Hello, {{ . }}!</h1>-->
-<!--<form class="form-horizontal" style="margin-right: 0; margin-top: 15px;" method="POST" action="logout" name="logout">-->
-<!--<div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">-->
-<!--<button type="submit" class="btn btn-primary">Logout</button>-->
-<!--</div>-->
-<!--</form>-->
 {{template "finder"}}
-<script src="../js/jquery-3.1.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
 {{template "fscript"}}
+<hr>
+{{template "tabs" . }}
 </body>
 </html>
 {{end}}
@@ -83,14 +79,10 @@
         </div>
     </nav>
 </div>
-
-<div id="workarea" style="margin: 20px">
-    <p id="found"></p>
-</div>
 {{end}}
 
 {{define "qresult"}}
-<select id="sresult" class="form-control" style="width: 16em;" onchange="showSelect(this)" onclick="showSelect(this)">
+<select id="sresult" class="form-control" style="width: 16em;" onchange="showSelect()">
     {{range .}}
     <option value="{{.ID}}">{{.Data.LastName}}, {{.Data.FirstName}}</option>
     {{else}}
@@ -99,26 +91,149 @@
 </select>
 {{end}}
 
-{{define "fscript"}}
-<script type="text/javascript">
+{{define "tabs"}}
+<ul class="nav nav-tabs" id="workTabs">
+    {{if .authenrol}}
+    <li class="active" data-toggle="tooltip" data-placement="top" title="Enrol Candidates">
+        <a data-toggle="tab" href="#enrol" ><span class="glyphicon glyphicon-education"></span> </a>
+    </li>
+    <li data-toggle="tooltip" data-placement="top" title="Edit Candidate Data">
+        <a data-toggle="tab" href="#edit"><span class="glyphicon glyphicon-pencil"></span></a>
+    </li>
+    <li data-toggle="tooltip" data-placement="top" title="Candidate Left Faculty">
+        <a data-toggle="tab" href="#hasleft"><span class="glyphicon glyphicon-remove-sign"></span></a>
+    </li>
+    {{end}}
+    {{if .authpoff}}
+    <li data-toggle="tooltip" data-placement="top" title="Capture Test Results">
+        <a data-toggle="tab" href="#exam"><span class="glyphicon glyphicon-certificate"></span></a>
+    </li>
+    <li data-toggle="tooltip" data-placement="top" title="Results List">
+        <a data-toggle="tab" href="#resultlist"><span class="glyphicon glyphicon-th-list"></span></a>
+    </li>
+    {{end}}
+    {{if .authuadmin}}
+    <li data-toggle="tooltip" data-placement="top" title="Edit Users">
+        <a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span></a>
+    </li>
+    {{end}}
+    {{if .authfulladmin}}
+    <li data-toggle="tooltip" data-placement="top" title="Administration">
+        <a data-toggle="tab" href="#admin"><span class="glyphicon glyphicon-wrench"></span></a>
+    </li>
+    <li data-toggle="tooltip" data-placement="top" title="Trace Data Changes">
+        <a data-toggle="tab" href="#trace"><span class="glyphicon glyphicon-eye-open"></span></a>
+    </li>
+    {{end}}
+    {{if .authall}}
+    <li data-toggle="tooltip" data-placement="top" title="Profile Settings">
+        <a data-toggle="tab" href="#set"><span class="glyphicon glyphicon-cog"></span></a>
+    </li>
+    {{end}}
+</ul>
+<div class="tab-content">
+    {{if .authenrol}}
+    <div id="enrol" class="tab-pane fade in active">
+        <div id="enrolarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    <div id="edit" class="tab-pane fade in active">
+        <div id="editarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    <div id="hasleft" class="tab-pane fade in active">
+        <div id="hasleftarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    {{end}}
+    {{if .authpoff}}
+    <div id="exam" class="tab-pane fade in active">
+        <div id="examarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    <div id="resultlist" class="tab-pane fade in active">
+        <div id="resultarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    {{end}}
+    {{if .authuadmin}}
+    <div id="users" class="tab-pane fade in active">
+        <div id="usersarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    {{end}}
+    {{if .authfulladmin}}
+    <div id="admin" class="tab-pane fade in active">
+        <div id="adminarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    <div id="trace" class="tab-pane fade in active">
+        <div id="tracearea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    {{end}}
+    {{if .authall}}
+    <div id="selfadmin" class="tab-pane fade in active">
+        <div id="selfadminarea" style="margin: 20px">
+            <p></p>
+        </div>
+    </div>
+    {{end}}
+    {{end}}
+
+    {{define "fscript"}}
+    <script type="text/javascript">
+    var tabAction = 'enrol';
     $(document).ready(function(){
-        //
+        // bind function to #find button:
+        //  send query fields to server and load response into div #qapps
         $("#find").click(function(){
             var ln = $("input#ln").val()
             var fn = $("input#fn").val()
-            $("#qapps").load("/find", {lastname: ln, firstname: fn});
+            $("#qapps").load("/find", {lastname: ln, firstname: fn, action: tabAction}, showSelect);
         });
-        //
-        $("#noresult").on('change click', function() {
-            alert('Please find some students before selecting');
+        // bind function to tab selection event
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tabAction = (""+e.target).replace(/.*#/, "");
         });
     });
 
     //
-    function showSelect(sel) {
-        var selid = sel.value;
-        $("#workarea").load("/enrol/show", {appid: selid, cmd: "show"});
+    function showSelect() {
+        var selid = $('#sresult').val();
+        var target, url;
+        switch(tabAction) {
+            case 'enrol':
+                target = '#enrolarea';
+                url = '/enrol/show';
+                break;
+            case 'edit':
+                target = '#editarea';
+                url = '/enrol/show'
+                break;
+            case 'exam':
+                target = '#examarea';
+                url = '/exam/show';
+                break;
+            case 'resultlist':
+                target = '#resultarea';
+                url = '/exam/resultlist';
+                break;
+            default:
+                return;
+        }
+        if(selid > 0)
+            $(target).load(url, {appid: selid, action: tabAction});
     }
 
-</script>
-{{end}}
+
+    </script>
+    {{end}}

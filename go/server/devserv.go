@@ -47,14 +47,17 @@ func main() {
 	// logout
 	mux.HandleFunc("/logout", controller.HandleLogout)
 	enroleChecking := alice.New(controller.SessionChecker, controller.AuthEnrol)
+	anyChecking := alice.New(controller.SessionChecker, controller.AuthAny)
 	// work
-	mux.Handle("/work", enroleChecking.ThenFunc(controller.HandleWork))
+	mux.Handle("/work", anyChecking.ThenFunc(controller.HandleWork))
 	// find
 	mux.Handle("/find", enroleChecking.ThenFunc(controller.Find))
 	// show enrol form
 	mux.Handle("/enrol/show", enroleChecking.ThenFunc(controller.ShowEnrol))
 	// process enrol form
 	mux.Handle("/enrol/submit", enroleChecking.ThenFunc(controller.SubmitEnrol))
+	// process edit form
+	mux.Handle("/edit/submit", enroleChecking.ThenFunc(controller.SubmitEdit))
 	// register
 	mux.HandleFunc("/register", controller.HandleRegistration)
 

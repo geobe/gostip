@@ -37,7 +37,7 @@ func checkSession(w http.ResponseWriter, r *http.Request, ignore interface{}) bo
 	if err != nil {
 		if err.(scc.Error).IsDecode() {
 			// recover from an old hanging session going to login
-			http.Redirect(w, r, "/", http.StatusFound)
+			http.Redirect(w, r, "/login", http.StatusFound)
 		} else {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -45,7 +45,7 @@ func checkSession(w http.ResponseWriter, r *http.Request, ignore interface{}) bo
 	}
 	if session.IsNew {
 		// no session there, goto login
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusFound)
 		return false
 	}
 	return true
@@ -90,7 +90,7 @@ func checkAuth(w http.ResponseWriter, r *http.Request, mask interface{}) bool {
 
 // authorize for anyone who is logged in
 func AuthAny(h http.Handler) http.Handler {
-	return authorizer(model.U_ANY, h)
+	return authorizer(model.U_ALL, h)
 }
 
 // authorize for deans office staff for enrolling

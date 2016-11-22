@@ -18,6 +18,7 @@ const U_ENROL int = 2
 const U_POFF int = 4
 const U_UADMIN int = 8
 const U_FULLADMIN int = 128
+const U_ALL int = U_ANY + U_ENROL + U_POFF + U_UADMIN + U_FULLADMIN
 
 func NewUser(l, n, pw string, roles ...int) *User {
 	var r int

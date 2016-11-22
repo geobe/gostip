@@ -25,23 +25,20 @@
   -->
 
 {{define "work_enrol"}}
-<form class="form-horizontal" style="margin: 0;" method="POST" action="{{.enrolaction}}">
+<form id="enrolform" class="form-horizontal" style="margin: 0;" method="POST">
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
-        <!--</div>-->
-        <!--<div class="ncontainer" style="padding: 8em 15px;">-->
         <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">
             Bitte bestätigen oder korrigieren Sie folgende Angaben:
         </h3>
         {{template "enrol_fields" .}}
     </div>
-    <!--<form class="form-horizontal" style="margin: 0;" method="POST" action="{{.checkaction}}">-->
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
-        <button id="change-enrol" type="button" class="btn btn-default">Angaben berichtigen
-        </button>
-        <button id="submit-enrol" type="submit" class="btn btn-primary">Angaben bestätigen</button>
+        <button id="change-enrol" type="button" class="btn btn-default">Angaben berichtigen</button>
+        <button id="submit-enrol" type="button" class="btn btn-primary">Angaben bestätigen</button>
     </div>
 </form>
+
 <script type="text/javascript">
     // called when this html fragment is loaded,
     // so all element configurations can be done here
@@ -50,6 +47,7 @@
         $('#submit-enrol').attr('disabled', 'disabled');
         // set action listener functions
         $('#change-enrol').click(enableAll);
+        $('#submit-enrol').click(postEnrol);
         $('input[type=checkbox]').on('change', checkAllOk);
     });
 
@@ -58,6 +56,31 @@
         $('input[disabled]').removeAttr("disabled");
         $('select[disabled]').removeAttr("disabled");
         $('#change-enrol').attr('disabled', 'disabled');
+    }
+
+    function postEnrol() {
+        enableAll();
+        var formVars = $("#enrolform").serialize();
+        var sid = $('#sresult').val();
+        var idx = $('#sresult').prop('selectedIndex');
+        $.post("/enrol/submit", formVars, function() {
+            $('option[value="'+sid+'"]').remove();
+            var l = $('#sresult').children('option').length;
+            // goto next in list
+            if(l > idx) {
+                $('#sresult').prop('selectedIndex', idx);
+            // else goto prev or empty
+            } else {
+                $('#sresult').prop('selectedIndex', idx - 1);
+            }
+            if(l > 0) {
+                var selid = $('#sresult').val();
+                $("#enrolarea").load("/enrol/show", {appid: selid, action: tabAction});
+            } else {
+                $('#enrolarea').html("");
+            }
+        });
+
     }
 
     // test if all checkboxes are checked to activate submit button
@@ -97,7 +120,59 @@
     ORT: {{.ort}}, {{.ortmath}}, {{.ortphys}} (Gesamt,&nbsp;Mathematik,&nbsp;Physik)
 </label>
 <label class="checkbox col-xs-3 col-sm-2 col-md-1 col-lg-1">
-    <input type="checkbox" name="oblastok" value="ok" required> richtig
+    <input type="checkbox" name="ortok" value="ok" required> richtig
 </label>
 <div class="clearfix"></div>
+{{end}}
+
+{{define "work_edit"}}
+<form id="editform" class="form-horizontal" style="margin: 0;" method="POST">
+    <div class="ncontainer" style="padding-right: 15px;">
+        {{template "registrationfields" .}}
+    </div>
+    <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
+        <button id="reset-edit" type="reset" class="btn btn-default">Reset</button>
+        <button id="submit-edit" type="button" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<script type="text/javascript">
+    // called when this html fragment is loaded,
+    // so all element configurations can be done here
+    $(document).ready(function () {
+        // set action listener functions
+        $('#submit-edit').click(postEdit);
+    });
+
+    // enable all input fields
+/*    function enableAll() {
+        $('input[disabled]').removeAttr("disabled");
+        $('select[disabled]').removeAttr("disabled");
+        $('#change-enrol').attr('disabled', 'disabled');
+    }
+*/
+    function postEdit() {
+        var formVars = $("#editform").serialize();
+        var sid = $('#sresult').val();
+        var idx = $('#sresult').prop('selectedIndex');
+        $.post("/edit/submit", formVars, function() {
+            $('option[value="'+sid+'"]').remove();
+            var l = $('#sresult').children('option').length;
+            // goto next in list
+            if(l > idx) {
+                $('#sresult').prop('selectedIndex', idx);
+            // else goto prev or empty
+            } else {
+                $('#sresult').prop('selectedIndex', idx - 1);
+            }
+            if(l > 0) {
+                var selid = $('#sresult').val();
+                $("#editarea").load("/enrol/show", {appid: selid, action: tabAction});
+            } else {
+                $('#editarea').html("");
+            }
+        });
+
+    }
+</script>
 {{end}}

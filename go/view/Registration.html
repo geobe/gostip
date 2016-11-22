@@ -50,13 +50,20 @@
 {{end}}
 
 {{define "registrationform"}}
+{{if .thankyou}}
+<h3>Danke für Ihre Anmeldung!</h3>
+<em>Bitte beachten Sie: Für das Studium und die Teilnahme am Stipendientest müssen Sie sich
+    zusätzlich mit Ihren Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.</em>
+{{end}}
 <form class="form-horizontal" style="margin-right: 0;"  method="POST" action="{{.action}}">
     {{template "registrationfields" .}}
+    {{if .buttons}}
     <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1"
          style ="display: {{.displaystyle}};">
         <button type="reset" class="btn btn-default">Reset</button>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
+    {{end}}
 </form>
 {{end}}
 
@@ -82,7 +89,7 @@
     </div>
 </div>
 <label for="fathersname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
-    Vorname:
+    Vatersname:
 </label>
 <div class="col-xs-8 col-sm-4 col-md-4 col-lg-2">
     <div class=" form-group input-group">

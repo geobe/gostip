@@ -1,3 +1,5 @@
+// registration.go implements all handlers and helper functions
+// for applicant registration.
 package controller
 
 import (
@@ -9,6 +11,9 @@ import (
 	"strconv"
 )
 
+// handler function for registration form get and post requests:
+// On GET, show an empty registration form, on POST save data into db
+// and show a confirmation message.
 func HandleRegistration(w http.ResponseWriter, r *http.Request) {
 	db := model.Db()
 	values := viewmodel{
@@ -16,6 +21,7 @@ func HandleRegistration(w http.ResponseWriter, r *http.Request) {
 		"disabled":     template.HTMLAttr(""),
 		"action":       "register",
 		"oblasts":      model.Oblasts(),
+		"buttons":      true,
 		"displaystyle": "",
 	}
 	if r.Method == http.MethodGet {
@@ -36,30 +42,31 @@ func HandleRegistration(w http.ResponseWriter, r *http.Request) {
 			Email:       html.EscapeString(r.PostFormValue("email")),
 			Home:        html.EscapeString(r.PostFormValue("home")),
 			School:      html.EscapeString(r.PostFormValue("school")),
-			OblastID:    oblastid(html.EscapeString(r.PostFormValue("district"))),
-			OrtSum:      ortint(html.EscapeString(r.PostFormValue("ort"))),
-			OrtMath:     ortint(html.EscapeString(r.PostFormValue("ortmath"))),
-			OrtPhys:     ortint(html.EscapeString(r.PostFormValue("ortphys"))),
+			OblastID:    atouint(html.EscapeString(r.PostFormValue("district"))),
+			OrtSum:      atoint16(html.EscapeString(r.PostFormValue("ort"))),
+			OrtMath:     atoint16(html.EscapeString(r.PostFormValue("ortmath"))),
+			OrtPhys:     atoint16(html.EscapeString(r.PostFormValue("ortphys"))),
 		}
 		var xappdata model.ApplicantData
-		db.First(&xappdata, "last_name = ? and first_name = ? "+
-			"and fathers_name = ? and phone = ?",
-			appdata.LastName, appdata.FirstName,
-			appdata.FathersName, appdata.Phone)
+		// already registered?
+		db.First(&xappdata, "last_name = ? and first_name = ? "+"and phone = ?",
+			appdata.LastName, appdata.FirstName, appdata.Phone)
+		// if no, save and redisplay form
 		if xappdata.ID == 0 {
 			app := model.Applicant{}
 			app.Data = appdata
 			db.Create(&app)
 			values["disabled"] = template.HTMLAttr("disabled")
 			values["displaystyle"] = "none"
+			values["thankyou"] = true
 		}
 		view.Views().ExecuteTemplate(w, "registration", values)
 	}
 
 }
 
-func ortint(s string) (v int16) {
-	//println("ortint: '" + s + "'")
+// convert string with digits into int16
+func atoint16(s string) (v int16) {
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		v = 0
@@ -69,8 +76,8 @@ func ortint(s string) (v int16) {
 	return
 }
 
-func oblastid(s string) (id uint) {
-	//println("oblastid: '" + s + "'")
+// convert string with digits into uint
+func atouint(s string) (id uint) {
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		id = 0
