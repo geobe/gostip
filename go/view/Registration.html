@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
 </head>
 <body>
-<div class="col-xs-12" style="padding-left: 0px;">
+<div class="col-xs-12">
     <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1">
         DKFAI-Registration
     </h3>
@@ -51,11 +51,26 @@
 
 {{define "registrationform"}}
 {{if .thankyou}}
-<h3>Danke für Ihre Anmeldung!</h3>
-<em>Bitte beachten Sie: Für das Studium und die Teilnahme am Stipendientest müssen Sie sich
-    zusätzlich mit Ihren Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.</em>
+<div class="container">
+    <div class="col-xs-12">
+        <span class="text-info">
+            <div class="jumbotron" style="background-color: #d3eed3;">
+                <h3 class="">Danke für Ihre Anmeldung!</h3>
+                <div class=""> Bitte beachten Sie: Für das Studium und die Teilnahme am Stipendientest müssen Sie sich
+                zusätzlich mit Ihren Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.</div>
+                <div class="">Bitte überprüfen Sie noch einmal Ihre Angaben</div>
+                <div class="clearfix">
+                    <p><div class="pull-right">
+                        <a href="/" class="btn btn-primary">Alle Angaben sind richtig</a>
+                        <a href="/register?appid={{.appid}}" class="btn btn-warning">Angaben korrigieren</a>
+                    </div></p>
+                </div>
+            </div>
+        </span>
+    </div>
+</div>
 {{end}}
-<form class="form-horizontal" style="margin-right: 0;"  method="POST" action="{{.action}}">
+<form class="form-horizontal" style="margin-right: 0;" method="POST" action="{{.action}}">
     {{template "registrationfields" .}}
     {{if .buttons}}
     <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">
@@ -74,7 +89,7 @@
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
         <input class="form-control" value="{{.lastname}}" id="lastname" name="lastname"
-               placeholder="Nachname" required {{.disabled}} >
+               placeholder="Nachname" required {{.disabled}}>
     </div>
 </div>
 <label for="firstname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
@@ -84,7 +99,7 @@
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
         <input class="form-control" value="{{.firstname}}" id="firstname" name="firstname"
-               placeholder="Vorname" required {{.disabled}} >
+               placeholder="Vorname" required {{.disabled}}>
     </div>
 </div>
 <label for="fathersname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
@@ -94,7 +109,7 @@
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
         <input class="form-control" value="{{.fathersname}}" id="fathersname" name="fathersname"
-               placeholder="Vatersname" required {{.disabled}} >
+               placeholder="Vatersname" required {{.disabled}}>
     </div>
 </div>
 <label for="phone" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
@@ -115,7 +130,7 @@
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
         <input type="email" class="form-control" value="{{.email}}" id="email" name="email"
-               placeholder="du@mail.ru" {{.disabled}} >
+               placeholder="du@mail.ru" {{.disabled}}>
     </div>
 </div>
 <label for="home" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
@@ -125,7 +140,7 @@
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
         <input type="text" class="form-control" value="{{.home}}" id="home" name="home"
-               placeholder="Bishkek" required {{.disabled}} >
+               placeholder="Bishkek" required {{.disabled}}>
     </div>
 </div>
 <label for="school" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
@@ -135,7 +150,7 @@
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
         <input type="text" class="form-control" value="{{.school}}" id="school" name="school"
-               placeholder="" required {{.disabled}} >
+               placeholder="" required {{.disabled}}>
     </div>
 </div>
 <label for="district" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
@@ -145,7 +160,7 @@
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-tent"></span></span>
         <select class="form-control" value="{{.district}}" id="district" name="district"
-                required {{.disabled}} >
+                required {{.disabled}}>
             {{ range .oblasts }}
             <option value="{{.ID}}" {{if eq .ID $.district}} selected="true" {{end}}>{{.Name}}</option>
             {{end}}
@@ -160,7 +175,7 @@
         <div class=" form-group input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
             <input type="number" class="form-control" value="{{.ort}}" id="ort" name="ort" min="100"
-                   step="1" value="99" max="250" required {{.disabled}} >
+                   step="1" value="99" max="250" required {{.disabled}}>
         </div>
     </div>
     <label for="ortmath" class="control-label col-xs-4 col-xs-offset-0
@@ -172,7 +187,7 @@
             <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
             <input type="number" class="form-control" value="{{.ortmath}}" id="ortmath"
                    name="ortmath" min="0"
-                   step="1" value="0" max="100" {{.disabled}} >
+                   step="1" value="0" max="100" {{.disabled}}>
         </div>
     </div>
     <label for="ortphys" class="control-label col-xs-4 col-xs-offset-0
@@ -184,9 +199,9 @@
             <span class="input-group-addon"><span class="glyphicon glyphicon-education"></span></span>
             <input type="number" class="form-control" value="{{.ortphys}}" id="ortphys"
                    name="ortphys" min="0"
-                   step="1" value="0" max="100" {{.disabled}} >
+                   step="1" value="0" max="100" {{.disabled}}>
         </div>
     </div>
 </div>
-<input type="hidden" name="applicantid" value="{{.applicantid}}">
+<input type="hidden" name="appid" value="{{.appid}}">
 {{end}}

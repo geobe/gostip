@@ -1,5 +1,5 @@
-// registration.go implements all handlers and helper functions
-// for applicant registration.
+// Package controller file registration.go implements all handlers
+// and helper functions for applicant registration.
 package controller
 
 import (
@@ -8,85 +8,82 @@ import (
 	"html"
 	"html/template"
 	"net/http"
-	"strconv"
 )
 
-// handler function for registration form get and post requests:
+// ShowRegistration is handler for registration form get requests:
 // On GET, show an empty registration form, on POST save data into db
 // and show a confirmation message.
-func HandleRegistration(w http.ResponseWriter, r *http.Request) {
+func ShowRegistration(w http.ResponseWriter, r *http.Request) {
 	db := model.Db()
+	if err := parseSubmission(w, r); err != nil {
+		return
+	}
 	values := viewmodel{
 		// HTMLAttr unescapes string for use as HTML Attribute
 		"disabled":     template.HTMLAttr(""),
-		"action":       "register",
+		"action":       "register/submit",
 		"oblasts":      model.Oblasts(),
 		"district":     0,
 		"buttons":      true,
 		"displaystyle": "block",
 	}
-	if r.Method == http.MethodGet {
+	if err := checkMethodAllowed(http.MethodGet, w, r); err == nil {
+		var appId uint
+		if v, ok := r.Form["appid"]; ok {
+			appId = atouint(html.EscapeString(v[0]))
+		} else {
+			appId = 0
+		}
+		if appId > 0 {
+			var app model.Applicant
+			db.Preload("Data").Preload("Data.Oblast").First(&app, appId)
+			if app.ID == appId {
+				setViewModel(app, values)
+			}
+		}
 		view.Views().ExecuteTemplate(w, "registration", values)
-	} else if r.Method == http.MethodPost {
-		if err := r.ParseForm(); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+}
+
+// SubmitRegistration is handler for registration form post requests:
+// On POST save data into db and show a confirmation message.
+func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		db := model.Db()
+		if err := parseSubmission(w, r); err != nil {
 			return
 		}
-		// do form reading field by field to avoid post attacks
-		// with additional values,
-		// escape to avoid malicious javascript code insertion
-		appdata := model.ApplicantData{
-			LastName:    html.EscapeString(r.PostFormValue("lastname")),
-			FirstName:   html.EscapeString(r.PostFormValue("firstname")),
-			FathersName: html.EscapeString(r.PostFormValue("fathersname")),
-			Phone:       html.EscapeString(r.PostFormValue("phone")),
-			Email:       html.EscapeString(r.PostFormValue("email")),
-			Home:        html.EscapeString(r.PostFormValue("home")),
-			School:      html.EscapeString(r.PostFormValue("school")),
-			OblastID:    atouint(html.EscapeString(r.PostFormValue("district"))),
-			OrtSum:      atoint16(html.EscapeString(r.PostFormValue("ort"))),
-			OrtMath:     atoint16(html.EscapeString(r.PostFormValue("ortmath"))),
-			OrtPhys:     atoint16(html.EscapeString(r.PostFormValue("ortphys"))),
+		values := viewmodel{
+			// HTMLAttr unescapes string for use as HTML Attribute
+			"disabled":     template.HTMLAttr("disabled"),
+			"action":       "register",
+			"oblasts":      model.Oblasts(),
+			"buttons":      false,
+			"thankyou":     true,
+			"displaystyle": "none",
 		}
-		var xappdata model.ApplicantData
-		// already registered?
-		db.First(&xappdata, "last_name = ? and first_name = ? "+"and phone = ?",
-			appdata.LastName, appdata.FirstName, appdata.Phone)
-		// if no, save and redisplay form
-		if xappdata.ID == 0 {
-			app := model.Applicant{}
+		var app model.Applicant
+		appId := atoint(html.EscapeString(r.PostFormValue("appid")))
+		if appId > 0 {
+			var err error
+			app, err = retrieveApplicant(appId, w, r)
+			// update registration
+			if err != nil {
+				return
+			}
+			setApplicantData(&app, r, false)
+			db.Save(&app)
+		} else {
+			// new registration
+			app = model.Applicant{}
+			appdata := model.ApplicantData{}
 			app.Data = appdata
+			setApplicantData(&app, r, false)
 			db.Create(&app)
-			values["disabled"] = template.HTMLAttr("disabled")
-			values["displaystyle"] = "none"
-			values["thankyou"] = true
-			values["buttons"] = false
-			setViewModel(app, values)
-			//values["district"] = appdata.OblastID
 		}
+		setViewModel(app, values)
 		view.Views().ExecuteTemplate(w, "registration", values)
 	}
 
-}
-
-// convert string with digits into int16
-func atoint16(s string) (v int16) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		v = 0
-	} else {
-		v = int16(i)
-	}
-	return
-}
-
-// convert string with digits into uint
-func atouint(s string) (id uint) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		id = 0
-	} else {
-		id = uint(i)
-	}
-	return
 }

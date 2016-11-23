@@ -46,20 +46,26 @@ func main() {
 	mux.HandleFunc("/login", controller.HandleLogin)
 	// logout
 	mux.HandleFunc("/logout", controller.HandleLogout)
+
+	resultsChecking := alice.New(controller.SessionChecker, controller.AuthProjectOffice)
 	enroleChecking := alice.New(controller.SessionChecker, controller.AuthEnrol)
 	anyChecking := alice.New(controller.SessionChecker, controller.AuthAny)
 	// work
 	mux.Handle("/work", anyChecking.ThenFunc(controller.HandleWork))
 	// find
 	mux.Handle("/find", enroleChecking.ThenFunc(controller.Find))
+	// show results edit form
+	mux.Handle("/results/show", resultsChecking.ThenFunc(controller.ShowResults))
 	// show enrol form
 	mux.Handle("/enrol/show", enroleChecking.ThenFunc(controller.ShowEnrol))
 	// process enrol form
 	mux.Handle("/enrol/submit", enroleChecking.ThenFunc(controller.SubmitEnrol))
 	// process edit form
-	mux.Handle("/edit/submit", enroleChecking.ThenFunc(controller.SubmitEdit))
+	mux.Handle("/edit/submit", enroleChecking.ThenFunc(controller.SubmitApplicantEdit))
 	// register
-	mux.HandleFunc("/register", controller.HandleRegistration)
+	mux.HandleFunc("/register", controller.ShowRegistration)
+	// register
+	mux.HandleFunc("/register/submit", controller.SubmitRegistration)
 
 	// konfiguriere server
 	server := &http.Server{

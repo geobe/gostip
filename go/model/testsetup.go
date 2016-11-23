@@ -140,7 +140,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 			OrtMath:     100,
 			OrtPhys:     100,
 			EnrolledAt:  time.Now(),
-			Results:     [NQESTION]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			Results:     [NQESTION]int{2, 3, 0, 5, 5, 5, 10, 10},
 		}
 		goose = Applicant{Data: data}
 		// create a new object with its dependents

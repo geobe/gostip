@@ -75,7 +75,7 @@ func Oblasts() []Oblast {
 	oblsem.Lock()
 	defer oblsem.Unlock()
 	if len(oblasts) == 0 {
-		Db().Find(&oblasts)
+		Db().Order("id asc").Find(&oblasts)
 	}
 	return oblasts
 }
