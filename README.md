@@ -6,11 +6,26 @@ Besides its primary purpose, this application is used as part of a tutorial to d
 to write a complete and working web application.
 
 ##### <a id="de"></a> Go Web Anwendung für Abiturienten, die sich für ein DAAD Stipendium an der DKFAI bewerben wollen
-
 ###### Installation
+go get lädt nicht die transitiven Abhängigkeiten, daher werden diese mit go get ... aufgelöst. Dabei gibt es einige 
+harmlose Fehlerausgaben.
+```
+go get -u github.com/geobe/gostip
+go get ...
+```
+Außerdem wird postgresql verwendet. Dazu muss
 
+* [postgresql](https://www.postgresql.org/download/) installiert und
+* eine neue Datenbank mit einem Benutzer für die Go Applikation angelegt werden. 
+Das geht einfach mit [pgAdmin](https://www.pgadmin.org/).
+* Datenbankname, Username und Passwort werden in der 
+[Konfigurationsdatei](https://github.com/geobe/gostip/blob/master/config/devconfig.json) festgelegt. 
+ 
+######Entwicklung
+Die Applikation wird mit IntelliJ Community Edition entwickelt. Sinnvollerweise legt man dazu ein 
+Go Projekt im $GOPATH Verzeichnis an. Dann kann das Projekt aus der IDE getartet werden.
 
-
+######Tutorial
 Neben dem eigentlichen Zweck der Anwendung ist dies gleichzeitig eine Demo-Applikation für ein 
 go Webapp Tutorial, in der verschiedene Bibliotheken benutzt werden, um eine
 vollständige Webanwendung zu entwickeln:
