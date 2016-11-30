@@ -15,9 +15,11 @@ go get ...
 ```
 Außerdem wird postgresql verwendet. Dazu muss
 
-* [postgresql](https://www.postgresql.org/download/) installiert und
+* [pgSql](https://www.postgresql.org/download/) installiert und
 * eine neue Datenbank mit einem Benutzer für die Go Applikation angelegt werden. 
 Das geht einfach mit [pgAdmin](https://www.pgadmin.org/).
+* Für [pgAdmin und pgSql](http://www.enterprisedb.com/products-services-training/pgdownload) gibt es einen gemeinsamen 
+Installer von EDB.
 * Datenbankname, Username und Passwort werden in der 
 [Konfigurationsdatei](https://github.com/geobe/gostip/blob/master/config/devconfig.json) festgelegt. 
  

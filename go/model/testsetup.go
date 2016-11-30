@@ -37,7 +37,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 	if db.Model(&ExamReference{}).Count(&nxref); nxref < 1 {
 		xref := ExamReference{
 			Year:    time.Now().Year(),
-			Results: [NQESTION]int{5, 5, 2, 3, 10, 15, 10, 10, 0, 0},
+			Results: [NQESTION]int{50, 50, 20, 30, 100, 150, 100, 100, 0, 0},
 		}
 		db.Create(&xref)
 	}
@@ -55,7 +55,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 			OrtSum:      111,
 			OrtMath:     66,
 			OrtPhys:     33,
-			Results:     [NQESTION]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			Results:     [NQESTION]int{10, 20, 30, 40, 555, 60, 75, 80, 9, 10},
 		}
 		goose := Applicant{Data: data}
 		// create a new object with its dependents
@@ -140,7 +140,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 			OrtMath:     100,
 			OrtPhys:     100,
 			EnrolledAt:  time.Now(),
-			Results:     [NQESTION]int{2, 3, 0, 5, 5, 5, 10, 10},
+			Results:     [NQESTION]int{20, 30, 0, 55, 45, 75, 100, 100},
 		}
 		goose = Applicant{Data: data}
 		// create a new object with its dependents

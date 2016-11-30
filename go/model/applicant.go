@@ -20,6 +20,9 @@ const (
 	EN
 	RU
 	KG
+	FR
+	ES
+	CN
 	OTHER = 99
 )
 
@@ -36,29 +39,29 @@ type Applicant struct {
 // to maintain a full history of changes to these sensitrive data
 type ApplicantData struct {
 	Model
-	ApplicantID   uint
-	Number        uint `gorm:"AUTO_INCREMENT"`
-	LastName      string
-	FirstName     string
-	FathersName   string
-	Phone         string
-	Email         string
-	Home          string
-	School        string
-	SchoolOk      bool
-	Oblast        Oblast // Belongs To Association
-	OblastID      uint
-	OblastOk      bool
-	OrtSum        int16
-	OrtMath       int16
-	OrtPhys       int16
-	OrtOk         bool
-	Results       [NQESTION]int `gorm:"-"`
-	Resultsave    string
-	LaguageResult int
-	Language      Lang
-	EnrolledAt    time.Time
-	CancelledAt   time.Time
+	ApplicantID    uint
+	Number         uint `gorm:"AUTO_INCREMENT"`
+	LastName       string
+	FirstName      string
+	FathersName    string
+	Phone          string
+	Email          string
+	Home           string
+	School         string
+	SchoolOk       bool
+	Oblast         Oblast // Belongs To Association
+	OblastID       uint
+	OblastOk       bool
+	OrtSum         int16
+	OrtMath        int16
+	OrtPhys        int16
+	OrtOk          bool
+	Results        [NQESTION]int `gorm:"-"` // marks multiplied by 10
+	Resultsave     string
+	LanguageResult int
+	Language       Lang
+	EnrolledAt     time.Time
+	CancelledAt    time.Time
 }
 
 // a district in Kyrgyzstan
@@ -78,6 +81,18 @@ var InitialOblasts = []Oblast{
 	{Name: "Talas"},
 	{Name: "Yssykköl"},
 	{Name: "Foreign"},
+}
+
+var InitialLanguages = map[Lang]string {
+	NONE:	"keine",
+	DE:	"Deutsch",
+	EN:	"Englisch",
+	RU:	"Russisch",
+	KG:	"Kirgisisch",
+	FR:	"Französisch",
+	ES:	"Spanisch",
+	CN:	"Chinesisch",
+	OTHER:	"andere",
 }
 
 // to easily store grant exam results in db with gorm,

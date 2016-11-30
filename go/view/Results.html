@@ -25,13 +25,13 @@
   -->*/}}
 
 {{define "work_results"}}
-<form id="resultsform" class="form-horizontal">
+<form id="resultsform" class="form-horizontal" data-toggle="validator" role="form">
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
-<h3 class="clearfix col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">
-    Ergebnisse des DAAD Stipendientests
-</h3>
-    {{template "results_fields" .}}
+        <h3 class="clearfix col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">
+            Ergebnisse des DAAD Stipendientests
+        </h3>
+        {{template "results_fields" .}}
     </div>
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
         <button id="change-results" type="button" class="btn btn-default">Stammdaten berichtigen</button>
@@ -46,6 +46,7 @@
         // set action listener functions
         $('#change-results').click(enableCoreData);
         $('#submit-results').click(postResults);
+        $('#resultsform').validator('update')
     });
 
     // enable all input fields
@@ -72,35 +73,54 @@
             }
             if(l > 0) {
                 var selid = $('#sresult').val();
-                $("#resultsarea").load("/results/show", {appid: selid, action: tabAction});
+                $("#examarea").load("/results/show", {appid: selid, action: tabAction});
             } else {
-                $('#resultsarea').html("");
+                $('#examarea').html("");
             }
         });
 
     }
-
-
-
-
-
-
-
 </script>
 {{end}}
 
 {{define "results_fields"}}
 {{range $idx, $val := .results}}
-    <label for="r{{$idx}}" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
-        ({{$val.no}}):
-    </label>
-    <div class="form-group col-xs-8 col-sm-4 col-md-4 col-lg-3">
-    <div class="input-group" title="max = {{$val.max}}">
+<label for="r{{$idx}}" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
+    ({{$val.no}}):
+</label>
+<div class="form-group col-xs-8 col-sm-4 col-md-4 col-lg-3">
+    <div class="input-group" title="Punkte: 0, 0.5, 1, ... , {{$val.max}}">
         <span class="input-group-addon"><span class="glyphicon glyphicon-certificate"></span></span>
         <input type="number" class="form-control" value="{{$val.val}}" id="r{{$idx}}"
-               step="1" name="r{{$idx}}" min="0" max="{{$val.max}}" style="width: 5em">
+               step="0.5" name="r{{$idx}}" min="0" max="{{$val.max}}" style="width: 5em">
     </div>
+    <div class="help-block with-errors"></div>
 </div>
 {{end}}
 <div class="clearfix"></div>
+<label for="languageresult" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
+    Text
+</label>
+<div class="form-group col-xs-8 col-sm-4 col-md-4 col-lg-3">
+    <div class="input-group" title="Note: 0 ... 5, eine Kommastelle">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
+        <input type="text" class="form-control" value="{{.languageresult}}" id="languageresult"
+               pattern="5|(([0-4])+([.,]\d){0,1})" style="width: 5em">
+    </div>
+    <div class="help-block with-errors"></div>
+</div>
+<label for="languages" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
+    Sprache
+</label>
+<div class="col-xs-5 col-sm-3 col-md-2 col-lg-2">
+    <div class=" form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-list-alt"></span></span>
+        <select class="form-control" value="{{.language}}" id="languages" name="languages">
+            {{ range $key, $val := .languages }}
+            <option value="{{$key}}" {{if eq $key $.language}} selected="true" {{end}}>{{$val}}</option>
+            {{end}}
+        </select>
+    </div>
+</div>
+
 {{end}}

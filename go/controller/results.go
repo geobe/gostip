@@ -15,6 +15,7 @@ func ShowResults(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app, err := fetchApplicant(w, r, "appid")
+	//fmt.Printf("got applicant %s\n", app.Data.FirstName)
 	if err != nil {
 		return
 	}
@@ -25,6 +26,13 @@ func ShowResults(w http.ResponseWriter, r *http.Request) {
 	setViewModel(app, values)
 	addResultsConfig(time.Now().Year(), app, values)
 	view.Views().ExecuteTemplate(w, "work_results", values)
+
+}
+
+func SubmitResults(w http.ResponseWriter, r *http.Request) {
+	if err := checkMethodAllowed(http.MethodPost, w, r); err == nil {
+		saveResultSubmission(w, r)
+	}
 
 }
 
@@ -43,13 +51,26 @@ func addResultsConfig(y int, app model.Applicant, data viewmodel) {
 		}
 	}
 
-	var results [model.NQESTION]map[string]int
+	var results [model.NQESTION]map[string]float32
 	for i := 0; i <= nq; i++ {
-		results[i] = map[string]int{
-			"val": app.Data.Results[i],
-			"max": exref.Results[i],
-			"no":  i + 1,
+		results[i] = map[string]float32{
+			"val": float32(app.Data.Results[i])/10.,
+			"max": float32(exref.Results[i])/10.,
+			"no":  float32(i + 1),
 		}
 	}
 	data["results"] = results[:nq]
+	data["languageresult"] = app.Data.LanguageResult
+	data["language"] = app.Data.Language
+	data["languages"] = model.InitialLanguages
+}
+
+func saveResultSubmission(w http.ResponseWriter, r *http.Request) {
+	app, err := fetchApplicant(w, r, "appid")
+	if err == nil {
+		setApplicantData(&app, r, false)
+		setResultData(&app, r)
+		model.Db().Save(&app)
+		w.WriteHeader(http.StatusNoContent)
+	}
 }

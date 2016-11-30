@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"fmt"
 )
 
 // set an Applicants Data from http form parameters
@@ -42,6 +43,22 @@ func setApplicantData(app *model.Applicant, r *http.Request, enrol bool) {
 	}
 }
 
+func setResultData(app *model.Applicant, r *http.Request) {
+	app.Data.Language = model.Lang(atoint(html.EscapeString(r.PostFormValue("languages"))))
+	app.Data.LanguageResult = atoint(html.EscapeString(r.PostFormValue("languageresult")))
+	var f float32
+	for i := 0; i < model.NQESTION; i++ {
+		rIndex := "r" + strconv.Itoa(i)
+		val := html.EscapeString(r.PostFormValue(rIndex))
+		n, err := fmt.Sscanf(val, "%f", &f)
+		if n == 1 && err == nil {
+			app.Data.Results[i] = int(f * 10. )
+		} else {
+			app.Data.Results[i] = 0
+		}
+	}
+}
+
 // fetch an applicant by its primary key that was submitted in form field "fieldname".
 func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string) (app model.Applicant, err error) {
 	if err = parseSubmission(w, r); err != nil {
@@ -68,7 +85,7 @@ func parseSubmission(w http.ResponseWriter, r *http.Request) (err error) {
 func keyFromForm(w http.ResponseWriter, r *http.Request, fieldname string) (id int, err error) {
 	id, err = strconv.Atoi(html.EscapeString(r.PostFormValue(fieldname)))
 	if err != nil {
-		http.Error(w, "Conversion error: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Conversion error: " + err.Error(), http.StatusInternalServerError)
 		return
 	}
 	return
