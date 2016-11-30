@@ -10,8 +10,8 @@ import (
 	"os"
 )
 
-const pages = "/github.com/geobe/gostip/pages/"
-const resources = "/github.com/geobe/gostip/resources/"
+const pages = model.Base + "/pages/"
+const resources = model.Base + "/resources/"
 
 func err(writer http.ResponseWriter, request *http.Request) {
 	//error := request.Header.Get("Status")
@@ -30,6 +30,7 @@ func main() {
 	mux := mux.NewRouter()
 	// finde Working directory = GOPATH
 	docbase, _ := os.Getwd()
+	docbase += "/"
 	// FileServer ist ein Handler, der dieses Verzeichnis bedient
 	files := http.FileServer(http.Dir(docbase + pages))
 	// Zugriff auf das Verzeichnis via Präfic /pages/

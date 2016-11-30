@@ -7,8 +7,8 @@ import (
 	"sync"
 )
 
-// llok here for config files
-const Base = "./github.com/geobe/gostip/config"
+// the relative location of project files
+const Base = "src/github.com/geobe/gostip"
 
 // setting up viper configuration lib
 func Setup(cfgfile string) {
@@ -16,8 +16,7 @@ func Setup(cfgfile string) {
 		cfgfile = "devconfig"
 	}
 	viper.SetConfigName(cfgfile)
-	//viper.AddConfigPath(docbase+Base)    // for config in the working directory
-	viper.AddConfigPath(Base)
+	viper.AddConfigPath(Base + "/config")    // for config in the working directory
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {
 		// Handle errors reading the config file

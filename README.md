@@ -7,6 +7,10 @@ to write a complete and working web application.
 
 ##### <a id="de"></a> Go Web Anwendung für Abiturienten, die sich für ein DAAD Stipendium an der DKFAI bewerben wollen
 
+###### Installation
+
+
+
 Neben dem eigentlichen Zweck der Anwendung ist dies gleichzeitig eine Demo-Applikation für ein 
 go Webapp Tutorial, in der verschiedene Bibliotheken benutzt werden, um eine
 vollständige Webanwendung zu entwickeln:

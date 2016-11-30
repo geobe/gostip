@@ -4,14 +4,16 @@ package view
 import (
 	"html/template"
 	"os"
+	"github.com/geobe/gostip/go/model"
 )
 
-const base = "/github.com/geobe/gostip/go/view/*.html"
+const base = model.Base + "/go/view/*.html"
 
 var views = Templates()
 
 func Templates() *template.Template {
 	pwd, _ := os.Getwd()
+	pwd += "/"
 	t := template.Must(template.ParseGlob(pwd + base))
 	return t
 }
