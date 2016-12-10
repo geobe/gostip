@@ -31,10 +31,10 @@ func Find(w http.ResponseWriter, r *http.Request) {
 	action := html.EscapeString(r.PostFormValue("action"))
 	enrol := action == "enrol"
 	applicants := findApplicants(lastName, firstName, enrol)
-	fmt.Printf("found %d applicants\n", len(applicants))
-	for i, ap := range applicants {
-		fmt.Printf("Applicant %d: %s %s %v\n", i, ap.Data.FirstName, ap.Data.LastName, ap.Data.EnrolledAt)
-	}
+	//fmt.Printf("found %d applicants\n", len(applicants))
+	//for i, ap := range applicants {
+	//	fmt.Printf("Applicant %d: %s %s %v\n", i, ap.Data.FirstName, ap.Data.LastName, ap.Data.EnrolledAt)
+	//}
 	view.Views().ExecuteTemplate(w, "qresult", applicants)
 }
 

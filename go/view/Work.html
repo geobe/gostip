@@ -48,35 +48,36 @@
 {{define "finder"}}
 <div style="margin: 5px">
     <nav role="navigation" class="navbar navbar-default">
-        <a href="/logout" class="navbar-brand navbar-right">
-            <span class="sr-only">Logout</span>
-            <span class="glyphicon glyphicon-off" style="margin-right: 5 px"></span>
-            &nbsp;
-        </a>
-        <div class="navbar-header">
-            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div id="navbarCollapse" class="collapse navbar-collapse">
-            <form role="search" class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input id="ln" type="text" placeholder="LastName" class="form-control">
-                    <input id="fn" type="text" placeholder="FirstName" class="form-control">
-                    <button id="find" type="button" class="btn btn-default">
-                        <span class="sr-only">Find</span>
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                    <div id="qapps" class="form-group">
-                        <select id="noresult" class="form-control" style="width: 16em;" disabled="disabled">
-                            <option value="0">----------</option>
-                        </select>
+            <a href="/logout" class="navbar-brand navbar-right">
+                <span class="sr-only">Logout</span>
+                <span class="glyphicon glyphicon-off" style="margin-right: 5 px"></span>
+                &nbsp;
+            </a>
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <form role="search" class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input id="search1" type="text" placeholder="LastName" class="form-control" style="margin: 2px 0px;">
+                        <input id="search2" type="text" placeholder="FirstName" class="form-control" style="margin: 2px 0px;">
+                        <input type="hidden" id="searchModifier" value="">
+                        <button id="find" type="button" class="btn btn-default" style="margin: 2px 0px;">
+                            <span class="sr-only">Find</span>
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        <div id="qapps" class="form-group" style="margin: 2px 0px;">
+                            <select id="noresult" class="form-control" style="width: 16em;" disabled="disabled">
+                                <option value="0">----------</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
         </div>
     </nav>
 </div>
@@ -95,6 +96,8 @@
 {{define "tabs"}}
 <script type="text/javascript">
     var searchStates = new Array();
+    var finderValues = new Array();
+
 
 </script>
 <ul class="nav nav-tabs" id="workTabs">
@@ -103,6 +106,10 @@
         searchStates['enrol'] = new SearchState('#qapps', '', '');
         searchStates['edit'] = new SearchState('#qapps', '', '');
         searchStates['cancellation'] = new SearchState('#qapps', '', '');
+        finderValues['enrol'] = {findUrl: '/find', targetUrl: '/enrol/show', target: '#enrolarea'};
+        finderValues['edit'] = {findUrl: '/find', targetUrl: '/enrol/show', target: '#editarea'};
+        finderValues['cancellation'] = {findUrl: '/find', targetUrl: '/cancellation/show', target: '#cancellationarea'};
+
 
     </script>
     <li class="active" data-toggle="tooltip" data-placement="top" title="Enrol Candidates">
@@ -117,8 +124,11 @@
     {{end}}
     {{if .authpoff}}
     <script type="text/javascript">
-            searchStates['exam'] = new SearchState('#qapps', '', '');
-            searchStates['resultlist'] = new SearchState('#qapps', '', '');
+        searchStates['exam'] = new SearchState('#qapps', '', '');
+        searchStates['resultlist'] = new SearchState('#qapps', '', '');
+        finderValues['exam'] = {findUrl: '/find', targetUrl: '/results/show', target: '#examarea'};
+        finderValues['resultlist'] = {findUrl: '/find', targetUrl: '/enrol/resultlist', target: '#resultarea'};
+
 
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Capture Test Results">
@@ -132,6 +142,7 @@
     <script type="text/javascript">
         searchStates['users'] = new SearchState('#qapps', '', '');
 
+
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Edit Users">
         <a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span></a>
@@ -140,6 +151,7 @@
     <script type="text/javascript">
         searchStates['admin'] = new SearchState('#qapps', '', '');
         searchStates['trace'] = new SearchState('#qapps', '', '');
+
 
     </script>
     {{if .authfulladmin}}
@@ -153,6 +165,7 @@
     {{if .authall}}
     <script type="text/javascript">
         searchStates['set'] = new SearchState('#qapps', '', '');
+
 
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Profile Settings">
@@ -226,55 +239,49 @@
     var bounceProtect = '';
     $(document).ready(function(){
         // bind function to #find button:
-        //  send query fields to server and load response into div #qapps
-        $("#find").click(function(){
-            var ln = $("input#ln").val()
-            var fn = $("input#fn").val()
-            $("#qapps").load("/find", {lastname: ln, firstname: fn, action: actTab}, showSelect);
-        });
+        $("#find").click(defaultFind);
         // bind function to tab selection event
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            actTab = (""+e.target).replace(/.*#/, "");
-            prevTab = (""+e.relatedTarget).replace(/.*#/, "");
-            console.log("prev: " + prevTab + " active: " + actTab + " protect: " + bounceProtect);
-            if(bounceProtect != prevTab + actTab) {
-                bounceProtect = prevTab + actTab;
-                if('' != prevTab) {
-                    searchStates[prevTab].saveContent();
-                }
-                searchStates[actTab].restoreContent();
-            }
-        });
+        $('a[data-toggle="tab"]').on('shown.bs.tab', tabSwitchHandler);
     });
 
-    //
-    function showSelect() {
-        var selid = $('#sresult').val();
-        var target, url;
-        switch(actTab) {
-            case 'enrol':
-                target = '#enrolarea';
-                url = '/enrol/show';
-                break;
-            case 'edit':
-                target = '#editarea';
-                url = '/enrol/show'
-                break;
-            case 'exam':
-                target = '#examarea';
-                url = '/results/show';
-                break;
-            case 'resultlist':
-                target = '#resultarea';
-                url = '/exam/resultlist';
-                break;
-            default:
-                return;
+    // default finder function for find button clicks
+    //  send query fields to server and load response into div #qapps
+    function defaultFind() {
+        var search1 = $("input#search1").val()
+        var search2 = $("input#search2").val()
+        var findUrl;
+        if(typeof(finderValues[actTab]) !== 'undefined') {
+            findUrl = finderValues[actTab].findUrl;
+            console.log('findUrl: ' + findUrl);
+            $("#qapps").load(findUrl, {lastname: search1, firstname: search2, action: actTab}, showSelect);
         }
-        if(selid > 0)
-            $(target).load(url, {appid: selid, action: actTab});
     }
 
+    // handler for switch tab events
+    function tabSwitchHandler(e) {
+        actTab = (""+e.target).replace(/.*#/, "");
+        prevTab = (""+e.relatedTarget).replace(/.*#/, "");
+        console.log("prev: " + prevTab + " active: " + actTab + " protect: " + bounceProtect);
+        if(bounceProtect != prevTab + actTab) {
+            bounceProtect = prevTab + actTab;
+            if('' != prevTab) {
+                searchStates[prevTab].saveContent();
+            }
+            searchStates[actTab].restoreContent();
+        }
+    }
+
+    // select the target area and service url for active tab and load from server
+    function showSelect() {
+        var selid = $('#sresult').val();
+        if(typeof(finderValues[actTab]) !== 'undefined' && selid > 0) {
+            var target = finderValues[actTab].target;
+            var url = finderValues[actTab].targetUrl;
+            $(target).load(url, {appid: selid, action: actTab});
+        }
+    }
+
+    // constructor function for objects that save and recover search results html when tabs are changed
     function SearchState(fid, s1id, s2id) {
         var selectid = fid;
         var search1 = s1id;
@@ -295,6 +302,7 @@
             }
         };
     }
+
 
 
 </script>
