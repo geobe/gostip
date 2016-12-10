@@ -69,6 +69,7 @@ func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string) (a
 		return
 	}
 	app, err = retrieveApplicant(appId, w, r)
+	fmt.Printf("Applicant: %s %s %v\n", app.Data.FirstName, app.Data.LastName, app.Data.EnrolledAt)
 	return
 }
 

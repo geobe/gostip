@@ -25,7 +25,8 @@
   -->
 
 {{define "work_enrol"}}
-<form id="enrolform" class="form-horizontal" style="margin: 0;" method="POST">
+<form id="enrolform" class="form-horizontal" action="JavaScript:postEnrol()" style="margin: 0;"
+      role="form" data-toggle="validator" >
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
         <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">
@@ -35,7 +36,7 @@
     </div>
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
         <button id="change-enrol" type="button" class="btn btn-default">Angaben berichtigen</button>
-        <button id="submit-enrol" type="button" class="btn btn-primary">Angaben bestätigen</button>
+        <button id="submit-enrol" type="submit" class="btn btn-primary">Angaben bestätigen</button>
     </div>
 </form>
 
@@ -43,12 +44,10 @@
     // called when this html fragment is loaded,
     // so all element configurations can be done here
     $(document).ready(function () {
-        // initially disable submit button
-        $('#submit-enrol').attr('disabled', 'disabled');
         // set action listener functions
         $('#change-enrol').click(enableAll);
-        $('#submit-enrol').click(postEnrol);
-        $('input[type=checkbox]').on('change', checkAllOk);
+        // update validator after form load
+        $('#enrolform').validator('update')
     });
 
     // enable all input fields
@@ -75,28 +74,11 @@
             }
             if(l > 0) {
                 var selid = $('#sresult').val();
-                $("#enrolarea").load("/enrol/show", {appid: selid, action: tabAction});
+                $("#enrolarea").load("/enrol/show", {appid: selid, action: actTab});
             } else {
                 $('#enrolarea').html("");
             }
         });
-
-    }
-
-    // test if all checkboxes are checked to activate submit button
-    function checkAllOk() {
-        var ok = true;
-        $('input[type="checkbox"]').each(function(index, element) {
-            if( ! this.checked) {
-                ok = false;
-                return false;
-            }
-        });
-        if(ok) {
-            $('#submit-enrol').removeAttr('disabled');
-        } else {
-            $('#submit-enrol').attr('disabled', 'disabled');
-        }
     }
 </script>
 {{end}}
@@ -126,13 +108,13 @@
 {{end}}
 
 {{define "work_edit"}}
-<form id="editform" class="form-horizontal" style="margin: 0;" method="POST">
+<form id="editform" class="form-horizontal" style="margin: 0;" action="JavaScript:postEdit()">
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
     </div>
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
         <button id="reset-edit" type="reset" class="btn btn-default">Reset</button>
-        <button id="submit-edit" type="button" class="btn btn-primary">Submit</button>
+        <button id="submit-edit" type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
 
@@ -140,17 +122,10 @@
     // called when this html fragment is loaded,
     // so all element configurations can be done here
     $(document).ready(function () {
-        // set action listener functions
-        $('#submit-edit').click(postEdit);
+        // update validator after form load
+        $('#editform').validator('update')
     });
 
-    // enable all input fields
-/*    function enableAll() {
-        $('input[disabled]').removeAttr("disabled");
-        $('select[disabled]').removeAttr("disabled");
-        $('#change-enrol').attr('disabled', 'disabled');
-    }
-*/
     function postEdit() {
         var formVars = $("#editform").serialize();
         var sid = $('#sresult').val();
@@ -167,12 +142,11 @@
             }
             if(l > 0) {
                 var selid = $('#sresult').val();
-                $("#editarea").load("/enrol/show", {appid: selid, action: tabAction});
+                $("#editarea").load("/enrol/show", {appid: selid, action: actTab});
             } else {
                 $('#editarea').html("");
             }
         });
-
     }
 </script>
 {{end}}
