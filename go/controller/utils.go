@@ -60,7 +60,7 @@ func setResultData(app *model.Applicant, r *http.Request) {
 }
 
 // fetch an applicant by its primary key that was submitted in form field "fieldname".
-func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string) (app model.Applicant, err error) {
+func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string, deleted ...bool) (app model.Applicant, err error) {
 	if err = parseSubmission(w, r); err != nil {
 		return
 	}
@@ -68,8 +68,7 @@ func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string) (a
 	if err != nil {
 		return
 	}
-	app, err = retrieveApplicant(appId, w, r)
-	fmt.Printf("Applicant: %s %s %v\n", app.Data.FirstName, app.Data.LastName, app.Data.EnrolledAt)
+	app, err = retrieveApplicant(appId, w, deleted...)
 	return
 }
 
@@ -93,8 +92,11 @@ func keyFromForm(w http.ResponseWriter, r *http.Request, fieldname string) (id i
 }
 
 // retrieve an applicant from db with error handling
-func retrieveApplicant(appId int, w http.ResponseWriter, r *http.Request) (app model.Applicant, err error) {
+func retrieveApplicant(appId int, w http.ResponseWriter, deleted ...bool) (app model.Applicant, err error) {
 	db := model.Db()
+	if len(deleted) > 0 && deleted[0] {
+		db = db.Unscoped()
+	}
 	db.Preload("Data").Preload("Data.Oblast").First(&app, appId)
 	if app.ID == 0 {
 		err = errors.New("Data integrity error")

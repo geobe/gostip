@@ -23,39 +23,48 @@ func HandleWork(w http.ResponseWriter, r *http.Request) {
 
 // handler function that executes a database search for applicants and
 // returns an html fragment for a select box.
-func Find(w http.ResponseWriter, r *http.Request) {
+func FindApplicant(w http.ResponseWriter, r *http.Request) {
 	//session, _ := SessionStore().Get(r, S_DKFAI)
 	r.ParseForm()
-	lastName := html.EscapeString(r.PostFormValue("lastname"))
-	firstName := html.EscapeString(r.PostFormValue("firstname"))
+	lastName := html.EscapeString(r.PostFormValue("search1"))
+	firstName := html.EscapeString(r.PostFormValue("search2"))
 	action := html.EscapeString(r.PostFormValue("action"))
+	flag := html.EscapeString(r.PostFormValue("flag"))
 	enrol := action == "enrol"
-	applicants := findApplicants(lastName, firstName, enrol)
-	//fmt.Printf("found %d applicants\n", len(applicants))
-	//for i, ap := range applicants {
-	//	fmt.Printf("Applicant %d: %s %s %v\n", i, ap.Data.FirstName, ap.Data.LastName, ap.Data.EnrolledAt)
-	//}
+	active := flag == ""
+	applicants := findApplicants(lastName, firstName, enrol, active)
 	view.Views().ExecuteTemplate(w, "qresult", applicants)
 }
 
 // find applicants based on lastname and/or firstname. Per default, a wildcard search
 // character (%) is appended to the search strings and query uses LIKE condition.
-func findApplicants(ln, fn string, enrol bool) (apps []model.Applicant) {
+func findApplicants(ln, fn string, enrol bool, active bool) (apps []model.Applicant) {
 	var qs string
-	if enrol {
+	if enrol {	// query for newly registered applicants
 		qs = "applicant_data.enrolled_at <'1900-01-01'"
-	} else {
+	} else {	// query for enrolled applicants
 		qs = "applicant_data.enrolled_at > '" +
 			time.Now().Format("2006") + "-01-01'"
 	}
 	db := model.Db()
-	db.Preload("Data").
-		Joins("INNER JOIN applicant_data ON applicants.id = applicant_data.applicant_id").
-		Where("applicant_data.deleted_at IS NULL").
-		Where(qs).
-		Where("applicant_data.last_name like ?", ln+"%").
-		Where("applicant_data.first_name like ?", fn+"%").
-		Find(&apps)
+	if active {	// query for active applicants
+		db.Preload("Data").
+			Joins("INNER JOIN applicant_data ON applicants.id = applicant_data.applicant_id").
+			Where("applicant_data.deleted_at IS NULL").
+			Where(qs).
+			Where("applicant_data.last_name like ?", ln+"%").
+			Where("applicant_data.first_name like ?", fn+"%").
+			Find(&apps)
+	} else {	// query for deleted applicants
+		db.Unscoped().Preload("Data").
+			Where("applicants.deleted_at IS NOT NULL").
+			Joins("INNER JOIN applicant_data ON applicants.id = applicant_data.applicant_id").
+			Where("applicant_data.deleted_at IS NULL").
+			Where(qs).
+			Where("applicant_data.last_name like ?", ln+"%").
+			Where("applicant_data.first_name like ?", fn+"%").
+			Find(&apps)
+	}
 	return
 }
 

@@ -54,7 +54,7 @@ func main() {
 	// work
 	mux.Handle("/work", anyChecking.ThenFunc(controller.HandleWork))
 	// find
-	mux.Handle("/find", enroleChecking.ThenFunc(controller.Find))
+	mux.Handle("/find/applicant", enroleChecking.ThenFunc(controller.FindApplicant))
 	// show results edit form
 	mux.Handle("/results/show", resultsChecking.ThenFunc(controller.ShowResults))
 	// submit results edit form
@@ -63,6 +63,10 @@ func main() {
 	mux.Handle("/enrol/show", enroleChecking.ThenFunc(controller.ShowEnrol))
 	// process enrol form
 	mux.Handle("/enrol/submit", enroleChecking.ThenFunc(controller.SubmitEnrol))
+	// show cancellation form
+	mux.Handle("/cancellation/show", enroleChecking.ThenFunc(controller.ShowCancellation))
+	// process cancellation form
+	mux.Handle("/cancellation/submit", enroleChecking.ThenFunc(controller.SubmitCancelation))
 	// process edit form
 	mux.Handle("/edit/submit", enroleChecking.ThenFunc(controller.SubmitApplicantEdit))
 	// register

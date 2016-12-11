@@ -67,7 +67,7 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 		appId := atoint(html.EscapeString(r.PostFormValue("appid")))
 		if appId > 0 {
 			var err error
-			app, err = retrieveApplicant(appId, w, r)
+			app, err = retrieveApplicant(appId, w)
 			// update registration
 			if err != nil {
 				return

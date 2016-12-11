@@ -48,14 +48,7 @@
         //$('#submit-results').click(postResults);
         // update validator after form load
         $('#resultsform').validator('update')
-/*        $("#resultsform").on('form.validated.bs.validator', function() {
-            if(testFormValid('#resultsform') alert('form now valid');
-        });
-        $("#resultsform").on('invalid.bs.validator', function() {
-            if(testFormValid('#resultsform') alert('form now invalid');
-        });
-        alert('Form valid? ' + testFormValid("#resultsform"));
-*/    });
+    });
 
     // enable all input fields
     function enableCoreData() {
@@ -86,7 +79,7 @@
             }
             if(l > 0) {
                 var selid = $('#sresult').val();
-                $("#examarea").load("/results/show", {appid: selid, action: tabAction});
+                $("#examarea").load("/results/show", {appid: selid, action: actTab});
             } else {
                 $('#examarea').html("");
             }

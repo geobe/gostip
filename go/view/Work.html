@@ -66,7 +66,6 @@
                     <div class="form-group">
                         <input id="search1" type="text" placeholder="LastName" class="form-control" style="margin: 2px 0px;">
                         <input id="search2" type="text" placeholder="FirstName" class="form-control" style="margin: 2px 0px;">
-                        <input type="hidden" id="searchModifier" value="">
                         <button id="find" type="button" class="btn btn-default" style="margin: 2px 0px;">
                             <span class="sr-only">Find</span>
                             <span class="glyphicon glyphicon-search"></span>
@@ -106,9 +105,9 @@
         searchStates['enrol'] = new SearchState('#qapps', '', '');
         searchStates['edit'] = new SearchState('#qapps', '', '');
         searchStates['cancellation'] = new SearchState('#qapps', '', '');
-        finderValues['enrol'] = {findUrl: '/find', targetUrl: '/enrol/show', target: '#enrolarea'};
-        finderValues['edit'] = {findUrl: '/find', targetUrl: '/enrol/show', target: '#editarea'};
-        finderValues['cancellation'] = {findUrl: '/find', targetUrl: '/cancellation/show', target: '#cancellationarea'};
+        finderValues['enrol'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#enrolarea'};
+        finderValues['edit'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#editarea'};
+        finderValues['cancellation'] = {findUrl: '/find/applicant', targetUrl: '/cancellation/show', target: '#cancellationarea'};
 
 
     </script>
@@ -126,8 +125,8 @@
     <script type="text/javascript">
         searchStates['exam'] = new SearchState('#qapps', '', '');
         searchStates['resultlist'] = new SearchState('#qapps', '', '');
-        finderValues['exam'] = {findUrl: '/find', targetUrl: '/results/show', target: '#examarea'};
-        finderValues['resultlist'] = {findUrl: '/find', targetUrl: '/enrol/resultlist', target: '#resultarea'};
+        finderValues['exam'] = {findUrl: '/find/applicant', targetUrl: '/results/show', target: '#examarea'};
+        finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultarea'};
 
 
     </script>
@@ -180,50 +179,62 @@
             <p></p>
         </div>
     </div>
-    <div id="edit" class="tab-pane fade in active">
+    <div id="edit" class="tab-pane fade">
         <div id="editarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
-    <div id="cancellation" class="tab-pane fade in active">
+    <div id="cancellation" class="tab-pane fade">
+        <div class="radio-inline">
+            <label for="do-cancellation" class="control-label">
+                <input id="do-cancellation" type="radio" name="cancellation" value="" checked="checked">
+                Exmatrikulieren
+            </label>
+        </div>
+        <div class="radio-inline">
+            <label for="undo-cancellation" class="control-label">
+                <input id="undo-cancellation" type="radio" name="cancellation" value="undo">
+                Exmatrikulation rückgängig machen
+            </label>
+        </div>
         <div id="cancellationarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
     {{end}}
     {{if .authpoff}}
-    <div id="exam" class="tab-pane fade in active">
+    <div id="exam" class="tab-pane fade">
         <div id="examarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
-    <div id="resultlist" class="tab-pane fade in active">
+    <div id="resultlist" class="tab-pane fade">
         <div id="resultarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
     {{end}}
     {{if .authuadmin}}
-    <div id="users" class="tab-pane fade in active">
+    <div id="users" class="tab-pane fade">
         <div id="usersarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
     {{end}}
     {{if .authfulladmin}}
-    <div id="admin" class="tab-pane fade in active">
+    <div id="admin" class="tab-pane fade">
         <div id="adminarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
-    <div id="trace" class="tab-pane fade in active">
+    <div id="trace" class="tab-pane fade">
         <div id="tracearea" style="margin: 20px">
             <p></p>
         </div>
     </div>
     {{end}}
     {{if .authall}}
-    <div id="selfadmin" class="tab-pane fade in active">
+    <div id="selfadmin" class="tab-pane fade">
         <div id="selfadminarea" style="margin: 20px">
             <p></p>
         </div>
@@ -236,12 +247,15 @@
 <script type="text/javascript">
     var actTab = 'enrol';
     var prevTab = '';
+    var searchFlag = '';
     var bounceProtect = '';
     $(document).ready(function(){
         // bind function to #find button:
         $("#find").click(defaultFind);
         // bind function to tab selection event
         $('a[data-toggle="tab"]').on('shown.bs.tab', tabSwitchHandler);
+        $('#do-cancellation').click(true, onCancellationRadioClick);
+        $('#undo-cancellation').click(false, onCancellationRadioClick);
     });
 
     // default finder function for find button clicks
@@ -252,8 +266,9 @@
         var findUrl;
         if(typeof(finderValues[actTab]) !== 'undefined') {
             findUrl = finderValues[actTab].findUrl;
-            console.log('findUrl: ' + findUrl);
-            $("#qapps").load(findUrl, {lastname: search1, firstname: search2, action: actTab}, showSelect);
+            $("#qapps").load(findUrl, {lastname: search1, firstname: search2,
+                action: actTab, flag: actTab == 'cancellation' ? searchFlag : ''},
+                showSelect);
         }
     }
 
@@ -261,7 +276,6 @@
     function tabSwitchHandler(e) {
         actTab = (""+e.target).replace(/.*#/, "");
         prevTab = (""+e.relatedTarget).replace(/.*#/, "");
-        console.log("prev: " + prevTab + " active: " + actTab + " protect: " + bounceProtect);
         if(bounceProtect != prevTab + actTab) {
             bounceProtect = prevTab + actTab;
             if('' != prevTab) {
@@ -271,13 +285,27 @@
         }
     }
 
+    // handler for switching exmatriculation radio buttons
+    function onCancellationRadioClick(e) {
+        var val = e.data;
+        if(val) {
+            searchFlag = '';
+        } else {
+            searchFlag = 'undo';
+        }
+        if(actTab == 'cancellation') {
+            $('#find').click();
+        }
+    }
+
+
     // select the target area and service url for active tab and load from server
     function showSelect() {
         var selid = $('#sresult').val();
         if(typeof(finderValues[actTab]) !== 'undefined' && selid > 0) {
             var target = finderValues[actTab].target;
             var url = finderValues[actTab].targetUrl;
-            $(target).load(url, {appid: selid, action: actTab});
+            $(target).load(url, {appid: selid, action: actTab, flag: actTab == 'cancellation' ? searchFlag : ''});
         }
     }
 
@@ -293,7 +321,6 @@
             if($('#sresult').length) {
                 idx = $('#sresult').val();
             }
-            console.log('idx = ' + idx + '\n' + content);
         };
         this.restoreContent = function() {
             $(selectid).html(content);

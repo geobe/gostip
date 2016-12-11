@@ -150,3 +150,74 @@
     }
 </script>
 {{end}}
+
+{{define "work_cancellation"}}
+<div class="ncontainer" style="padding-right: 15px;">
+    {{template "identification" .}}
+</div>
+<form id="cancellationform" class="form-horizontal" action="JavaScript:postCancellation()" style="margin: 0;"
+      role="form" data-toggle="validator" >
+    <input type="hidden" name="appid" value="{{.appid}}">
+    <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
+        <button id="submit-cancellation" type="submit" class="btn btn-primary">Absenden</button>
+    </div>
+</form>
+<script type="text/javascript">
+    function postCancellation() {
+        var formVars = $("#cancellationform").serialize();
+        formVars = formVars + '&flag=' + searchFlag;
+        $.post("/cancellation/submit", formVars, afterCancellationSubmit);
+    }
+
+    function afterCancellationSubmit() {
+        var sid = $('#sresult').val();
+        var idx = $('#sresult').prop('selectedIndex');
+        $('option[value="'+sid+'"]').remove();
+        var l = $('#sresult').children('option').length;
+        // goto next in list
+        if(l > idx) {
+            $('#sresult').prop('selectedIndex', idx);
+        // else goto prev or empty
+        } else {
+            $('#sresult').prop('selectedIndex', idx - 1);
+        }
+        if(l > 0) {
+            var selid = $('#sresult').val();
+            $("#cancellationarea").load("/cancellation/show", {appid: selid, action: actTab,
+                flag: actTab == 'cancellation' ? searchFlag : ''});
+        } else {
+            $('#cancellationarea').html("");
+        }
+    }
+</script>
+{{end}}
+
+{{define "identification"}}
+<div class="col-xs-6 col-sm-4">
+    <label >
+        Nachname:
+    </label> {{.lastname}}
+</div>
+<div class="col-xs-6 col-sm-4">
+    <label >
+        Vorname:
+    </label> {{.firstname}}
+</div>
+<div class="col-xs-6 col-sm-4">
+    <label >
+        Vatersname:
+    </label> {{.fathersname}}
+</div>
+<div class="clearfix"></div>
+<div class="col-xs-12 col-sm-4">
+    <label >
+        Telefon:
+    </label> {{.phone}}
+</div>
+<div class="col-xs-12 col-sm-8">
+    <label >
+        Email:
+    </label> {{.email}}
+</div>
+{{end}}
+
