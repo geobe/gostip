@@ -25,7 +25,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 	// initialize if db empty
 	var nOblasts, nappl, nxref int
 	if db.Model(&Oblast{}).Count(&nOblasts); nOblasts < 1 {
-		fmt.Printf("No oblasts in db, creating new\n")
+		fmt.Print("No oblasts in db, creating new\n")
 		for _, oblast := range InitialOblasts {
 			db.Create(&oblast)
 		}
@@ -72,7 +72,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 			OrtSum:      100,
 			OrtMath:     66,
 			OrtPhys:     33,
-			Results:     [NQESTION]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			Results:     [NQESTION]int{10, 25, 35, 40, 50, 25, 70, 80, 90, 100},
 		}
 		goose = Applicant{Data: data}
 		// create a new object with its dependents
@@ -89,7 +89,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 			OrtSum:      178,
 			OrtMath:     99,
 			OrtPhys:     36,
-			Results:     [NQESTION]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			Results:     [NQESTION]int{10, 25, 35, 40, 50, 25, 70, 80, 90, 100},
 		}
 		goose = Applicant{Data: data}
 		// create a new object with its dependents
@@ -106,7 +106,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 			OrtSum:      230,
 			OrtMath:     100,
 			OrtPhys:     66,
-			Results:     [NQESTION]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			Results:     [NQESTION]int{10, 25, 35, 40, 50, 25, 70, 80, 90, 100},
 		}
 		goose = Applicant{Data: data}
 		// create a new object with its dependents
@@ -122,7 +122,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 			Oblast:      oblasts[2],
 			OrtSum:      101,
 			OrtMath:     50,
-			Results:     [NQESTION]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			Results:     [NQESTION]int{10, 25, 35, 40, 50, 25, 70, 80, 90, 100},
 		}
 		goose = Applicant{Data: data}
 		// create a new object with its dependents
@@ -160,8 +160,8 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 func ClearTestDb(db *gorm.DB) {
 
 	for _, class := range classes {
-		db.Delete(class)
-		db.DropTableIfExists(class)
+		db.Unscoped().Delete(class)
+		//db.DropTableIfExists(class)
 	}
 
 }

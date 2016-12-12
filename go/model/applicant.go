@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"fmt"
 )
 
 // # of questions that could appear in one test
@@ -138,6 +139,12 @@ func signature() (uint, string) {
 // is ensured by recording the identity of the user who
 // initiated the update.
 func (app *Applicant) BeforeUpdate(tx *gorm.DB) (err error) {
+	var appdb Applicant
+	tx.First(&appdb, app.ID)
+	if appdb.UpdatedAt != app.UpdatedAt {
+		err = fmt.Errorf("stale object")
+		return
+	}
 	data := app.Data
 	upid, upsig := signature()
 	data.Model = Model{UpdatedBy: upsig, Updater: upid}
