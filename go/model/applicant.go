@@ -41,28 +41,28 @@ type Applicant struct {
 type ApplicantData struct {
 	Model
 	ApplicantID    uint
-	Number         uint `gorm:"AUTO_INCREMENT"`
-	LastName       string
-	FirstName      string
-	FathersName    string
-	Phone          string
-	Email          string
-	Home           string
-	School         string
-	SchoolOk       bool
-	Oblast         Oblast // Belongs To Association
-	OblastID       uint
-	OblastOk       bool
-	OrtSum         int16
-	OrtMath        int16
-	OrtPhys        int16
-	OrtOk          bool
-	Results        [NQESTION]int `gorm:"-"` // marks multiplied by 10
+	Number         uint `gorm:"AUTO_INCREMENT" form:"applid"`
+	LastName       string `form:"lastname"`
+	FirstName      string `form:"firstname"`
+	FathersName    string `form:"fathersname"`
+	Phone          string `form:"phone"`
+	Email          string `form:"email"`
+	Home           string `form:"home"`
+	School         string `form:"school"`
+	SchoolOk       bool `form:"schoolok"`
+	Oblast         Oblast                   // Belongs To Association
+	OblastID       uint `form:"district"`
+	OblastOk       bool `form:"districtok"`
+	OrtSum         int16 `form:"ort"`
+	OrtMath        int16 `form:"ortmath"`
+	OrtPhys        int16 `form:"ortphys"`
+	OrtOk          bool `form:"ortok"`
+	Results        [NQESTION]int `gorm:"-" form:"r#"` // marks multiplied by 10
 	Resultsave     string
-	LanguageResult int
-	Language       Lang
-	EnrolledAt     time.Time
-	CancelledAt    time.Time
+	LanguageResult int `form:"languageresult"`
+	Language       Lang `form:"language"`
+	EnrolledAt     time.Time `form:"enrolledat"`
+	CancelledAt    time.Time `form:"cancelledat"`
 }
 
 // a district in Kyrgyzstan
@@ -84,16 +84,16 @@ var InitialOblasts = []Oblast{
 	{Name: "Foreign"},
 }
 
-var InitialLanguages = map[Lang]string {
-	NONE:	"keine",
-	DE:	"Deutsch",
-	EN:	"Englisch",
-	RU:	"Russisch",
-	KG:	"Kirgisisch",
-	FR:	"Französisch",
-	ES:	"Spanisch",
-	CN:	"Chinesisch",
-	OTHER:	"andere",
+var InitialLanguages = map[Lang]string{
+	NONE:        "keine",
+	DE:        "Deutsch",
+	EN:        "Englisch",
+	RU:        "Russisch",
+	KG:        "Kirgisisch",
+	FR:        "Französisch",
+	ES:        "Spanisch",
+	CN:        "Chinesisch",
+	OTHER:        "andere",
 }
 
 // to easily store grant exam results in db with gorm,
@@ -138,6 +138,8 @@ func signature() (uint, string) {
 // and a new record with updated data is saved to db. Tracebility
 // is ensured by recording the identity of the user who
 // initiated the update.
+// concurrent conflicting updates are detected by comparing
+// changed_at field
 func (app *Applicant) BeforeUpdate(tx *gorm.DB) (err error) {
 	var appdb Applicant
 	tx.First(&appdb, app.ID)

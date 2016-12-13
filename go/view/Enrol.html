@@ -29,6 +29,7 @@
       role="form" data-toggle="validator" >
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
+        <div class="clearfix"></div>
         <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">
             Bitte bestätigen oder korrigieren Sie folgende Angaben:
         </h3>
@@ -60,26 +61,11 @@
     function postEnrol() {
         enableAll();
         var formVars = $("#enrolform").serialize();
-        var sid = $('#sresult').val();
-        var idx = $('#sresult').prop('selectedIndex');
-        $.post("/enrol/submit", formVars, function() {
-            $('option[value="'+sid+'"]').remove();
-            var l = $('#sresult').children('option').length;
-            // goto next in list
-            if(l > idx) {
-                $('#sresult').prop('selectedIndex', idx);
-            // else goto prev or empty
-            } else {
-                $('#sresult').prop('selectedIndex', idx - 1);
-            }
-            if(l > 0) {
-                var selid = $('#sresult').val();
-                $("#enrolarea").load("/enrol/show", {appid: selid, action: actTab});
-            } else {
-                $('#enrolarea').html("");
-            }
+        $.post("/enrol/submit", formVars, function(data) {
+            loadArea("/enrol/show", "#enrolarea");
         });
     }
+
 </script>
 {{end}}
 
@@ -131,21 +117,7 @@
         var sid = $('#sresult').val();
         var idx = $('#sresult').prop('selectedIndex');
         $.post("/edit/submit", formVars, function() {
-            $('option[value="'+sid+'"]').remove();
-            var l = $('#sresult').children('option').length;
-            // goto next in list
-            if(l > idx) {
-                $('#sresult').prop('selectedIndex', idx);
-            // else goto prev or empty
-            } else {
-                $('#sresult').prop('selectedIndex', idx - 1);
-            }
-            if(l > 0) {
-                var selid = $('#sresult').val();
-                $("#editarea").load("/enrol/show", {appid: selid, action: actTab});
-            } else {
-                $('#editarea').html("");
-            }
+            loadArea("/enrol/show", "#editarea");
         });
     }
 </script>

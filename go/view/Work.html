@@ -330,6 +330,25 @@
         };
     }
 
+    function loadArea(url, area) {
+        var sid = $('#sresult').val();
+        var idx = $('#sresult').prop('selectedIndex');
+        $('option[value="'+sid+'"]').remove();
+        var l = $('#sresult').children('option').length;
+        // goto next in list
+        if(l > idx) {
+            $('#sresult').prop('selectedIndex', idx);
+        // else goto prev or empty
+        } else {
+            $('#sresult').prop('selectedIndex', idx - 1);
+        }
+        if(l > 0) {
+            var selid = $('#sresult').val();
+            $(area).load(url, {appid: selid, action: actTab});
+        } else {
+            $(area).html("");
+        }
+    }
 
 
 </script>

@@ -23,10 +23,19 @@ func TestStaleUpdate(t *testing.T) {
 	db.Preload("Data").Preload("Data.Oblast").First(&app1)
 	db.Preload("Data").Preload("Data.Oblast").First(&app2)
 
+	var naryn, batken model.Oblast
+
+	db.Where("name = ?", "Naryn").First(&naryn)
+	db.Where("name = ?", "Batken").First(&batken)
+
+	fmt.Printf("Oblast %v\n", naryn)
+
 	fn := app1.Data.FirstName
 
 	// two way update
 	app1.Data.FirstName = fn + "_der_Erste"
+	app1.Data.Oblast = batken
+	app2.Data.Oblast = naryn
 	app2.Data.FirstName = fn + "_der_Zweite"
 	// mine is updated, but not other, -> no conflict
 	app1.Data.Email = "blah@blubb.com"
@@ -37,18 +46,16 @@ func TestStaleUpdate(t *testing.T) {
 	for _, e := range db.LogMode(false).Save(&app2).GetErrors() {
 		fmt.Printf("save app2 error: \"%v\"\n", e)
 	}
-	d, err := getDiff(app1.Data, app2.Data)
-	if err != nil {
-		fmt.Printf("error in differencing %v\n", err)
-	} else {
-		for k, v := range d {
-			fmt.Printf("diff [%s]: %v <-> %v\n", k, v[0], v[1])
-		}
-	}
 
-	fmt.Println()
+	fmt.Printf("before merge\n")
+	fmt.Printf("app0.Data: %s %s [%s] from %s\n",
+		app0.Data.FirstName, app0.Data.LastName, app0.Data.Email, app0.Data.Oblast.Name)
+	fmt.Printf("app1.Data: %s %s [%s] from %s\n",
+		app1.Data.FirstName, app1.Data.LastName, app1.Data.Email, app1.Data.Oblast.Name)
+	fmt.Printf("app2.Data: %s %s [%s] from %s\n",
+		app2.Data.FirstName, app2.Data.LastName, app2.Data.Email, app2.Data.Oblast.Name)
 
-	merge, err := controller.MergeDiff(app0.Data, app1.Data, app2.Data, true)
+	merge, err := controller.MergeDiff(&app0.Data, &app1.Data, &app2.Data, true)
 	if err != nil {
 		fmt.Printf("error in merging %v\n", err)
 	} else {
@@ -57,16 +64,10 @@ func TestStaleUpdate(t *testing.T) {
 		}
 	}
 
-	fmt.Println()
+	fmt.Printf("after merge\n")
+	fmt.Printf("app1.Data: %s %s [%s] from %s\n",
+		app1.Data.FirstName, app1.Data.LastName, app1.Data.Email, app1.Data.Oblast.Name)
 
-	merge, err = controller.MergeDiff(app0.Data, app1.Data, app2.Data, false)
-	if err != nil {
-		fmt.Printf("error in merging %v\n", err)
-	} else {
-		for k, v := range merge {
-			fmt.Printf("merge show [%s]: %v <-> %v is conflict: %v\n", k, v.Mine, v.Other, v.Conflict)
-		}
-	}
 }
 
 func getDiff(val1, val2 interface{}) (diffs map[string][]interface{}, err error) {

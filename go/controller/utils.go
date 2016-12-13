@@ -117,6 +117,11 @@ func checkMethodAllowed(method string, w http.ResponseWriter, r *http.Request) e
 // set applicant data into viewmodel
 func setViewModel(app model.Applicant, vmod viewmodel) {
 	data := app.Data
+	if app.UpdatedAt.Before(time.Unix(0.0, 0.0)) {
+		vmod["updatedat"] = time.Now().UnixNano()
+	} else {
+		vmod["updatedat"] = app.UpdatedAt.UnixNano()
+	}
 	vmod["appid"] = app.ID
 	vmod["lastname"] = data.LastName
 	vmod["firstname"] = data.FirstName

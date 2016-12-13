@@ -18,10 +18,11 @@ type Merge struct {
 // other version are recorded and flagged with conflict = false. If automerge is true, these differences
 // are not recorded. Differences between my new changed version and a changed other version are always
 // recorded and flagged with conflict = true.
+// mineOld, mineNew, other must be pointers to same types
 func MergeDiff(mineOld, mineNew, other interface{}, automerge bool) (diffs map[string]Merge, err error) {
-	vMineOld := reflect.ValueOf(mineOld)
-	vMineNew := reflect.ValueOf(mineNew)
-	vOther := reflect.ValueOf(other)
+	vMineOld := reflect.ValueOf(mineOld).Elem()
+	vMineNew := reflect.ValueOf(mineNew).Elem()
+	vOther := reflect.ValueOf(other).Elem()
 	diffs = make(map[string]Merge)
 	if vMineOld.Type() != vOther.Type() || vMineOld.Type() != vMineNew.Type() {
 		err = errors.New("different types")
@@ -37,9 +38,13 @@ func MergeDiff(mineOld, mineNew, other interface{}, automerge bool) (diffs map[s
 			if fieldMineNew != fieldMineOld && fieldOther != fieldMineOld && fieldMineNew != fieldOther {
 				// both changed
 				diffs[fieldName] = Merge{fieldMineNew, fieldOther, true}
-			} else if fieldMineNew == fieldMineOld && fieldMineNew != fieldOther && !automerge {
+				vMineNew.Field(i).Set(vOther.Field(i))
+			} else if fieldMineNew == fieldMineOld && fieldMineNew != fieldOther {
 				// only other changed
-				diffs[fieldName] = Merge{fieldMineNew, fieldOther, false}
+				vMineNew.Field(i).Set(vOther.Field(i))
+				if !automerge {
+					diffs[fieldName] = Merge{fieldMineNew, fieldOther, false}
+				}
 			}
 		}
 	}

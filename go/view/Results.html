@@ -91,17 +91,24 @@
 
 {{define "results_fields"}}
 {{range $idx, $val := .results}}
-<label for="r{{$idx}}" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
-    ({{$val.no}}):
-</label>
-<div class="form-group col-xs-8 col-sm-4 col-md-4 col-lg-3">
-    <div class="input-group" title="Punkte: 0, 0.5, 1, ... , {{$val.max}}">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-certificate"></span></span>
-        <input type="number" class="form-control" value="{{$val.val}}" id="r{{$idx}}"
-               step="0.5" name="r{{$idx}}" min="0" max="{{$val.max}}" style="width: 5em">
-    </div>
-    <div class="help-block with-errors"></div>
-</div>
+    {{$lbl := "control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1" -}}
+    {{$ipt := "col-xs-8 col-sm-4 col-md-4 col-lg-3" -}}
+    {{$num := concat `min="0" max="` $val.max `" step="0.5"` -}}
+    {{$title := concat "Punkte: 0, 0.5, 1, ... ," $val.max }}
+    {{template "forminput" dict "dot" . "type" "number" "id" (concat "r" $idx) "value" $val.val "caption" $val.no "icon" "certificate" "def" "0" "numeric" $num "flabel" $lbl "finput" $ipt "style" "width: 5em" "title" $title}}
+
+
+<!--<label for="r{{$idx}}" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">-->
+    <!--({{$val.no}}):-->
+<!--</label>-->
+<!--<div class="form-group col-xs-8 col-sm-4 col-md-4 col-lg-3">-->
+    <!--<div class="input-group" title="Punkte: 0, 0.5, 1, ... , {{$val.max}}">-->
+        <!--<span class="input-group-addon"><span class="glyphicon glyphicon-certificate"></span></span>-->
+        <!--<input type="number" class="form-control" value="{{$val.val}}" id="r{{$idx}}"-->
+               <!--step="0.5" name="r{{$idx}}" min="0" max="{{$val.max}}" style="width: 5em">-->
+    <!--</div>-->
+    <!--<div class="help-block with-errors"></div>-->
+<!--</div>-->
 {{end}}
 <div class="clearfix"></div>
 <label for="languageresult" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">

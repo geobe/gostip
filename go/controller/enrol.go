@@ -8,6 +8,7 @@ import (
 	"html"
 	"html/template"
 	"net/http"
+	"fmt"
 )
 
 // ShowEnrol is handler to show the selected applicant from the
@@ -58,9 +59,12 @@ func SubmitApplicantEdit(w http.ResponseWriter, r *http.Request) {
 // save edited applicant data to database
 func saveApplicantSubmission(w http.ResponseWriter, r *http.Request, enrol bool) {
 	app, err := fetchApplicant(w, r, "appid")
-	if err == nil {
+	upat, err2 := keyFromForm(w, r, "updatedat")
+	updb := app.UpdatedAt.UnixNano()
+	fmt.Printf("updated at from form: %d, from db: %d, delta: %d\n", upat, updb, int64(upat)-updb)
+	if err == nil && err2 == nil {
 		setApplicantData(&app, r, enrol)
 		model.Db().Save(&app)
-		w.WriteHeader(http.StatusNoContent)
+		fmt.Fprint(w, "hurz")
 	}
 }
