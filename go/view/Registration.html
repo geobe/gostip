@@ -40,11 +40,12 @@
         DKFAI-Registration
     </h3>
 </div>
-<div class="ncontainer" style="padding-right: 0px;">
+<div class="ncontainer" style="padding-right: 15px;">
     {{template "registrationform" .}}
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/validator.min.js"></script>
 </body>
 </html>
 {{end}}
@@ -70,7 +71,7 @@
     </div>
 </div>
 {{end}}
-<form class="form-horizontal" style="margin-right: 0;" method="POST" action="{{.action}}">
+<form class="form-horizontal" data-toggle="validator" style="margin-right: 0;" method="POST" action="{{.action}}">
     {{template "registrationfields" .}}
     {{if .buttons}}
     <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">
@@ -82,25 +83,25 @@
 {{end}}
 
 {{define "registrationfields"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "lastname" "caption" "Nachname" "icon" "user" }}
-    {{template "forminput" dict "dot" . "type" "text" "id" "firstname" "caption" "Vorname" "icon" "user" }}
+    {{template "forminput" dict "dot" . "type" "text" "id" "lastname" "caption" "Nachname" "icon" "user" "validate" "required"}}
+    {{template "forminput" dict "dot" . "type" "text" "id" "firstname" "caption" "Vorname" "icon" "user" "validate" "required"}}
     {{template "forminput" dict "dot" . "type" "text" "id" "fathersname" "caption" "Vatersname" "icon" "user" }}
-    {{template "forminput" dict "dot" . "type" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789"}}
-    {{template "forminput" dict "dot" . "type" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "school" "caption" "Abitur-Schule" "icon" "education" "def" "" }}
-    {{template "formselect" dict "dot" . "id" "district" "caption" "Oblast" "icon" "tent" }}
+    {{template "forminput" dict "dot" . "type" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required"}}
+    {{template "forminput" dict "dot" . "type" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" "validate" "required"}}
+    {{template "forminput" dict "dot" . "type" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol" "validate" "required"}}
+    {{template "forminput" dict "dot" . "type" "text" "id" "school" "caption" "Abitur-Schule" "icon" "education" "validate" "required"}}
+    {{template "formselect" dict "dot" . "id" "district" "caption" "Oblast" "icon" "tent"  "validate" "required"}}
 <div class="clearfix"></div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
     {{$ol1 := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1" -}}
     {{$olm := "control-label col-xs-4 col-xs-offset-0 col-sm-2 col-sm-offset-2 col-md-2 col-lg-offset-0  col-lg-1" -}}
     {{$olp := "control-label col-xs-4 col-xs-offset-0 col-sm-2 col-sm-offset-6 col-md-2 col-md-offset-6 col-lg-offset-0  col-lg-1" -}}
     {{$oix := "col-xs-6 col-sm-2 col-lg-2" -}}
-    {{$numort := `min="100" max="250" step="1"` -}}
+    {{$numort := `min="100" max="250" step="1" required` -}}
     {{$numortx := `min="0" max="100" step="1"` -}}
-    {{template "forminput" dict "dot" . "type" "number" "id" "ort" "caption" "ORT" "icon" "education" "def" "99" "numeric" $numort "flabel" $ol1 "finput" $oix}}
-    {{template "forminput" dict "dot" . "type" "number" "id" "ortmath" "caption" "ORT Mathe" "icon" "education" "numeric" $numortx  "flabel" $olm "finput" $oix}}
-    {{template "forminput" dict "dot" . "type" "number" "id" "ortphys" "caption" "ORT Physik" "icon" "education" "numeric" $numortx  "flabel" $olp "finput" $oix}}
+    {{template "forminput" dict "dot" . "type" "number" "id" "ort" "caption" "ORT" "icon" "education" "def" "99" "validate" $numort "flabel" $ol1 "finput" $oix}}
+    {{template "forminput" dict "dot" . "type" "number" "id" "ortmath" "caption" "ORT Mathe" "icon" "education" "validate" $numortx  "flabel" $olm "finput" $oix}}
+    {{template "forminput" dict "dot" . "type" "number" "id" "ortphys" "caption" "ORT Physik" "icon" "education" "validate" $numortx  "flabel" $olp "finput" $oix}}
 </div>
 <input type="hidden" name="appid" value="{{.appid}}">
 <input type="hidden" name="updatedat" value="{{.updatedat}}">
@@ -108,32 +109,35 @@
 
 {{define "forminput"}}
 {{$cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1" -}}
-{{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-3" -}}
+{{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2" -}}
 <label for="{{.id}}" class="{{if .flabel}}{{.flabel}}{{else}}{{$cfl}}{{end}}">
     {{.caption}}:
 </label>
-<div class="form-group {{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}" {{if .title}}title="{{.title}}"{{end -}}>
-    <div class="input-group">
+<div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}" {{if .title}}title="{{.title}}"{{end -}}>
+    <div class="form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
         <input type="{{.type}}" class="form-control" value="{{if .value}}{{.value}}{{else}}{{index .dot .id}}{{end}}"
                id="{{.id}}" name="{{.id}}" {{if .style}}style="{{.style}}"{{end -}}
-               {{if .numeric}}{{safeatt .numeric}}{{end -}}
-               {{if ne .type "number"}}placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}
-        required {{.dot.disabled}}>
+               {{if .validate}}{{safeatt .validate}} {{end -}}
+               {{if or .def (eq .type "text" "tel" "email") }}placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}
+        {{.dot.disabled}}>
     </div>
 </div>
 {{end}}
 
 {{define "formselect"}}
 {{$cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1"}}
-{{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-3"}}
+{{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"}}
 <label for="{{.id}}" class="{{if .flabel}}{{.flabel}}{{else}}{{$cfl}}{{end}}">
     {{.caption}}:
 </label>
 <div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}">
     <div class=" form-group input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
-        <Select class="form-control" value="{{index .dot .id}}" id="{{ .id}}" name="{{.id}}" required {{.dot.disabled}}>
+        <Select class="form-control" value="{{index .dot .id}}" id="{{ .id}}" name="{{.id}}"
+                {{if .validate}}{{safeatt .validate}} {{end -}}
+                {{.dot.disabled}}>
+            {{if .validate}}<option value="">------------</option>{{end}}
             {{ range .dot.oblasts }}
             <option value="{{.ID}}" {{if eq .ID $.dot.district}} selected="true" {{end}}>{{.Name}}</option>
             {{end}}

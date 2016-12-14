@@ -35,7 +35,13 @@ func TestStaleUpdate(t *testing.T) {
 	// two way update
 	app1.Data.FirstName = fn + "_der_Erste"
 	app1.Data.Oblast = batken
+	app1.Data.Results[2]++
+	app1.Data.Results[3]++
+	app1.Data.Results[4]++
 	app2.Data.Oblast = naryn
+	app2.Data.Results[3]++
+	app2.Data.Results[4]--
+	app2.Data.Results[5]++
 	app2.Data.FirstName = fn + "_der_Zweite"
 	// mine is updated, but not other, -> no conflict
 	app1.Data.Email = "blah@blubb.com"
@@ -48,25 +54,31 @@ func TestStaleUpdate(t *testing.T) {
 	}
 
 	fmt.Printf("before merge\n")
-	fmt.Printf("app0.Data: %s %s [%s] from %s\n",
-		app0.Data.FirstName, app0.Data.LastName, app0.Data.Email, app0.Data.Oblast.Name)
-	fmt.Printf("app1.Data: %s %s [%s] from %s\n",
-		app1.Data.FirstName, app1.Data.LastName, app1.Data.Email, app1.Data.Oblast.Name)
-	fmt.Printf("app2.Data: %s %s [%s] from %s\n",
-		app2.Data.FirstName, app2.Data.LastName, app2.Data.Email, app2.Data.Oblast.Name)
+	fmt.Printf("app0.Data: %s %s [%s] from %s results %v\n",
+		app0.Data.FirstName, app0.Data.LastName, app0.Data.Email, app0.Data.Oblast.Name, app0.Data.Results)
+	fmt.Printf("app1.Data: %s %s [%s] from %s results %v\n",
+		app1.Data.FirstName, app1.Data.LastName, app1.Data.Email, app1.Data.Oblast.Name, app1.Data.Results)
+	fmt.Printf("app2.Data: %s %s [%s] from %s results %v\n",
+		app2.Data.FirstName, app2.Data.LastName, app2.Data.Email, app2.Data.Oblast.Name, app2.Data.Results)
 
-	merge, err := controller.MergeDiff(&app0.Data, &app1.Data, &app2.Data, true)
+	merge, err := controller.MergeDiff(&app0.Data, &app1.Data, &app2.Data, true, "form")
 	if err != nil {
 		fmt.Printf("error in merging %v\n", err)
 	} else {
 		for k, v := range merge {
-			fmt.Printf("merge auto [%s]: %v <-> %v is conflict: %v\n", k, v.Mine, v.Other, v.Conflict)
+			cnf := "update"
+			ic := ""
+			if v.Conflict {
+				cnf = "conflict"
+				ic = ">"
+			}
+			fmt.Printf("merge auto [%s]: %v <-%s %v is %s\n", k, v.Mine, ic, v.Other, cnf)
 		}
 	}
 
 	fmt.Printf("after merge\n")
-	fmt.Printf("app1.Data: %s %s [%s] from %s\n",
-		app1.Data.FirstName, app1.Data.LastName, app1.Data.Email, app1.Data.Oblast.Name)
+	fmt.Printf("app1.Data: %s %s [%s] from %s results %v\n",
+		app1.Data.FirstName, app1.Data.LastName, app1.Data.Email, app1.Data.Oblast.Name, app1.Data.Results)
 
 }
 

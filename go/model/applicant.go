@@ -38,6 +38,7 @@ type Applicant struct {
 
 // all data of an applicant are stored in a separate structure in order
 // to maintain a full history of changes to these sensitrive data
+// form: tags are used to identify html form fields and request parameters
 type ApplicantData struct {
 	Model
 	ApplicantID    uint
@@ -57,7 +58,7 @@ type ApplicantData struct {
 	OrtMath        int16 `form:"ortmath"`
 	OrtPhys        int16 `form:"ortphys"`
 	OrtOk          bool `form:"ortok"`
-	Results        [NQESTION]int `gorm:"-" form:"r#"` // marks multiplied by 10
+	Results        [NQESTION]int `gorm:"-" form:"r#1"` // marks multiplied by 10
 	Resultsave     string
 	LanguageResult int `form:"languageresult"`
 	Language       Lang `form:"language"`
@@ -143,7 +144,9 @@ func signature() (uint, string) {
 func (app *Applicant) BeforeUpdate(tx *gorm.DB) (err error) {
 	var appdb Applicant
 	tx.First(&appdb, app.ID)
+	fmt.Printf("updating applicant upd@%v onto upd@%v\n", app.UpdatedAt, appdb.UpdatedAt)
 	if appdb.UpdatedAt != app.UpdatedAt {
+		fmt.Printf("stale error updating applicant %d\n", app.ID)
 		err = fmt.Errorf("stale object")
 		return
 	}

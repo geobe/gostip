@@ -61,10 +61,34 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request, enrol bool)
 	app, err := fetchApplicant(w, r, "appid")
 	upat, err2 := keyFromForm(w, r, "updatedat")
 	updb := app.UpdatedAt.UnixNano()
-	fmt.Printf("updated at from form: %d, from db: %d, delta: %d\n", upat, updb, int64(upat)-updb)
+	fmt.Printf("updated at from form: %d, from db: %d, delta: %d\n", upat, updb, int64(upat) - updb)
 	if err == nil && err2 == nil {
 		setApplicantData(&app, r, enrol)
-		model.Db().Save(&app)
+		if err := model.Db().Save(&app).Error; err != nil {
+			var appModified model.Applicant
+			var dataOld model.ApplicantData
+			dataSubmitted := app.Data
+			model.Db().Preload("Data").Preload("Data.Oblast").First(&appModified, app.ID)
+			model.Db().Unscoped().First(&dataOld, dataSubmitted.ID)
+			dataModified := appModified.Data
+
+			merge, err := MergeDiff(&dataOld, &dataSubmitted, &dataModified, true, "form")
+			if err != nil {
+				fmt.Printf("error in merging %v\n", err)
+			} else {
+				for k, v := range merge {
+					cnf := "update"
+					ic := ""
+					if v.Conflict {
+						cnf = "conflict"
+						ic = ">"
+					}
+					fmt.Printf("merge auto [%s]: %v <-%s %v is %s\n", k, v.Mine, ic, v.Other, cnf)
+				}
+			}
+		} else {
+
+		}
 		fmt.Fprint(w, "hurz")
 	}
 }
