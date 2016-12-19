@@ -7,6 +7,7 @@ import (
 	"html"
 	"net/http"
 	"github.com/geobe/gostip/go/model"
+	"time"
 )
 
 // ShowCancellation is handler to show the selected applicant from the
@@ -41,21 +42,24 @@ func SubmitCancelation(w http.ResponseWriter, r *http.Request) {
 
 // processCancellation deletes or undeletes an applicant in the database
 func processCancellation(w http.ResponseWriter, r *http.Request, enrol bool) {
-	if checkMethodAllowed(http.MethodPost, w, r) != nil {
-		return
-	}
 	if err := parseSubmission(w, r); err != nil {
 		return
 	}
 	flag := html.EscapeString(r.PostFormValue("flag"))
 	undo := flag != ""
-	app, err := fetchApplicant(w, r, "appid", undo)
+	action := html.EscapeString(r.PostFormValue("action"))
+	app, err := applicantFromSession(action, r) // fetchApplicant(w, r, "appid", action, undo)
 	if err == nil {
 		if undo {
 			app.DeletedAt = nil
+			app.Data.CancelledAt = time.Time{}
 			model.Db().Unscoped().Save(&app)
 		} else {
-			model.Db().Delete(&app)
+			tx := model.Db().Begin()
+			app.Data.CancelledAt = time.Now()
+			tx.Save(&app)
+			tx.Delete(&app)
+			tx.Commit()
 		}
 		w.WriteHeader(http.StatusNoContent)
 	}

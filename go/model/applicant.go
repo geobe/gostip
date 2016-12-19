@@ -51,7 +51,7 @@ type ApplicantData struct {
 	Home           string `form:"home"`
 	School         string `form:"school"`
 	SchoolOk       bool `form:"schoolok"`
-	Oblast         Oblast                   // Belongs To Association
+	Oblast         Oblast                              // Belongs To Association
 	OblastID       uint `form:"district"`
 	OblastOk       bool `form:"districtok"`
 	OrtSum         int16 `form:"ort"`
@@ -144,8 +144,11 @@ func signature() (uint, string) {
 func (app *Applicant) BeforeUpdate(tx *gorm.DB) (err error) {
 	var appdb Applicant
 	tx.First(&appdb, app.ID)
+	if appdb.ID == 0 {
+		tx.Unscoped().First(&appdb, app.ID)
+	}
 	fmt.Printf("updating applicant upd@%v onto upd@%v\n", app.UpdatedAt, appdb.UpdatedAt)
-	if appdb.UpdatedAt != app.UpdatedAt {
+	if ! appdb.UpdatedAt.Equal(app.UpdatedAt) {
 		fmt.Printf("stale error updating applicant %d\n", app.ID)
 		err = fmt.Errorf("stale object")
 		return

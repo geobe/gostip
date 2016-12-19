@@ -8,10 +8,12 @@ import (
 	"strconv"
 	"time"
 	"fmt"
+	"log"
+	"encoding/json"
 )
 
 // set an Applicants Data from http form parameters
-func setApplicantData(app *model.Applicant, r *http.Request, enrol bool) {
+func setApplicantData(app *model.Applicant, r *http.Request) {
 	app.Data.LastName = html.EscapeString(r.PostFormValue("lastname"))
 	app.Data.FirstName = html.EscapeString(r.PostFormValue("firstname"))
 	app.Data.FathersName = html.EscapeString(r.PostFormValue("fathersname"))
@@ -38,7 +40,10 @@ func setApplicantData(app *model.Applicant, r *http.Request, enrol bool) {
 	if r.PostFormValue("ortok") != "" {
 		app.Data.OrtOk = true
 	}
-	if enrol && app.Data.EnrolledAt.IsZero() {
+}
+
+func setEnrolledAt(app *model.Applicant) {
+	if app.Data.EnrolledAt.IsZero() {
 		app.Data.EnrolledAt = time.Now()
 	}
 }
@@ -52,23 +57,43 @@ func setResultData(app *model.Applicant, r *http.Request) {
 		val := html.EscapeString(r.PostFormValue(rIndex))
 		n, err := fmt.Sscanf(val, "%f", &f)
 		if n == 1 && err == nil {
-			app.Data.Results[i] = int(f * 10. )
+			app.Data.Results[i] = int(f * 10.)
 		} else {
 			app.Data.Results[i] = 0
 		}
 	}
 }
 
-// fetch an applicant by its primary key that was submitted in form field "fieldname".
+// fetch an applicant by its primary key that was submitted in form field "fieldname" and
+// save applicant in session
 func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string, deleted ...bool) (app model.Applicant, err error) {
 	if err = parseSubmission(w, r); err != nil {
 		return
 	}
+	actionKey := html.EscapeString(r.PostFormValue("action"))
 	appId, err := keyFromForm(w, r, fieldname)
 	if err != nil {
 		return
 	}
 	app, err = retrieveApplicant(appId, w, deleted...)
+	if err != nil {
+		return
+	}
+	if err = storeApplicant(w, r, app, actionKey); err != nil {
+		return
+	}
+	return
+}
+
+func storeApplicant(w http.ResponseWriter, r *http.Request, app model.Applicant, key string) (err error) {
+	session, err := SessionStore().Get(r, S_DKFAI)
+	if err != nil {
+		return
+	}
+	session.Values[S_APPLICANT + key] = app
+	if err = session.Save(r, w); err != nil {
+		return
+	}
 	return
 }
 
@@ -76,6 +101,7 @@ func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string, de
 func parseSubmission(w http.ResponseWriter, r *http.Request) (err error) {
 	if err = r.ParseForm(); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Printf("error %v, status %v\n", err.Error(), http.StatusInternalServerError)
 		return
 	}
 	return
@@ -86,6 +112,7 @@ func keyFromForm(w http.ResponseWriter, r *http.Request, fieldname string) (id i
 	id, err = strconv.Atoi(html.EscapeString(r.PostFormValue(fieldname)))
 	if err != nil {
 		http.Error(w, "Conversion error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("error %v, status %v\n", "Conversion error: " + err.Error(), http.StatusInternalServerError)
 		return
 	}
 	return
@@ -101,14 +128,102 @@ func retrieveApplicant(appId int, w http.ResponseWriter, deleted ...bool) (app m
 	if app.ID == 0 {
 		err = errors.New("Data integrity error")
 		http.Error(w, "Data integrity error", http.StatusInternalServerError)
+		log.Printf("error %v, status %v\n", "Data integrity error", http.StatusInternalServerError)
 	}
 	return
 }
+
+func applicantFromSession(key string, r *http.Request) (app model.Applicant, err error) {
+	session, err := SessionStore().Get(r, S_DKFAI)
+	if err != nil {
+		return
+	}
+	val := session.Values[S_APPLICANT + key]
+	var ok bool
+	if app, ok = val.(model.Applicant); !ok {
+		err = errors.New("conversion error from session")
+		return
+	}
+	return
+}
+
+// save edited applicant data to database
+func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
+	if err := parseSubmission(w, r); err != nil {
+		http.Error(w, "Request parse error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("error %v, status %v\n", "Request parse error: " + err.Error(), http.StatusInternalServerError)
+		return
+	}
+	action := html.EscapeString(r.PostFormValue("action"))
+	app, err := applicantFromSession(action, r)
+	if err != nil {
+		http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("action %s, error %v, status %v\n", action, "Session store error: " + err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// save the base data in any case
+	setApplicantData(&app, r)
+	switch action {
+	case "enrol":
+		setEnrolledAt(&app)
+	case "results":
+		setResultData(&app, r)
+	}
+	if err := model.Db().Save(&app).Error; err != nil {
+		var appModified model.Applicant
+		var dataOld model.ApplicantData
+		dataSubmitted := app.Data
+		model.Db().Preload("Data").Preload("Data.Oblast").First(&appModified, app.ID)
+		if appModified.ID == 0 {
+			w.Header().Set("Content-Type", "application/json")
+			json, _ := json.Marshal("Object was deleted")
+			log.Printf("editing deleted Object, message is %s\n", string(json))
+			w.Write(json)
+			return
+		}
+		model.Db().Unscoped().First(&dataOld, dataSubmitted.ID)
+		dataModified := appModified.Data
+		merge, err := MergeDiff(&dataOld, &dataSubmitted, &dataModified, true, "form")
+		if err != nil {
+			http.Error(w, "Submission merge error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Submission merge error: " + err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json, err := json.Marshal(merge)
+		if err != nil {
+			log.Printf("Json marshalling error %v\n", err)
+			http.Error(w, "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := storeApplicant(w, r, appModified, action); err != nil {
+			log.Printf("Session store error %v\n", err)
+			http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Session store error: " + err.Error(), http.StatusInternalServerError)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json)
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+//// save edited test results
+//func saveResultSubmission(w http.ResponseWriter, r *http.Request) {
+//	app, err := fetchApplicant(w, r, "appid")
+//	if err == nil {
+//		setApplicantData(&app, r, false)
+//		setResultData(&app, r)
+//		model.Db().Save(&app)
+//		w.WriteHeader(http.StatusNoContent)
+//	}
+//}
 
 // allow only http POST methods
 func checkMethodAllowed(method string, w http.ResponseWriter, r *http.Request) error {
 	if r.Method != method {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		log.Printf("error %v, status %v\n", "Method not allowed", http.StatusMethodNotAllowed)
 		return errors.New("Message not allowed: " + r.Method)
 	}
 	return nil

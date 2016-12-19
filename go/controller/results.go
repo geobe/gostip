@@ -31,7 +31,7 @@ func ShowResults(w http.ResponseWriter, r *http.Request) {
 
 func SubmitResults(w http.ResponseWriter, r *http.Request) {
 	if err := checkMethodAllowed(http.MethodPost, w, r); err == nil {
-		saveResultSubmission(w, r)
+		saveApplicantSubmission(w, r)
 	}
 
 }
@@ -63,14 +63,4 @@ func addResultsConfig(y int, app model.Applicant, data viewmodel) {
 	data["languageresult"] = app.Data.LanguageResult
 	data["language"] = app.Data.Language
 	data["languages"] = model.InitialLanguages
-}
-
-func saveResultSubmission(w http.ResponseWriter, r *http.Request) {
-	app, err := fetchApplicant(w, r, "appid")
-	if err == nil {
-		setApplicantData(&app, r, false)
-		setResultData(&app, r)
-		model.Db().Save(&app)
-		w.WriteHeader(http.StatusNoContent)
-	}
 }

@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"fmt"
 	"strconv"
+	"html/template"
 )
 
 // Function Dict creates a map from its inputs for use in go templates
@@ -23,6 +24,41 @@ func Dict(values ...interface{}) (map[string]interface{}, error) {
 	}
 	return dict, nil
 }
+
+// function SaveAtt flags the string representation of an
+// interface parameter as a safe html attribute
+func SafeAtt(s interface{}) template.HTMLAttr {
+	if s != nil {
+		return template.HTMLAttr(fmt.Sprint(s))
+	}
+	return template.HTMLAttr("")
+}
+
+// function Concat cocatenates the string representations of its parameters
+func Concat(s ...interface{}) string {
+	r := ""
+	for _, e := range s {
+		r += fmt.Sprint(e)
+	}
+	return r
+}
+
+// function AddDict adds more key/value pairs to a dictionary. This helps to break long parameter
+// lists to templates on several lines to make them better readable
+func AddDict(dict map[string]interface{}, values ...interface{}) (map[string]interface{}, error) {
+	if len(values) % 2 != 0 {
+		return nil, errors.New("invalid Dict call")
+	}
+	for i := 0; i < len(values); i += 2 {
+		key, ok := values[i].(string)
+		if !ok {
+			return nil, errors.New("dict keys must be strings")
+		}
+		dict[key] = values[i + 1]
+	}
+	return dict, nil
+}
+
 
 // function DotReference helps to pass a field reference of Dot {{.}} or some other
 // variable as a parameter into a nested template

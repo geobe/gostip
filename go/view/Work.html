@@ -102,9 +102,11 @@
 <ul class="nav nav-tabs" id="workTabs">
     {{if .authenrol}}
     <script type="text/javascript">
+        // objects that cache the search result select values of every tab
         searchStates['enrol'] = new SearchState('#qapps', '', '');
         searchStates['edit'] = new SearchState('#qapps', '', '');
         searchStates['cancellation'] = new SearchState('#qapps', '', '');
+        // information to configure the search click url and result area of every tab
         finderValues['enrol'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#enrolarea'};
         finderValues['edit'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#editarea'};
         finderValues['cancellation'] = {findUrl: '/find/applicant', targetUrl: '/cancellation/show', target: '#cancellationarea'};
@@ -123,15 +125,15 @@
     {{end}}
     {{if .authpoff}}
     <script type="text/javascript">
-        searchStates['exam'] = new SearchState('#qapps', '', '');
+        searchStates['results'] = new SearchState('#qapps', '', '');
         searchStates['resultlist'] = new SearchState('#qapps', '', '');
-        finderValues['exam'] = {findUrl: '/find/applicant', targetUrl: '/results/show', target: '#examarea'};
-        finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultarea'};
+        finderValues['results'] = {findUrl: '/find/applicant', targetUrl: '/results/show', target: '#resultsarea'};
+        finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultlistarea'};
 
 
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Capture Test Results">
-        <a data-toggle="tab" href="#exam"><span class="glyphicon glyphicon-certificate"></span></a>
+        <a data-toggle="tab" href="#results"><span class="glyphicon glyphicon-certificate"></span></a>
     </li>
     <li data-toggle="tooltip" data-placement="top" title="Results List">
         <a data-toggle="tab" href="#resultlist"><span class="glyphicon glyphicon-th-list"></span></a>
@@ -203,13 +205,13 @@
     </div>
     {{end}}
     {{if .authpoff}}
-    <div id="exam" class="tab-pane fade">
-        <div id="examarea" style="margin: 20px">
+    <div id="results" class="tab-pane fade">
+        <div id="resultsarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
     <div id="resultlist" class="tab-pane fade">
-        <div id="resultarea" style="margin: 20px">
+        <div id="resultlistarea" style="margin: 20px">
             <p></p>
         </div>
     </div>
@@ -259,7 +261,7 @@
     });
 
     // default finder function for find button clicks
-    //  send query fields to server and load response into div #qapps
+    // send query fields to server and load response into div #qapps
     function defaultFind() {
         var search1 = $("input#search1").val()
         var search2 = $("input#search2").val()
@@ -330,6 +332,38 @@
         };
     }
 
+    // post form data and check returned data. if it's not empty, edited object was
+    // changed in the database. so normally update form fields and mark changes.
+    // in case object was deleted, show alert and refresh find
+    // if data is empty, call load area
+    function postSubmissionAndReload(posturl, values, loadurl, area) {
+        $.post(posturl, values, function( data ) {
+            if( data ) {
+                if (typeof data === 'string' || data instanceof String) {
+                    alert(data);
+                    //$("#find").click(defaultFind);
+                    loadArea(loadurl, area);
+                } else {
+                    var keys = Object.keys(data);
+                    keys.forEach(function(key) {
+                        mergeVal(key, data[key]);
+                    });
+                }
+            } else {
+                loadArea(loadurl, area);
+            }
+        });
+    }
+
+    // update fields with changed values and mark these fields
+    function mergeVal( key, value ) {
+        elements = Object.keys(value);
+        $('#' + key).attr('value', value['Other'])
+        $('#' + key + '-icon').attr('style', value['Conflict'] ? "background-color: red" : "background-color: yellow");
+    }
+
+    // load tab area with next from search field, removing previous fron search results.
+    // clear area if no further results in search results list.
     function loadArea(url, area) {
         var sid = $('#sresult').val();
         var idx = $('#sresult').prop('selectedIndex');

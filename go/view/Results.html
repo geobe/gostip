@@ -33,6 +33,7 @@
         </h3>
         {{template "results_fields" .}}
     </div>
+    <input type="hidden" name="action" value="results">
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
         <button id="change-results" type="button" class="btn btn-default">Stammdaten berichtigen</button>
         <button id="submit-results" type="submit" class="btn btn-primary">Submit</button>
@@ -79,9 +80,9 @@
             }
             if(l > 0) {
                 var selid = $('#sresult').val();
-                $("#examarea").load("/results/show", {appid: selid, action: actTab});
+                $("#resultsarea").load("/results/show", {appid: selid, action: actTab});
             } else {
-                $('#examarea').html("");
+                $('#resultsarea').html("");
             }
         });
 
@@ -93,9 +94,12 @@
 {{range $idx, $val := .results}}
     {{$lbl := "control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1" -}}
     {{$ipt := "col-xs-8 col-sm-4 col-md-2 col-lg-2" -}}
-    {{$num := concat `min="0" max="` $val.max `" step="0.5"` -}}
+    {{$numval := concat "min='0' max='" $val.max "' step='0.5'" -}}
     {{$title := concat "Punkte: 0, 0.5, 1, ... ," $val.max }}
-    {{template "forminput" dict "dot" . "type" "number" "id" (concat "r" $idx) "value" $val.val "caption" $val.no "icon" "certificate" "def" "0" "numeric" $num "flabel" $lbl "finput" $ipt "style" "width: 5em" "title" $title}}
+    {{$templateparams := dict "dot" . "itype" "number" "id" (concat "r" $idx) "value" $val.val "caption" $val.no }}
+    {{$templateparams := adddict $templateparams "icon" "certificate" "def" "0" "validate" $numval }}
+    {{$templateparams := adddict $templateparams "flabel" $lbl "finput" $ipt "style" "width: 5em" "title" $title}}
+    {{template "forminput" $templateparams }}
 
 
 <!--<label for="r{{$idx}}" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">-->

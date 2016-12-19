@@ -6,7 +6,6 @@ import (
 	"os"
 	"github.com/geobe/gostip/go/model"
 	"strings"
-	"fmt"
 )
 
 const base = model.Base + "/go/view/*.html"
@@ -26,7 +25,8 @@ func Templates() *template.Template {
 	// Create a function map with dict and refer function
 	funcs := map[string]interface{}{
 		"dict": Dict,
-		"refer": DotReference,
+		"adddict": AddDict,
+		//"refer": DotReference,
 		"safeatt": SafeAtt,
 		"concat": Concat,
 	}
@@ -38,19 +38,4 @@ func Templates() *template.Template {
 
 func Views() *template.Template {
 	return views
-}
-
-func SafeAtt(s interface{}) template.HTMLAttr {
-	if s != nil {
-		return template.HTMLAttr(fmt.Sprint(s))
-	}
-	return template.HTMLAttr("")
-}
-
-func Concat(s ...interface{}) string {
-	r := ""
-	for _, e := range s {
-		r += fmt.Sprint(e)
-	}
-	return r
 }

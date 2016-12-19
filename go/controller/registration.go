@@ -72,14 +72,14 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				return
 			}
-			setApplicantData(&app, r, false)
+			setApplicantData(&app, r)
 			db.Save(&app)
 		} else {
 			// new registration
 			app = model.Applicant{}
 			appdata := model.ApplicantData{}
 			app.Data = appdata
-			setApplicantData(&app, r, false)
+			setApplicantData(&app, r)
 			db.Create(&app)
 		}
 		setViewModel(app, values)

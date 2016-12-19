@@ -83,13 +83,13 @@
 {{end}}
 
 {{define "registrationfields"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "lastname" "caption" "Nachname" "icon" "user" "validate" "required"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "firstname" "caption" "Vorname" "icon" "user" "validate" "required"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "fathersname" "caption" "Vatersname" "icon" "user" }}
-    {{template "forminput" dict "dot" . "type" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required"}}
-    {{template "forminput" dict "dot" . "type" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" "validate" "required"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol" "validate" "required"}}
-    {{template "forminput" dict "dot" . "type" "text" "id" "school" "caption" "Abitur-Schule" "icon" "education" "validate" "required"}}
+    {{template "forminput" dict "dot" . "itype" "text" "id" "lastname" "caption" "Nachname" "icon" "user" "validate" "required"}}
+    {{template "forminput" dict "dot" . "itype" "text" "id" "firstname" "caption" "Vorname" "icon" "user" "validate" "required"}}
+    {{template "forminput" dict "dot" . "itype" "text" "id" "fathersname" "caption" "Vatersname" "icon" "user" }}
+    {{template "forminput" dict "dot" . "itype" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required"}}
+    {{template "forminput" dict "dot" . "itype" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" "validate" "required"}}
+    {{template "forminput" dict "dot" . "itype" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol" "validate" "required"}}
+    {{template "forminput" dict "dot" . "itype" "text" "id" "school" "caption" "Abitur-Schule" "icon" "education" "validate" "required"}}
     {{template "formselect" dict "dot" . "id" "district" "caption" "Oblast" "icon" "tent"  "validate" "required"}}
 <div class="clearfix"></div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
@@ -99,9 +99,9 @@
     {{$oix := "col-xs-6 col-sm-2 col-lg-2" -}}
     {{$numort := `min="100" max="250" step="1" required` -}}
     {{$numortx := `min="0" max="100" step="1"` -}}
-    {{template "forminput" dict "dot" . "type" "number" "id" "ort" "caption" "ORT" "icon" "education" "def" "99" "validate" $numort "flabel" $ol1 "finput" $oix}}
-    {{template "forminput" dict "dot" . "type" "number" "id" "ortmath" "caption" "ORT Mathe" "icon" "education" "validate" $numortx  "flabel" $olm "finput" $oix}}
-    {{template "forminput" dict "dot" . "type" "number" "id" "ortphys" "caption" "ORT Physik" "icon" "education" "validate" $numortx  "flabel" $olp "finput" $oix}}
+    {{template "forminput" dict "dot" . "itype" "number" "id" "ort" "caption" "ORT" "icon" "education" "def" "99" "validate" $numort "flabel" $ol1 "finput" $oix}}
+    {{template "forminput" dict "dot" . "itype" "number" "id" "ortmath" "caption" "ORT Mathe" "icon" "education" "validate" $numortx  "flabel" $olm "finput" $oix}}
+    {{template "forminput" dict "dot" . "itype" "number" "id" "ortphys" "caption" "ORT Physik" "icon" "education" "validate" $numortx  "flabel" $olp "finput" $oix}}
 </div>
 <input type="hidden" name="appid" value="{{.appid}}">
 <input type="hidden" name="updatedat" value="{{.updatedat}}">
@@ -115,11 +115,11 @@
 </label>
 <div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}" {{if .title}}title="{{.title}}"{{end -}}>
     <div class="form-group input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
-        <input type="{{.type}}" class="form-control" value="{{if .value}}{{.value}}{{else}}{{index .dot .id}}{{end}}"
+        <span id="{{.id}}-icon" class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
+        <input type="{{.itype}}" class="form-control" value="{{if .value}}{{.value}}{{else}}{{index .dot .id}}{{end}}"
                id="{{.id}}" name="{{.id}}" {{if .style}}style="{{.style}}"{{end -}}
                {{if .validate}}{{safeatt .validate}} {{end -}}
-               {{if or .def (eq .type "text" "tel" "email") }}placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}
+               {{if or .def (eq .itype "text" "tel" "email") }}placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}
         {{.dot.disabled}}>
     </div>
 </div>
@@ -133,7 +133,7 @@
 </label>
 <div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}">
     <div class=" form-group input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
+        <span id="{{.id }}-icon" class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
         <Select class="form-control" value="{{index .dot .id}}" id="{{ .id}}" name="{{.id}}"
                 {{if .validate}}{{safeatt .validate}} {{end -}}
                 {{.dot.disabled}}>

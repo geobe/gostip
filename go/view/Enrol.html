@@ -35,6 +35,7 @@
         </h3>
         {{template "enrol_fields" .}}
     </div>
+    <input type="hidden" name="action" value="enrol">
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
         <button id="change-enrol" type="button" class="btn btn-default">Angaben berichtigen</button>
         <button id="submit-enrol" type="submit" class="btn btn-primary">Angaben bestätigen</button>
@@ -61,9 +62,7 @@
     function postEnrol() {
         enableAll();
         var formVars = $("#enrolform").serialize();
-        $.post("/enrol/submit", formVars, function(data) {
-            loadArea("/enrol/show", "#enrolarea");
-        });
+        postSubmissionAndReload("/enrol/submit", formVars, "/enrol/show", "#enrolarea");
     }
 
 </script>
@@ -98,6 +97,7 @@
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
     </div>
+    <input type="hidden" name="action" value="edit">
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
         <button id="reset-edit" type="reset" class="btn btn-default">Reset</button>
         <button id="submit-edit" type="submit" class="btn btn-primary">Submit</button>
@@ -114,12 +114,9 @@
 
     function postEdit() {
         var formVars = $("#editform").serialize();
-        var sid = $('#sresult').val();
-        var idx = $('#sresult').prop('selectedIndex');
-        $.post("/edit/submit", formVars, function() {
-            loadArea("/enrol/show", "#editarea");
-        });
+        postSubmissionAndReload("/edit/submit", formVars, "/enrol/show", "#editarea");
     }
+
 </script>
 {{end}}
 
@@ -130,6 +127,7 @@
 <form id="cancellationform" class="form-horizontal" action="JavaScript:postCancellation()" style="margin: 0;"
       role="form" data-toggle="validator" >
     <input type="hidden" name="appid" value="{{.appid}}">
+    <input type="hidden" name="action" value="cancellation">
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
         <button id="submit-cancellation" type="submit" class="btn btn-primary">Absenden</button>
     </div>
