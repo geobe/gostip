@@ -64,7 +64,8 @@
                     <p><div class="pull-right">
                         <a href="/" class="btn btn-primary">Alle Angaben sind richtig</a>
                         <a href="/register?appid={{.appid}}" class="btn btn-warning">Angaben korrigieren</a>
-                    </div></p>
+                    </div>
+                    </p>
                 </div>
             </div>
         </span>
@@ -83,65 +84,36 @@
 {{end}}
 
 {{define "registrationfields"}}
-    {{template "forminput" dict "dot" . "itype" "text" "id" "lastname" "caption" "Nachname" "icon" "user" "validate" "required"}}
-    {{template "forminput" dict "dot" . "itype" "text" "id" "firstname" "caption" "Vorname" "icon" "user" "validate" "required"}}
-    {{template "forminput" dict "dot" . "itype" "text" "id" "fathersname" "caption" "Vatersname" "icon" "user" }}
-    {{template "forminput" dict "dot" . "itype" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required"}}
-    {{template "forminput" dict "dot" . "itype" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" "validate" "required"}}
-    {{template "forminput" dict "dot" . "itype" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol" "validate" "required"}}
-    {{template "forminput" dict "dot" . "itype" "text" "id" "school" "caption" "Abitur-Schule" "icon" "education" "validate" "required"}}
-    {{template "formselect" dict "dot" . "id" "district" "caption" "Oblast" "icon" "tent"  "validate" "required"}}
+{{$defuser := dict "dot" . "itype" "text" "icon" "user" "disabled" .disabled "validate" "required" -}}
+{{template "forminput" mergedict $defuser (dict "id" "lastname" "caption" "Nachname")}}
+{{template "forminput" mergedict $defuser (dict "id" "firstname" "caption" "Vorname")}}
+{{template "forminput" mergedict $defuser (dict "itype" "text" "id" "fathersname" "caption" "Vatersname" "validate" "")}}
+{{$tel := dict "itype" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required" -}}
+{{template "forminput" mergedict $defuser $tel}}
+{{$mail := dict "itype" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" -}}
+{{template "forminput" mergedict $defuser $mail}}
+{{$home := dict "itype" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol" -}}
+{{template "forminput" mergedict $defuser $home}}
+{{$school := dict "id" "school" "caption" "Abitur-Schule" "icon" "education" -}}
+{{template "forminput" mergedict $defuser $school}}
+{{template "formselect" dict "dot" . "id" "district" "caption" "Oblast" "icon" "tent"  "validate" "required"}}
 <div class="clearfix"></div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
     {{$ol1 := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1" -}}
-    {{$olm := "control-label col-xs-4 col-xs-offset-0 col-sm-2 col-sm-offset-2 col-md-2 col-lg-offset-0  col-lg-1" -}}
-    {{$olp := "control-label col-xs-4 col-xs-offset-0 col-sm-2 col-sm-offset-6 col-md-2 col-md-offset-6 col-lg-offset-0  col-lg-1" -}}
+    {{$olm := "control-label col-xs-4 col-xs-offset-0 col-sm-2 col-sm-offset-2 col-md-2 col-lg-offset-0 col-lg-1" -}}
+    {{$olp := "control-label col-xs-4 col-xs-offset-0 col-sm-2 col-sm-offset-6 col-md-2 col-md-offset-6 col-lg-offset-0 col-lg-1" -}}
     {{$oix := "col-xs-6 col-sm-2 col-lg-2" -}}
     {{$numort := `min="100" max="250" step="1" required` -}}
     {{$numortx := `min="0" max="100" step="1"` -}}
-    {{template "forminput" dict "dot" . "itype" "number" "id" "ort" "caption" "ORT" "icon" "education" "def" "99" "validate" $numort "flabel" $ol1 "finput" $oix}}
-    {{template "forminput" dict "dot" . "itype" "number" "id" "ortmath" "caption" "ORT Mathe" "icon" "education" "validate" $numortx  "flabel" $olm "finput" $oix}}
-    {{template "forminput" dict "dot" . "itype" "number" "id" "ortphys" "caption" "ORT Physik" "icon" "education" "validate" $numortx  "flabel" $olp "finput" $oix}}
+    {{$defort := dict "dot" . "itype" "number" "icon" "education" "finput" $oix -}}
+    {{$ort := dict "id" "ort" "caption" "ORT" "def" "99" "validate" $numort "flabel" $ol1 -}}
+    {{template "forminput" mergedict $defort $ort}}
+    {{$ortm := dict "id" "ortmath" "caption" "ORT Mathe" "validate" $numortx "flabel" $olm -}}
+    {{template "forminput" mergedict $defort $ortm}}
+    {{$ortp := dict "id" "ortphys" "caption" "ORT Physik" "validate" $numortx "flabel" $olp -}}
+    {{template "forminput" mergedict $defort $ortp}}
 </div>
 <input type="hidden" name="appid" value="{{.appid}}">
 <input type="hidden" name="updatedat" value="{{.updatedat}}">
 {{end}}
 
-{{define "forminput"}}
-{{$cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1" -}}
-{{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2" -}}
-<label for="{{.id}}" class="{{if .flabel}}{{.flabel}}{{else}}{{$cfl}}{{end}}">
-    {{.caption}}:
-</label>
-<div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}" {{if .title}}title="{{.title}}"{{end -}}>
-    <div class="form-group input-group">
-        <span id="{{.id}}-icon" class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
-        <input type="{{.itype}}" class="form-control" value="{{if .value}}{{.value}}{{else}}{{index .dot .id}}{{end}}"
-               id="{{.id}}" name="{{.id}}" {{if .style}}style="{{.style}}"{{end -}}
-               {{if .validate}}{{safeatt .validate}} {{end -}}
-               {{if or .def (eq .itype "text" "tel" "email") }}placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}
-        {{.dot.disabled}}>
-    </div>
-</div>
-{{end}}
-
-{{define "formselect"}}
-{{$cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1"}}
-{{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"}}
-<label for="{{.id}}" class="{{if .flabel}}{{.flabel}}{{else}}{{$cfl}}{{end}}">
-    {{.caption}}:
-</label>
-<div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}">
-    <div class=" form-group input-group">
-        <span id="{{.id }}-icon" class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
-        <Select class="form-control" value="{{index .dot .id}}" id="{{ .id}}" name="{{.id}}"
-                {{if .validate}}{{safeatt .validate}} {{end -}}
-                {{.dot.disabled}}>
-            {{if .validate}}<option value="">------------</option>{{end}}
-            {{ range .dot.oblasts }}
-            <option value="{{.ID}}" {{if eq .ID $.dot.district}} selected="true" {{end}}>{{.Name}}</option>
-            {{end}}
-        </select>
-    </div>
-</div>
-{{end}}

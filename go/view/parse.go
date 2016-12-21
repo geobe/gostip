@@ -26,6 +26,7 @@ func Templates() *template.Template {
 	funcs := map[string]interface{}{
 		"dict": Dict,
 		"adddict": AddDict,
+		"mergedict": MergeDict,
 		//"refer": DotReference,
 		"safeatt": SafeAtt,
 		"concat": Concat,

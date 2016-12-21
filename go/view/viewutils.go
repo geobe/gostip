@@ -2,9 +2,7 @@ package view
 
 import (
 	"errors"
-	"reflect"
 	"fmt"
-	"strconv"
 	"html/template"
 )
 
@@ -47,7 +45,7 @@ func Concat(s ...interface{}) string {
 // lists to templates on several lines to make them better readable
 func AddDict(dict map[string]interface{}, values ...interface{}) (map[string]interface{}, error) {
 	if len(values) % 2 != 0 {
-		return nil, errors.New("invalid Dict call")
+		return nil, errors.New("invalid AddDict call")
 	}
 	for i := 0; i < len(values); i += 2 {
 		key, ok := values[i].(string)
@@ -59,40 +57,52 @@ func AddDict(dict map[string]interface{}, values ...interface{}) (map[string]int
 	return dict, nil
 }
 
+// function MergeDict merges dictionaries for use in templates
+func MergeDict(dict map[string]interface{},  more ...map[string]interface{}) (map[string]interface{}, error) {
+	if len(more) == 0 {
+		return nil, errors.New("invalid MergeDict call")
+	}
+	for _, m := range more {
+		for k, v := range m {
+			dict[k] = v
+		}
+	}
+	return dict, nil
+}
 
 // function DotReference helps to pass a field reference of Dot {{.}} or some other
 // variable as a parameter into a nested template
 // params: dot the template Dot or some other variable of type struct, map, array or slice
 //	   at  the field name, map key or slice index you want to address
 // returns the addressed value as string or an error if not applicable
-func DotReference(dot interface{}, at string) (result string, err error) {
-	var value interface{}
-	reflected := reflect.ValueOf(dot)
-	switch reflected.Kind() {
-	case reflect.Struct:
-		value = reflected.FieldByName(at).String()
-		err = nil
-	case reflect.Map:
-		value = reflected.MapIndex(reflect.ValueOf(at))
-		err = nil
-	case reflect.Array:
-		fallthrough
-	case reflect.Slice:
-		idx, e := strconv.Atoi(at)
-		if e == nil && idx < reflected.Len() {
-			value = reflected.Index(idx)
-			err = nil
-		} else if e != nil {
-			err = e
-			return
-		} else {
-			err = errors.New("index out of range")
-			return
-		}
-	default:
-		err = errors.New(fmt.Sprintf("%s in not supported", reflected.Kind().String()))
-		return
-	}
-	result = fmt.Sprintf("%v", value)
-	return
-}
+//func DotReference(dot interface{}, at string) (result string, err error) {
+//	var value interface{}
+//	reflected := reflect.ValueOf(dot)
+//	switch reflected.Kind() {
+//	case reflect.Struct:
+//		value = reflected.FieldByName(at).String()
+//		err = nil
+//	case reflect.Map:
+//		value = reflected.MapIndex(reflect.ValueOf(at))
+//		err = nil
+//	case reflect.Array:
+//		fallthrough
+//	case reflect.Slice:
+//		idx, e := strconv.Atoi(at)
+//		if e == nil && idx < reflected.Len() {
+//			value = reflected.Index(idx)
+//			err = nil
+//		} else if e != nil {
+//			err = e
+//			return
+//		} else {
+//			err = errors.New("index out of range")
+//			return
+//		}
+//	default:
+//		err = errors.New(fmt.Sprintf("%s in not supported", reflected.Kind().String()))
+//		return
+//	}
+//	result = fmt.Sprintf("%v", value)
+//	return
+//}
