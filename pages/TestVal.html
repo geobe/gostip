@@ -14,16 +14,47 @@
 <body>
 <form id="resultsform" class="form-horizontal" data-toggle="validator" role="form" onsubmit="act()">
     <div class="ncontainer" style="padding-right: 15px;">
-        <label for="languageresult" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
+        <label for="languageresult"
+               class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
             Text
         </label>
-        <div class="form-group col-xs-8 col-sm-4 col-md-4 col-lg-3">
-            <div class="input-group" title="Note: 0 ... 5, eine Kommastelle">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
-                <input type="text" class="form-control" value="42" id="languageresult"
-                       pattern="5|[0-4][,.]" style="width: 5em">
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+            <div class="form-group ">
+                <div class="input-group" title="Note: 0 ... 5, eine Kommastelle">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
+                    <input type="text" class="form-control" value="42" id="languageresult"
+                           pattern="(5|([0-4]([,.]\d){0,1}))" style="width: 5em">
+                </div>
+                <div class="help-block with-errors"></div>
             </div>
-            <div class="help-block with-errors"></div>
+        </div>
+        <label for="languageresult2"
+               class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
+            Text
+        </label>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+            <div class="form-group ">
+                <div class="input-group" title="Note: 0 ... 5, eine Kommastelle">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
+                    <input type="text" class="form-control" value="42" id="languageresult2"
+                           pattern="(5|([0-4]([,.]\d){0,1}))" style="width: 5em">
+                </div>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <label for="languageresult3"
+               class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
+            Text
+        </label>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+            <div class="form-group ">
+                <div class="input-group" title="Note: 0 ... 5, eine Kommastelle">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
+                    <input type="text" class="form-control" value="42" id="languageresult3"
+                           pattern="(5|([0-4]([,.]\d){0,1}))" style="width: 5em">
+                </div>
+                <div class="help-block with-errors"></div>
+            </div>
         </div>
     </div>
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
@@ -39,14 +70,14 @@
         $('#change-results').click(enableCoreData);
         $('#submit-results').click(postResults);
         $('#resultsform').validator('update')
-        $("#resultsform").on('valid.bs.validator', function() {
+/*        $("#resultsform").on('valid.bs.validator', function() {
             if(testFormValid('#resultsform'))
                 alert('form now valid');
         });
         $("#resultsform").on('invalid.bs.validator', function() {
             alert('form now invalid');
         });
-    });
+*/    });
 
     function act() {
         alert('action!');
@@ -69,6 +100,7 @@
         var sid = $('#sresult').val();
         var idx = $('#sresult').prop('selectedIndex');
     }
+
 </script>
 </body>
 </html>

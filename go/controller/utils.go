@@ -49,13 +49,19 @@ func setEnrolledAt(app *model.Applicant) {
 }
 
 func setResultData(app *model.Applicant, r *http.Request) {
-	app.Data.Language = model.Lang(atoint(html.EscapeString(r.PostFormValue("languages"))))
-	app.Data.LanguageResult = atoint(html.EscapeString(r.PostFormValue("languageresult")))
+	app.Data.Language = model.Lang(atoint(html.EscapeString(r.PostFormValue("language"))))
+	val := html.EscapeString(r.PostFormValue("languageresult"))
 	var f float32
+	n, err := fmt.Sscanf(val, "%f", &f)
+	if n == 1 && err == nil {
+		app.Data.LanguageResult = int(f * 10.)
+	} else {
+		app.Data.LanguageResult = 0
+	}
 	for i := 0; i < model.NQESTION; i++ {
 		rIndex := "r" + strconv.Itoa(i)
-		val := html.EscapeString(r.PostFormValue(rIndex))
-		n, err := fmt.Sscanf(val, "%f", &f)
+		val = html.EscapeString(r.PostFormValue(rIndex))
+		n, err = fmt.Sscanf(val, "%f", &f)
 		if n == 1 && err == nil {
 			app.Data.Results[i] = int(f * 10.)
 		} else {

@@ -90,54 +90,41 @@
 </script>
 {{end}}
 
-{{define "results_fields"}}
-{{range $idx, $val := .results}}
+{{define "results_fields" -}}
+{{range $idx, $val := .results -}}
+    {{- if ismod $idx 2 -}}
+        <div class="clearfix visible-sm-block "></div>
+    {{- end -}}
+    {{if ismod $idx 3 }}
+        <div class="clearfix visible-md-block"></div>
+    {{- end -}}
+    {{- if ismod $idx 4 -}}
+        <div class="clearfix visible-lg-block"></div>
+    {{- end -}}
     {{$lbl := "control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1" -}}
     {{$ipt := "col-xs-8 col-sm-4 col-md-2 col-lg-2" -}}
     {{$numval := concat "min='0' max='" $val.max "' step='0.5'" -}}
-    {{$title := concat "Punkte: 0, 0.5, 1, ... ," $val.max }}
-    {{$templateparams := dict "dot" . "itype" "number" "id" (concat "r" $idx) "value" $val.val "caption" $val.no }}
-    {{$templateparams := adddict $templateparams "icon" "certificate" "def" "0" "validate" $numval }}
-    {{$templateparams := adddict $templateparams "flabel" $lbl "finput" $ipt "style" "width: 5em" "title" $title}}
-    {{template "forminput" $templateparams }}
-
-
-<!--<label for="r{{$idx}}" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">-->
-    <!--({{$val.no}}):-->
-<!--</label>-->
-<!--<div class="form-group col-xs-8 col-sm-4 col-md-4 col-lg-3">-->
-    <!--<div class="input-group" title="Punkte: 0, 0.5, 1, ... , {{$val.max}}">-->
-        <!--<span class="input-group-addon"><span class="glyphicon glyphicon-certificate"></span></span>-->
-        <!--<input type="number" class="form-control" value="{{$val.val}}" id="r{{$idx}}"-->
-               <!--step="0.5" name="r{{$idx}}" min="0" max="{{$val.max}}" style="width: 5em">-->
-    <!--</div>-->
-    <!--<div class="help-block with-errors"></div>-->
-<!--</div>-->
-{{end}}
+    {{$title := concat "Punkte: 0, 0.5, 1, ... ," $val.max -}}
+    {{$tplpms := dict "dot" . "itype" "number" "id" (concat "r" $idx) "value" $val.val "caption" $val.no -}}
+    {{$tplpms := adddict $tplpms "icon" "certificate" "def" "0" "validate" $numval -}}
+    {{$tplpms := adddict $tplpms "flabel" $lbl "finput" $ipt "style" "width: 5em" "title" $title -}}
+    {{template "forminput" $tplpms }}
+{{end -}}
 <div class="clearfix"></div>
-<label for="languageresult" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
-    Text
-</label>
-<div class="col-xs-8 col-sm-4 col-md-2 col-lg-2">
-    <div class="form-group input-group" title="Note: 0 ... 5, eine Kommastelle">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-file"></span></span>
-        <input type="text" class="form-control" value="{{.languageresult}}" id="languageresult"
-               pattern="5|(([0-4])+([.,]\d){0,1})" style="width: 5em">
-    </div>
-    <div class="help-block with-errors"></div>
-</div>
-<label for="languages" class="control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1">
-    Sprache
-</label>
-<div class="col-xs-6 col-sm-4 col-md-2 col-lg-2">
-    <div class=" form-group input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-list-alt"></span></span>
-        <select class="form-control" value="{{.language}}" id="languages" name="languages">
-            {{ range $key, $val := .languages }}
-            <option value="{{$key}}" {{if eq $key $.language}} selected="true" {{end}}>{{$val}}</option>
-            {{end}}
-        </select>
-    </div>
-</div>
+{{$lbl := "control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1" -}}
+{{$ipt := "col-xs-8 col-sm-4 col-md-2 col-lg-2" -}}
+{{/* pattern validation does not work with template for unknown reasons, so use min max step /*}}
+{{/*$numval := "pattern='(5|([0-4]([,.]\\d){0,1}))'" -*/}}
+{{$numval := "min='0' max='5' step='0.1'" -}}
+{{$title := "Note: 0 ... 5, eine Kommastelle" -}}
+{{$tplpms := dict "dot" . "itype" "number" "id" "languageresult" "caption" "Text" }}
+{{$tplpms := adddict $tplpms "icon" "file" "validate" $numval }}
+{{$tplpms := adddict $tplpms "flabel" $lbl "finput" $ipt "style" "width: 5em" "title" $title}}
+{{template "forminput" $tplpms}}
+{{$lbl := "control-label col-xs-offset-2 col-sm-offset-0 col-xs-2 col-sm-2 col-md-2 col-lg-1" -}}
+{{$ipt := "col-xs-8 col-sm-4 col-md-2 col-lg-2" -}}
+{{$base := dict "dot" . "icon" "list-alt" "flabel" $lbl "finput" $ipt -}}
+{{$lan := dict "id" "language" "range" "languages" "caption" "Sprache" -}}
+{{template "formselect" mergedict $base $lan}}
 
 {{end}}

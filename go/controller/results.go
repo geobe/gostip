@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"net/http"
 	"time"
+	"fmt"
 )
 
 func ShowResults(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +61,7 @@ func addResultsConfig(y int, app model.Applicant, data viewmodel) {
 		}
 	}
 	data["results"] = results[:nq]
-	data["languageresult"] = app.Data.LanguageResult
+	data["languageresult"] = fmt.Sprintf("%.1f",float32(app.Data.LanguageResult)/10.)
 	data["language"] = app.Data.Language
 	data["languages"] = model.InitialLanguages
 }

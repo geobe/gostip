@@ -87,16 +87,20 @@
 {{$defuser := dict "dot" . "itype" "text" "icon" "user" "disabled" .disabled "validate" "required" -}}
 {{template "forminput" mergedict $defuser (dict "id" "lastname" "caption" "Nachname")}}
 {{template "forminput" mergedict $defuser (dict "id" "firstname" "caption" "Vorname")}}
+<div class="clearfix visible-sm-block visible-md-block"></div>
 {{template "forminput" mergedict $defuser (dict "itype" "text" "id" "fathersname" "caption" "Vatersname" "validate" "")}}
 {{$tel := dict "itype" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required" -}}
 {{template "forminput" mergedict $defuser $tel}}
+<div class="clearfix"></div>
 {{$mail := dict "itype" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" -}}
 {{template "forminput" mergedict $defuser $mail}}
 {{$home := dict "itype" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol" -}}
 {{template "forminput" mergedict $defuser $home}}
+<div class="clearfix visible-sm-block visible-md-block"></div>
 {{$school := dict "id" "school" "caption" "Abitur-Schule" "icon" "education" -}}
 {{template "forminput" mergedict $defuser $school}}
-{{template "formselect" dict "dot" . "id" "district" "caption" "Oblast" "icon" "tent"  "validate" "required"}}
+{{$obl := dict "id" "district" "range" "oblasts" "caption" "Oblast" "icon" "tent"}}
+{{template "formselect" mergedict $defuser $obl}}
 <div class="clearfix"></div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
     {{$ol1 := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1" -}}
@@ -105,11 +109,12 @@
     {{$oix := "col-xs-6 col-sm-2 col-lg-2" -}}
     {{$numort := `min="100" max="250" step="1" required` -}}
     {{$numortx := `min="0" max="100" step="1"` -}}
-    {{$defort := dict "dot" . "itype" "number" "icon" "education" "finput" $oix -}}
+    {{$defort := dict "dot" . "itype" "number" "icon" "education" "disabled" .disabled "finput" $oix -}}
     {{$ort := dict "id" "ort" "caption" "ORT" "def" "99" "validate" $numort "flabel" $ol1 -}}
     {{template "forminput" mergedict $defort $ort}}
     {{$ortm := dict "id" "ortmath" "caption" "ORT Mathe" "validate" $numortx "flabel" $olm -}}
     {{template "forminput" mergedict $defort $ortm}}
+    <div class="clearfix visible-sm-block visible-md-block"></div>
     {{$ortp := dict "id" "ortphys" "caption" "ORT Physik" "validate" $numortx "flabel" $olp -}}
     {{template "forminput" mergedict $defort $ortp}}
 </div>

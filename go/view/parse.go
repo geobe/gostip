@@ -27,9 +27,10 @@ func Templates() *template.Template {
 		"dict": Dict,
 		"adddict": AddDict,
 		"mergedict": MergeDict,
-		//"refer": DotReference,
 		"safeatt": SafeAtt,
 		"concat": Concat,
+		"iskind": IsKind,
+		"ismod": IsMod,
 	}
 
 	t := template.New("gostip.html").Funcs(funcs)

@@ -36,9 +36,9 @@ dot:        the go template . (dot) value of the enclosing template (optional, i
 value:      preset value of input field. if value is empty, dot.id is used (optional, if dot is set)
 style:      additional style attributes (optional)
 validate:   validation attributes like 'required', 'min', 'pattern' etc. WARNING: this parameter is
-            escaped with HTMLAttr, so beware of letting user input get into it. This could easily be exploited!
+escaped with HTMLAttr, so beware of letting user input get into it. This could easily be exploited!
 def:        define placeholder text for input fields (optional). If empty, caption parameter will be used for
-            field types "text" "tel" "email".
+field types "text" "tel" "email".
 disabled:   make input field disabled
 default bootstrap formats:
 label: $cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1"
@@ -50,18 +50,41 @@ input: $cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"
 <label for="{{.id}}" class="{{if .flabel}}{{.flabel}}{{else}}{{$cfl}}{{end}}">
     {{.caption}}:
 </label>
-<div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}" {{if .title}}title="{{.title}}"{{end -}}>
-    <div class="form-group input-group">
-        <span id="{{.id}}-icon" class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
-        <input type="{{.itype}}" class="form-control" value="{{if .value}}{{.value}}{{else if .dot}}{{index .dot .id}}{{end}}"
-               id="{{.id}}" name="{{.id}}" {{if .style}}style="{{.style}}"{{end -}}
-               {{if .validate}}{{safeatt .validate}} {{end -}}
-               {{if or .def (eq .itype "text" "tel" "email") }}placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}
-        {{if .dot}}{{.dot.disabled}}{{else}}{{.disabled}}{{end}}>
+<div class="{{if .finput}}{{.finput}}{{else}}{{$cfi}}{{end}}" {{if .title}}title="{{.title}}" {{end -}}>
+    <div class="form-group">
+        <div class="input-group">
+            <span id="{{.id}}-icon" class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
+            <input type="{{.itype}}" class="form-control"
+                   value="{{if .value}}{{.value}}{{else if .dot}}{{index .dot .id}}{{end}}"
+                   id="{{.id}}" name="{{.id}}" {{if .disabled}}{{safeatt .disabled}}{{end}}
+                   {{if .validate}}{{safeatt .validate}} {{end -}} {{if .style}}style="{{.style}}" {{end -}}
+                   {{if or .def (eq .itype "text" "tel" "email") }}
+            placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}>
+        </div>
+        <div class="help-block with-errors"></div>
     </div>
 </div>
 {{end}}
 
+{{/*
+A reuseable template for form select fields formatted with bootstrap. The template is
+called with a map or struct with the following keys or fields:
+id:         unique html element id, also index of value field of "dot"
+range:      index of range field of "dot"
+flabel:     bootstrap formatting classes for the label part (optional)
+finput:     bootstrap formatting classes for the input part (optional)
+caption:    label caption for input field
+icon:       last part of the bootstrap glyphicon name to be used
+dot:        the go template . (dot) value of the enclosing template (optional, if value is set)
+value:      preset value of input field. if value is empty, dot.id is used (optional, if dot is set)
+style:      additional style attributes (optional)
+validate:   validation attributes like 'required', 'min', 'pattern' etc. WARNING: this parameter is
+escaped with HTMLAttr, so beware of letting user input get into it. This could easily be exploited!
+disabled:   make input field disabled
+default bootstrap formats:
+label: $cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1"
+input: $cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"
+*/}}
 {{define "formselect"}}
 {{$cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1"}}
 {{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"}}
@@ -72,11 +95,19 @@ input: $cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"
     <div class=" form-group input-group">
         <span id="{{.id }}-icon" class="input-group-addon"><span class="glyphicon glyphicon-{{.icon}}"></span></span>
         <Select class="form-control" value="{{index .dot .id}}" id="{{ .id}}" name="{{.id}}"
-                {{if .validate}}{{safeatt .validate}} {{end -}}
-                {{.dot.disabled}}>
-            {{if .validate}}<option value="">------------</option>{{end}}
-            {{ range .dot.oblasts }}
-            <option value="{{.ID}}" {{if eq .ID $.dot.district}} selected="true" {{end}}>{{.Name}}</option>
+                {{if .validate}}{{safeatt .validate}} {{end -}} {{if .style}}style="{{.style}}" {{end -}}
+                {{if .disabled}}{{safeatt .disabled}}{{end}}>
+            {{if .validate}}
+            <option value="">------------</option>
+            {{end}}
+            {{ range $key, $val := (index .dot .range) }}
+            {{if iskind $val "struct" -}}
+            <option value="{{$val.ID}}" {{if eq $val.ID (index $.dot $.id)}} selected="true" {{end}}>
+                {{$val.Name}}
+            </option>
+            {{- else -}}
+            <option value="{{$key}}" {{if eq $key (index $.dot $.id)}} selected="true" {{end}}>{{$val}}</option>
+            {{- end -}}
             {{end}}
         </select>
     </div>
