@@ -26,6 +26,7 @@
 
 {{define "work_results"}}
 <form id="resultsform" class="form-horizontal" data-toggle="validator" role="form" action="JavaScript:postResults()">
+    {{template "csrf" . }}
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
         <h3 class="clearfix col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">

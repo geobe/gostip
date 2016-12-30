@@ -5,11 +5,18 @@ import (
 	"github.com/geobe/gostip/go/view"
 	scc "github.com/gorilla/securecookie"
 	"net/http"
+	"log"
+	"github.com/justinas/nosurf"
 )
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		view.Views().ExecuteTemplate(w, "login", "")
+		f := nosurf.Token(r)
+		log.Printf("token: %v\n", f)
+		values := viewmodel{
+			"csrftoken": f,
+		}
+		view.Views().ExecuteTemplate(w, "login", values)
 	} else if r.Method == http.MethodPost {
 		r.ParseForm()
 		login := r.PostFormValue("login")
@@ -41,7 +48,8 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 			return
 		} else {
 			//http.Error(w, "Login Failure", http.StatusForbidden)
-			view.Views().ExecuteTemplate(w, "login", "Failure, wrong login or password")
+			view.Views().ExecuteTemplate(w, "login",
+				map[string]string{"failure": "Failure, wrong login or password"})
 		}
 	}
 }

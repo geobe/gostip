@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"github.com/geobe/gostip/go/model"
 	"time"
+	"github.com/justinas/nosurf"
 )
 
 // ShowCancellation is handler to show the selected applicant from the
@@ -27,6 +28,8 @@ func ShowCancellation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	values := viewmodel{
+		"csrftoken": nosurf.Token(r),
+		"csrfid": "csrf_id_cancel",
 	}
 	setViewModel(app, values)
 	view.Views().ExecuteTemplate(w, "work_cancellation", values)

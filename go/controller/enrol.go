@@ -8,6 +8,7 @@ import (
 	"html"
 	"html/template"
 	"net/http"
+	"github.com/justinas/nosurf"
 )
 
 // ShowEnrol is handler to show the selected applicant from the
@@ -24,6 +25,8 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 	}
 	values := viewmodel{
 		"oblasts": model.Oblasts(),
+		"csrftoken": nosurf.Token(r),
+		"csrfid": "csrf_id_enrol",
 	}
 	setViewModel(app, values)
 

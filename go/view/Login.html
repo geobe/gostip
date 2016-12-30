@@ -33,10 +33,11 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
 </head>
 <body>
-{{if .}}
-<h4 class="col-xs-10 col-xs-offset-2 col-sm-11 col-sm-offset-1" style="color: red">{{.}}</h4>
+{{if .failure}}
+<h4 class="col-xs-10 col-xs-offset-2 col-sm-11 col-sm-offset-1" style="color: red">{{.failure}}</h4>
 {{end}}
 <form  class="form-horizontal" style="margin-right: 0; margin-top: 15px;" method="POST" action="login" name="login">
+    {{template "csrf" . }}
     <label for="login" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
         Login:
     </label>

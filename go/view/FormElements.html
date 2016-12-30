@@ -113,3 +113,9 @@ input: $cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"
     </div>
 </div>
 {{end}}
+
+{{define "csrf"}}
+<input type="hidden" id="{{if .csrfid}}{{.csrfid}}{{else}}csrf_id{{end}}"
+       name="{{if .csrffield}}{{.csrffield}}{{else}}csrf_token{{end}}"
+       value="{{.csrftoken}}">
+{{end}}

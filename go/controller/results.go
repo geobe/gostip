@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"time"
 	"fmt"
+	"github.com/justinas/nosurf"
 )
 
 func ShowResults(w http.ResponseWriter, r *http.Request) {
@@ -23,6 +24,8 @@ func ShowResults(w http.ResponseWriter, r *http.Request) {
 	values := viewmodel{
 		"disabled": template.HTMLAttr("disabled='true'"),
 		"oblasts":  model.Oblasts(),
+		"csrftoken": nosurf.Token(r),
+		"csrfid": "csrf_id_results",
 	}
 	setViewModel(app, values)
 	addResultsConfig(time.Now().Year(), app, values)

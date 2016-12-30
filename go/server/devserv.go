@@ -8,6 +8,7 @@ import (
 	"github.com/justinas/alice"
 	"net/http"
 	"os"
+	"github.com/justinas/nosurf"
 )
 
 const pages = model.Base + "/pages/"
@@ -41,16 +42,18 @@ func main() {
 	mux.Handle("/{dir:\\w+\\.html?}", http.FileServer(http.Dir(docbase+pages)))
 	// error
 	mux.HandleFunc("/err", err)
+
+	csrfChecking := alice.New(nosurf.NewPure)
+	resultsChecking := alice.New(controller.SessionChecker, controller.AuthProjectOffice)
+	enroleChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthEnrol)
+	anyChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthAny)
+
 	// index
-	mux.HandleFunc("/", controller.HandleLogin)
+	mux.Handle("/", csrfChecking.ThenFunc(controller.HandleLogin))
 	// login
-	mux.HandleFunc("/login", controller.HandleLogin)
+	mux.Handle("/login", csrfChecking.ThenFunc(controller.HandleLogin))
 	// logout
 	mux.HandleFunc("/logout", controller.HandleLogout)
-
-	resultsChecking := alice.New(controller.SessionChecker, controller.AuthProjectOffice)
-	enroleChecking := alice.New(controller.SessionChecker, controller.AuthEnrol)
-	anyChecking := alice.New(controller.SessionChecker, controller.AuthAny)
 	// work
 	mux.Handle("/work", anyChecking.ThenFunc(controller.HandleWork))
 	// find

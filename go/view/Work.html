@@ -37,7 +37,7 @@
     <script src="../js/validator.js"></script>
 </head>
 <body>
-{{template "finder"}}
+{{template "finder" .}}
 {{template "fscript"}}
 <hr>
 {{template "tabs" . }}
@@ -63,6 +63,7 @@
             </div>
             <div id="navbarCollapse" class="collapse navbar-collapse">
                 <form role="search" class="navbar-form navbar-left">
+                    {{template "csrf" . }}
                     <div class="form-group">
                         <input id="search1" type="text" placeholder="LastName" class="form-control" style="margin: 2px 0px;">
                         <input id="search2" type="text" placeholder="FirstName" class="form-control" style="margin: 2px 0px;">
@@ -96,8 +97,6 @@
 <script type="text/javascript">
     var searchStates = new Array();
     var finderValues = new Array();
-
-
 </script>
 <ul class="nav nav-tabs" id="workTabs">
     {{if .authenrol}}
@@ -265,10 +264,12 @@
     function defaultFind() {
         var search1 = $("input#search1").val()
         var search2 = $("input#search2").val()
+        var csrfid = $("input#csrf_id_find").val()
+        console.log("csrfid: " + csrfid);
         var findUrl;
         if(typeof(finderValues[actTab]) !== 'undefined') {
             findUrl = finderValues[actTab].findUrl;
-            $("#qapps").load(findUrl, {lastname: search1, firstname: search2,
+            $("#qapps").load(findUrl, {lastname: search1, firstname: search2, csrf_token: csrfid,
                 action: actTab, flag: actTab == 'cancellation' ? searchFlag : ''},
                 showSelect);
         }
@@ -304,10 +305,12 @@
     // select the target area and service url for active tab and load from server
     function showSelect() {
         var selid = $('#sresult').val();
+        var csrfid = $("input#csrf_id_find").val()
         if(typeof(finderValues[actTab]) !== 'undefined' && selid > 0) {
             var target = finderValues[actTab].target;
             var url = finderValues[actTab].targetUrl;
-            $(target).load(url, {appid: selid, action: actTab, flag: actTab == 'cancellation' ? searchFlag : ''});
+            $(target).load(url, {appid: selid, action: actTab, csrf_token: csrfid,
+            flag: actTab == 'cancellation' ? searchFlag : ''});
         }
     }
 
@@ -367,6 +370,7 @@
     function loadArea(url, area) {
         var sid = $('#sresult').val();
         var idx = $('#sresult').prop('selectedIndex');
+        var csrfid = $("#csrf_id_find").val()
         $('option[value="'+sid+'"]').remove();
         var l = $('#sresult').children('option').length;
         // goto next in list
@@ -378,7 +382,7 @@
         }
         if(l > 0) {
             var selid = $('#sresult').val();
-            $(area).load(url, {appid: selid, action: actTab});
+            $(area).load(url, {appid: selid, csrf_token: csrfid, action: actTab});
         } else {
             $(area).html("");
         }

@@ -51,6 +51,35 @@ func checkSession(w http.ResponseWriter, r *http.Request, ignore interface{}) bo
 	return true
 }
 
+//var options  []csrf.Option = []csrf.Option{csrf.Secure(viper.GetBool("csrfsecure"))}
+//var protector http.Handler
+//var protsem sync.Mutex
+//
+//func CsrfChecker(h http.Handler) http.Handler {
+//	protsem.Lock()
+//	defer protsem.Unlock()
+//	if protector == nil {
+//		key := GetCsrfKey()
+//		log.Printf("CsrfChecker created with key %v\n", key)
+//		protector = csrf.Protect(key, csrf.Secure(false))(h)
+//	} else {
+//		log.Println("reusing CsrfChecker")
+//	}
+//	return protector
+//}
+//
+//func GetCsrfKey() (key []byte) {
+//	key = make([]byte, 32)
+//	vkey := viper.Get("csrfkey").([]interface{})
+//	for i, v := range vkey {
+//		if(i >= 32) {
+//			break
+//		}
+//		key[i] = byte(v.(float64))
+//	}
+//	return
+//}
+
 // extend chainableHandler for authorisation
 type authHandler struct {
 	chainableHandler

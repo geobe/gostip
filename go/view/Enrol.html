@@ -27,6 +27,7 @@
 {{define "work_enrol"}}
 <form id="enrolform" class="form-horizontal" action="JavaScript:postEnrol()" style="margin: 0;"
       role="form" data-toggle="validator" >
+    {{template "csrf" . }}
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
         <div class="clearfix"></div>
@@ -94,6 +95,7 @@
 
 {{define "work_edit"}}
 <form id="editform" class="form-horizontal" style="margin: 0;" action="JavaScript:postEdit()">
+    {{template "csrf" . }}
     <div class="ncontainer" style="padding-right: 15px;">
         {{template "registrationfields" .}}
     </div>
@@ -126,6 +128,7 @@
 </div>
 <form id="cancellationform" class="form-horizontal" action="JavaScript:postCancellation()" style="margin: 0;"
       role="form" data-toggle="validator" >
+    {{template "csrf" . }}
     <input type="hidden" name="appid" value="{{.appid}}">
     <input type="hidden" name="action" value="cancellation">
     <div class="col-xs-11 col-xs-offset-1" style="margin-top: 3em;">
@@ -142,6 +145,7 @@
     function afterCancellationSubmit() {
         var sid = $('#sresult').val();
         var idx = $('#sresult').prop('selectedIndex');
+        var csrfid = $("#csrf_id_find").val()
         $('option[value="'+sid+'"]').remove();
         var l = $('#sresult').children('option').length;
         // goto next in list
@@ -153,7 +157,7 @@
         }
         if(l > 0) {
             var selid = $('#sresult').val();
-            $("#cancellationarea").load("/cancellation/show", {appid: selid, action: actTab,
+            $("#cancellationarea").load("/cancellation/show", {appid: selid, action: actTab, csrf_token: csrfid,
                 flag: actTab == 'cancellation' ? searchFlag : ''});
         } else {
             $('#cancellationarea').html("");
