@@ -85,11 +85,11 @@
 
 {{define "registrationfields"}}
 {{$defuser := dict "dot" . "itype" "text" "icon" "user" "disabled" .disabled "validate" "required" -}}
-{{template "forminput" mergedict $defuser (dict "id" "lastname" "caption" "Nachname")}}
-{{template "forminput" mergedict $defuser (dict "id" "firstname" "caption" "Vorname")}}
+{{template "forminput" mergedict $defuser (dict "id" "lastname" "caption" "Nachname" "tx" .lastnametx)}}
+{{template "forminput" mergedict $defuser (dict "id" "firstname" "caption" "Vorname" "tx" .firstnametx)}}
 <div class="clearfix visible-sm-block visible-md-block"></div>
-{{template "forminput" mergedict $defuser (dict "itype" "text" "id" "fathersname" "caption" "Vatersname" "validate" "")}}
-{{$tel := dict "itype" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required" -}}
+{{template "forminput" mergedict $defuser (dict "id" "fathersname" "caption" "Vatersname" "validate" "" "tx" .fathersnametx)}}
+{{$tel := dict "itype" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" "validate" "required" "tx" "" -}}
 {{template "forminput" mergedict $defuser $tel}}
 <div class="clearfix"></div>
 {{$mail := dict "itype" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" -}}

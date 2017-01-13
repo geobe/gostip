@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 	"fmt"
+	"github.com/geobe/gostip/go/transcription"
 )
 
 // # of questions that could appear in one test
@@ -46,6 +47,9 @@ type ApplicantData struct {
 	LastName       string `form:"lastname"`
 	FirstName      string `form:"firstname"`
 	FathersName    string `form:"fathersname"`
+	LastNameTx     string `form:"lastnametx"`
+	FirstNameTx    string `form:"firstnametx"`
+	FathersNameTx  string `form:"fathersnametx"`
 	Phone          string `form:"phone"`
 	Email          string `form:"email"`
 	Home           string `form:"home"`
@@ -100,12 +104,16 @@ var InitialLanguages = map[Lang]string{
 // to easily store grant exam results in db with gorm,
 // an array of (transient) integer result values is converted to a
 // string before saving to db
+// transcription fields are regenerated from original fields with every update
 func (appdata *ApplicantData) BeforeSave() (err error) {
 	var r string
 	for _, val := range appdata.Results {
 		r = r + strconv.Itoa(val) + " "
 	}
 	appdata.Resultsave = r
+	appdata.LastNameTx = transcription.Transcribe(appdata.LastName)
+	appdata.FirstNameTx = transcription.Transcribe(appdata.FirstName)
+	appdata.FathersNameTx = transcription.Transcribe(appdata.FathersName)
 	err = nil
 	return
 }
@@ -137,25 +145,26 @@ func signature() (uint, string) {
 // to maintain a full history of changes of applicant data,
 // old data are kept in the db using gorms 'DeletedAt' mechanism
 // and a new record with updated data is saved to db. Tracebility
-// is ensured by recording the identity of the user who
-// initiated the update.
-// concurrent conflicting updates are detected by comparing
-// changed_at field
+// is ensured by recording the identity of the user who initiated the update.
+// concurrent conflicting updates are detected by comparing changed_at field.
 func (app *Applicant) BeforeUpdate(tx *gorm.DB) (err error) {
 	var appdb Applicant
 	tx.First(&appdb, app.ID)
 	if appdb.ID == 0 {
 		tx.Unscoped().First(&appdb, app.ID)
 	}
-	fmt.Printf("updating applicant upd@%v onto upd@%v\n", app.UpdatedAt, appdb.UpdatedAt)
 	if ! appdb.UpdatedAt.Equal(app.UpdatedAt) {
 		fmt.Printf("stale error updating applicant %d\n", app.ID)
 		err = fmt.Errorf("stale object")
 		return
 	}
 	data := app.Data
-	upid, upsig := signature()
-	data.Model = Model{UpdatedBy: upsig, Updater: upid}
+	//upid, upsig := signature()
+	//data.Model = Model{UpdatedBy: upsig, Updater: upid}
+	data.Model = Model{
+		UpdatedBy: data.Model.UpdatedBy,
+		Updater:   data.Model.Updater,
+	}
 	tx.Delete(&app.Data)
 	app.Data = data
 	err = nil

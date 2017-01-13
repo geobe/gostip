@@ -40,6 +40,13 @@ func setApplicantData(app *model.Applicant, r *http.Request) {
 	if r.PostFormValue("ortok") != "" {
 		app.Data.OrtOk = true
 	}
+	user, err := getUserFromSession(r)
+	if err == nil {
+		app.Data.Model.UpdatedBy = fmt.Sprintf("%s(%s)",user.Fullname, user.Login)
+		app.Data.Model.Updater = user.ID
+	} else {
+		app.Data.Model.UpdatedBy = "self"
+	}
 }
 
 func setEnrolledAt(app *model.Applicant) {
@@ -247,6 +254,9 @@ func setViewModel(app model.Applicant, vmod viewmodel) {
 	vmod["lastname"] = data.LastName
 	vmod["firstname"] = data.FirstName
 	vmod["fathersname"] = data.FathersName
+	vmod["lastnametx"] = data.LastNameTx
+	vmod["firstnametx"] = data.FirstNameTx
+	vmod["fathersnametx"] = data.FathersNameTx
 	vmod["phone"] = data.Phone
 	vmod["email"] = data.Email
 	vmod["home"] = data.Home

@@ -34,6 +34,7 @@ icon:       last part of the bootstrap glyphicon name to be used
 itype:      html type attribute for the input field
 dot:        the go template . (dot) value of the enclosing template (optional, if value is set)
 value:      preset value of input field. if value is empty, dot.id is used (optional, if dot is set)
+tx:         transcription of the value (optional)
 style:      additional style attributes (optional)
 validate:   validation attributes like 'required', 'min', 'pattern' etc. WARNING: this parameter is
 escaped with HTMLAttr, so beware of letting user input get into it. This could easily be exploited!
@@ -61,8 +62,9 @@ input: $cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"
                    {{if or .def (eq .itype "text" "tel" "email") }}
             placeholder="{{if .def }}{{.def}}{{else}}{{.caption}}{{end}}"{{end -}}>
         </div>
+        {{ if .tx }}<div style="padding: 4px 0px 0px 4em; font-weight: bold;">{{.tx}}</div>{{end -}}
         <div class="help-block with-errors"></div>
-    </div>
+     </div>
 </div>
 {{end}}
 

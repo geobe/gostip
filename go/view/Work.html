@@ -86,7 +86,7 @@
 {{define "qresult"}}
 <select id="sresult" class="form-control" style="width: 16em;" onchange="showSelect()">
     {{range .}}
-    <option value="{{.ID}}">{{.Data.LastName}}, {{.Data.FirstName}}</option>
+    <option value="{{.id}}">{{.lastname}}, {{.firstname}}</option>
     {{else}}
     <option value="0">not found</option>
     {{end}}

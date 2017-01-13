@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"time"
 	"github.com/justinas/nosurf"
+	"github.com/geobe/gostip/go/transcription"
 )
 
 // load the "work" template. Tabs are included depending on role of current user.
@@ -28,19 +29,50 @@ func HandleWork(w http.ResponseWriter, r *http.Request) {
 // returns an html fragment for a select box.
 func FindApplicant(w http.ResponseWriter, r *http.Request) {
 	//session, _ := SessionStore().Get(r, S_DKFAI)
+	l := r.Header["Accept-Language"]
+	getKyr := transcription.UsesKyrillic(l)
+	for i, v := range l {
+		fmt.Printf("Request Header language %d: \"%s\"\n", i, v)
+
+	}
 	r.ParseForm()
-	lastName := html.EscapeString(r.PostFormValue("search1"))
-	firstName := html.EscapeString(r.PostFormValue("search2"))
+	lastName := html.EscapeString(r.PostFormValue("lastname"))
+	firstName := html.EscapeString(r.PostFormValue("firstname"))
 	action := html.EscapeString(r.PostFormValue("action"))
 	flag := html.EscapeString(r.PostFormValue("flag"))
 	enrol := action == "enrol"
 	active := flag == ""
 	applicants := findApplicants(lastName, firstName, enrol, active)
-	view.Views().ExecuteTemplate(w, "qresult", applicants)
+	view.Views().ExecuteTemplate(w, "qresult", applicantResultList(applicants, getKyr))
+}
+
+func applicantResultList(appls []model.Applicant, getKyr bool) (res []map[string]string) {
+	res = make([]map[string]string, len(appls))
+	for i, app := range appls {
+		isKyr := transcription.IsKyrgyz(app.Data.LastName)
+		if isKyr == getKyr {
+			res[i] = map[string]string{
+				"id":        fmt.Sprintf("%d", app.ID),
+				"lastname":  app.Data.LastName,
+				"firstname": app.Data.FirstName,
+			}
+		} else {
+			res[i] = map[string]string{
+				"id":        fmt.Sprintf("%d", app.ID),
+				"lastname":  app.Data.LastNameTx,
+				"firstname": app.Data.FirstNameTx,
+			}
+		}
+	}
+	return
 }
 
 // find applicants based on lastname and/or firstname. Per default, a wildcard search
 // character (%) is appended to the search strings and query uses LIKE condition.
+// Search is performed also in trnscription fields
+// ln, fn:      lastname, firstname search strings
+// enrol:       true -> searching from the enrol use case for new applicants
+// active:      true -> active applicant, not cancelled
 func findApplicants(ln, fn string, enrol bool, active bool) (apps []model.Applicant) {
 	var qs string
 	if enrol {
@@ -58,8 +90,12 @@ func findApplicants(ln, fn string, enrol bool, active bool) (apps []model.Applic
 			Joins("INNER JOIN applicant_data ON applicants.id = applicant_data.applicant_id").
 			Where("applicant_data.deleted_at IS NULL").
 			Where(qs).
-			Where("applicant_data.last_name like ?", ln + "%").
-			Where("applicant_data.first_name like ?", fn + "%").
+		//Where("applicant_data.last_name like ?", ln + "%").
+		//Where("applicant_data.first_name like ?", fn + "%").
+			Where("applicant_data.last_name like ? OR applicant_data.last_name_tx like ?",
+			ln + "%", ln + "%").
+			Where("applicant_data.first_name like ? OR applicant_data.first_name_tx like ?",
+			fn + "%", fn + "%").
 			Find(&apps)
 	} else {
 		// query for deleted applicants
