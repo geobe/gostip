@@ -63,7 +63,8 @@
                 <div class="clearfix">
                     <p><div class="pull-right">
                         <a href="/" class="btn btn-primary">Alle Angaben sind richtig</a>
-                        <a href="/register?appid={{.appid}}" class="btn btn-warning">Angaben korrigieren</a>
+                        <a href="/register?appid={{.appid}}&{{if .csrffield}}{{.csrffield}}{{else}}csrf_token{{end}}={{.csrftoken}}"
+                           class="btn btn-warning">Angaben korrigieren</a>
                     </div>
                     </p>
                 </div>
@@ -73,6 +74,7 @@
 </div>
 {{end}}
 <form class="form-horizontal" data-toggle="validator" style="margin-right: 0;" method="POST" action="{{.action}}">
+    {{template "csrf" . }}
     {{template "registrationfields" .}}
     {{if .buttons}}
     <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">

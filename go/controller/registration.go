@@ -8,6 +8,7 @@ import (
 	"html"
 	"html/template"
 	"net/http"
+	"github.com/justinas/nosurf"
 )
 
 // ShowRegistration is handler for registration form get requests:
@@ -26,11 +27,20 @@ func ShowRegistration(w http.ResponseWriter, r *http.Request) {
 		"district":     0,
 		"buttons":      true,
 		"displaystyle": "block",
+		"csrftoken":    nosurf.Token(r),
 	}
 	if err := checkMethodAllowed(http.MethodGet, w, r); err == nil {
 		var appId uint
 		if v, ok := r.Form["appid"]; ok {
 			appId = atouint(html.EscapeString(v[0]))
+		} else {
+			appId = 0
+		}
+		if token, ok := r.Form["csrf_token"]; ok {
+			if ! nosurf.VerifyToken(nosurf.Token(r), token[0]) {
+				appId = 0
+			}
+
 		} else {
 			appId = 0
 		}
@@ -62,6 +72,7 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 			"buttons":      false,
 			"thankyou":     true,
 			"displaystyle": "none",
+			"csrftoken":    nosurf.Token(r),
 		}
 		var app model.Applicant
 		appId := atoint(html.EscapeString(r.PostFormValue("appid")))

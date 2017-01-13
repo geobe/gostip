@@ -65,7 +65,8 @@ func createUserSession(user model.User, w http.ResponseWriter, r *http.Request) 
 func getUserFromSession(r *http.Request) (model.User, error) {
 	session, err := SessionStore().Get(r, S_DKFAI)
 	user := model.User{}
-	if err == nil {
+	uid := session.Values["userid"]
+	if err == nil && uid != nil {
 		user.ID = session.Values["userid"].(uint)
 		user.Login = session.Values["login"].(string)
 		user.Fullname = session.Values["fullname"].(string)

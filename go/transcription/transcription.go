@@ -2,7 +2,6 @@ package transcription
 
 import (
 	"regexp"
-	"log"
 )
 
 var fromKyrgyzTrans = [...]equiv{
@@ -93,6 +92,7 @@ var toKyrgyzTrans = [...]equiv{
 	{"shch", "щ"},
 	{"Tsch", "Ч"},
 	{"tsch", "ч"},
+	{"vich", "вич"},
 	{"Ch", "Х"},
 	{"Sh", "Ш"},
 	{"Sch", "Ш"},
@@ -151,11 +151,13 @@ var toKyrgyzTrans = [...]equiv{
 	{"X", "Кc"},
 	{"Y", "Ы"},
 	{"Ä", "Э"},
+	{"a", "а"},
 	{"b", "б"},
 	{"v", "в"},
 	{"w", "вь"},
 	{"g", "г"},
 	{"d", "д"},
+	{"e", "е"},
 	{"z", "з"},
 	{"i", "и"},
 	{"j", "й"},
@@ -164,6 +166,7 @@ var toKyrgyzTrans = [...]equiv{
 	{"m", "м"},
 	{"n", "н"},
 	{"ñ", "ң"},
+	{"o", "о"},
 	{"ö", "ө"},
 	{"p", "п"},
 	{"r", "р"},
@@ -223,7 +226,6 @@ func Transcribe(s string) string {
 func UsesKyrillic(languageHeader []string) bool {
 	for _, v := range languageHeader {
 		m := useKyrRegex.FindString(v)
-		log.Printf("matched %s\n", m)
 		if m != "" {
 			return true
 		}

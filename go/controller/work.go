@@ -31,10 +31,6 @@ func FindApplicant(w http.ResponseWriter, r *http.Request) {
 	//session, _ := SessionStore().Get(r, S_DKFAI)
 	l := r.Header["Accept-Language"]
 	getKyr := transcription.UsesKyrillic(l)
-	for i, v := range l {
-		fmt.Printf("Request Header language %d: \"%s\"\n", i, v)
-
-	}
 	r.ParseForm()
 	lastName := html.EscapeString(r.PostFormValue("lastname"))
 	firstName := html.EscapeString(r.PostFormValue("firstname"))

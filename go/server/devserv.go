@@ -44,7 +44,7 @@ func main() {
 	mux.HandleFunc("/err", err)
 
 	csrfChecking := alice.New(nosurf.NewPure)
-	resultsChecking := alice.New(controller.SessionChecker, controller.AuthProjectOffice)
+	resultsChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthProjectOffice)
 	enroleChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthEnrol)
 	anyChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthAny)
 
@@ -73,9 +73,9 @@ func main() {
 	// process edit form
 	mux.Handle("/edit/submit", enroleChecking.ThenFunc(controller.SubmitApplicantEdit))
 	// register
-	mux.HandleFunc("/register", controller.ShowRegistration)
+	mux.Handle("/register", csrfChecking.ThenFunc(controller.ShowRegistration))
 	// register
-	mux.HandleFunc("/register/submit", controller.SubmitRegistration)
+	mux.Handle("/register/submit", csrfChecking.ThenFunc(controller.SubmitRegistration))
 
 	// konfiguriere server
 	server := &http.Server{
