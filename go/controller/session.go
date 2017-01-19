@@ -4,6 +4,7 @@ import (
 	"github.com/geobe/gostip/go/model"
 	scc "github.com/gorilla/securecookie"
 	"net/http"
+	"fmt"
 )
 
 // chainfunc is called before chaining handlers. Next handler in
@@ -48,6 +49,25 @@ func checkSession(w http.ResponseWriter, r *http.Request, ignore interface{}) bo
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return false
 	}
+	return true
+}
+
+// RequestLogger uses logRequest function to
+// log request info to log output
+func RequestLogger(h http.Handler) http.Handler {
+	c := chainableHandler{
+		filter: chainfunc(logRequest),
+		chain:  h,
+	}
+	return c
+}
+
+// logRequest writes relevant information from the request
+// to the logging output
+func logRequest(w http.ResponseWriter, r *http.Request,
+		ignore interface{}) bool {
+	fmt.Printf("Host: %s, URL: %s, URI: %s\n",
+		r.Host, r.URL.Path, r.RequestURI)
 	return true
 }
 
@@ -110,7 +130,7 @@ func checkAuth(w http.ResponseWriter, r *http.Request, mask interface{}) bool {
 		http.Error(w, "error validating role", http.StatusInternalServerError)
 		return false
 	}
-	if role&m == 0 {
+	if role & m == 0 {
 		http.Error(w, "Not Authorized", http.StatusUnauthorized)
 		return false
 	}

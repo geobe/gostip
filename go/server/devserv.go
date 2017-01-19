@@ -11,8 +11,8 @@ import (
 	"github.com/justinas/nosurf"
 )
 
-const pages = model.Base + "/pages/"
-const resources = model.Base + "/resources/"
+const pagedir = model.Base + "/pages/"
+const resourcedir = model.Base + "/resources/"
 
 func err(writer http.ResponseWriter, request *http.Request) {
 	//error := request.Header.Get("Status")
@@ -33,21 +33,25 @@ func main() {
 	docbase, _ := os.Getwd()
 	docbase += "/"
 	// FileServer ist ein Handler, der dieses Verzeichnis bedient
-	files := http.FileServer(http.Dir(docbase + pages))
+	// Funktionsvariablen für alice anlegen
+	files := http.StripPrefix("/pages/", http.FileServer(http.Dir(docbase + pagedir)))
+	resources := http.FileServer(http.Dir(docbase + resourcedir))
+	pages := http.FileServer(http.Dir(docbase + pagedir))
+
+	requestLogging := alice.New(controller.RequestLogger)
+	csrfChecking := alice.New(nosurf.NewPure)
+	resultsChecking := alice.New(controller.RequestLogger, nosurf.NewPure, controller.SessionChecker, controller.AuthProjectOffice)
+	enroleChecking := alice.New(controller.RequestLogger, nosurf.NewPure, controller.SessionChecker, controller.AuthEnrol)
+	anyChecking := alice.New(controller.RequestLogger, nosurf.NewPure, controller.SessionChecker, controller.AuthAny)
+
 	// Zugriff auf das Verzeichnis via Präfic /pages/
-	mux.PathPrefix("/pages/").Handler(http.StripPrefix("/pages/", files))
+	mux.PathPrefix("/pages/").Handler(requestLogging.Then(files))
 	// Zugriff auf die Resourcen-Verzeichnisse mit regular expression
-	mux.PathPrefix("/{dir:(css|fonts|js)}/").Handler(http.FileServer(http.Dir(docbase + resources)))
+	mux.PathPrefix("/{dir:(css|fonts|js)}/").Handler(requestLogging.Then(resources))
 	// Zugriff auf *.htm[l] Dateien im /pages Verzeichnis
-	mux.Handle("/{dir:\\w+\\.html?}", http.FileServer(http.Dir(docbase+pages)))
+	mux.Handle("/{dir:\\w+\\.html?}", requestLogging.Then(pages))
 	// error
 	mux.HandleFunc("/err", err)
-
-	csrfChecking := alice.New(nosurf.NewPure)
-	resultsChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthProjectOffice)
-	enroleChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthEnrol)
-	anyChecking := alice.New(nosurf.NewPure, controller.SessionChecker, controller.AuthAny)
-
 	// index
 	mux.Handle("/", csrfChecking.ThenFunc(controller.HandleLogin))
 	// login
@@ -79,8 +83,8 @@ func main() {
 
 	// konfiguriere server
 	server := &http.Server{
-		Addr: "127.0.0.1:8090",
-		//Addr:    "0.0.0.0:8090",
+		//Addr: "127.0.0.1:8090",
+		Addr:    "0.0.0.0:8090",
 		Handler: mux,
 	}
 	// und starte ihn
