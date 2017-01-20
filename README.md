@@ -21,7 +21,9 @@ Das geht einfach mit [pgAdmin](https://www.pgadmin.org/).
 * Für [pgAdmin und pgSql](http://www.enterprisedb.com/products-services-training/pgdownload) gibt es einen gemeinsamen 
 Installer von EDB.
 * Datenbankname, Username und Passwort werden in der 
-[Konfigurationsdatei](https://github.com/geobe/gostip/blob/master/config/devconfig.json) festgelegt. 
+[Konfigurationsdatei](https://github.com/geobe/gostip/blob/master/config/devconfig.json) festgelegt.
+* In der pgSql Konfigurationsdatei postgresql.conf timezone auf 'UTC' setzen. Mit anderen timezone Einstellungen gibt es 
+möglicherweise Fehler.
  
 ######Entwicklung
 Die Applikation wird mit IntelliJ Community Edition entwickelt. Sinnvollerweise legt man dazu ein 
