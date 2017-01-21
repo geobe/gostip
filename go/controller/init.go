@@ -8,6 +8,8 @@ import (
 	"github.com/gorilla/sessions"
 	"encoding/gob"
 	"github.com/geobe/gostip/go/model"
+	"log"
+	"os"
 )
 
 var sessionStore = makeStore()
@@ -23,10 +25,15 @@ type viewmodel map[string]interface{}
 // helper function to create a gorilla session store with
 // a strong set of keys
 func makeStore() sessions.Store {
-	store := sessions.NewCookieStore(
+	// store sessions in temp directory to allow sessions stores larger than 4 kB
+	// IE restricts cookie stores to 4 kB
+	store := sessions.NewFilesystemStore("", //NewCookieStore(
 		scc.GenerateRandomKey(32),
 		scc.GenerateRandomKey(32))
 	registerTypes()
+	// set session store of unlimited length
+	store.MaxLength(0)
+	log.Printf("storing sessions to %s\n", os.TempDir())
 	return store
 }
 
@@ -35,6 +42,8 @@ func SessionStore() sessions.Store {
 	return sessionStore
 }
 
+// register application types for serialization/deserialization
+// necessary for session store
 func registerTypes() {
 	gob.Register(model.Applicant{})
 	gob.Register(model.ApplicantData{})

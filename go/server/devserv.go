@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"github.com/justinas/nosurf"
+	"log"
 )
 
 const pagedir = model.Base + "/pages/"
@@ -87,6 +88,7 @@ func main() {
 		Addr:    "0.0.0.0:8090",
 		Handler: mux,
 	}
+	log.Printf("server started\n")
 	// und starte ihn
 	server.ListenAndServe()
 }

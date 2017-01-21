@@ -6,6 +6,8 @@ import (
 	scc "github.com/gorilla/securecookie"
 	"net/http"
 	"github.com/justinas/nosurf"
+	"log"
+	"html"
 )
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
@@ -17,14 +19,15 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		view.Views().ExecuteTemplate(w, "login", values)
 	} else if r.Method == http.MethodPost {
 		r.ParseForm()
-		login := r.PostFormValue("login")
-		passwd := r.PostFormValue("password")
+		login := html.EscapeString(r.PostFormValue("login"))
+		passwd := html.EscapeString(r.PostFormValue("password"))
 		db := model.Db()
 		var user model.User
 		db.First(&user, "login = ?", login)
 		if user.ID > 0 && user.ValidatePw(passwd) {
 			err := createUserSession(user, w, r)
 			if err == nil {
+				log.Printf("User %s logged in\n", login)
 				http.Redirect(w, r, "/work", http.StatusFound)
 			} else {
 				http.Error(w, "Session error: " + err.Error(), http.StatusInternalServerError)

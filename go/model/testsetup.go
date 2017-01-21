@@ -2,7 +2,6 @@
 package model
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"time"
@@ -25,7 +24,6 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 	// initialize if db empty
 	var nOblasts, nappl, nxref int
 	if db.Model(&Oblast{}).Count(&nOblasts); nOblasts < 1 {
-		fmt.Print("No oblasts in db, creating new\n")
 		for _, oblast := range InitialOblasts {
 			db.Create(&oblast)
 		}

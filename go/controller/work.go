@@ -114,7 +114,6 @@ func addRoles(r *http.Request, data viewmodel) (err error) {
 		return
 	}
 	role, ok := session.Values["role"].(int)
-	fmt.Printf("role = %d\n", role)
 	if !ok {
 		err = errors.New("no role defined")
 		return

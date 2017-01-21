@@ -4,7 +4,7 @@ import (
 	"github.com/geobe/gostip/go/model"
 	scc "github.com/gorilla/securecookie"
 	"net/http"
-	"fmt"
+	"log"
 )
 
 // chainfunc is called before chaining handlers. Next handler in
@@ -66,8 +66,7 @@ func RequestLogger(h http.Handler) http.Handler {
 // to the logging output
 func logRequest(w http.ResponseWriter, r *http.Request,
 		ignore interface{}) bool {
-	fmt.Printf("Host: %s, URL: %s, URI: %s\n",
-		r.Host, r.URL.Path, r.RequestURI)
+	log.Printf("\t%s: %s%s\n", r.Method, r.Host, r.URL.Path)
 	return true
 }
 

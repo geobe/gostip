@@ -98,13 +98,18 @@ func fetchApplicant(w http.ResponseWriter, r *http.Request, fieldname string, de
 	return
 }
 
+// store current applicant the current session. the key parameter distinguishes
+// between different applicant objects that are used simultaniously in the
+// web interface, e.g. on different tab pages.
 func storeApplicant(w http.ResponseWriter, r *http.Request, app model.Applicant, key string) (err error) {
 	session, err := SessionStore().Get(r, S_DKFAI)
 	if err != nil {
+		log.Printf("SessionStore.get error %s", err)
 		return
 	}
 	session.Values[S_APPLICANT + key] = app
 	if err = session.Save(r, w); err != nil {
+		log.Printf("SessionStore.save error %s", err)
 		return
 	}
 	return
@@ -146,6 +151,9 @@ func retrieveApplicant(appId int, w http.ResponseWriter, deleted ...bool) (app m
 	return
 }
 
+// get the previously stored applicant from the current session. the key parameter distinguishes
+// between different applicant objects that are used simultaniously in the
+// web interface, e.g. on different tab pages.
 func applicantFromSession(key string, r *http.Request) (app model.Applicant, err error) {
 	session, err := SessionStore().Get(r, S_DKFAI)
 	if err != nil {

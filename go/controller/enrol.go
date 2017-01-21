@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"net/http"
 	"github.com/justinas/nosurf"
+	"log"
 )
 
 // ShowEnrol is handler to show the selected applicant from the
@@ -21,6 +22,7 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 	action := html.EscapeString(r.PostFormValue("action"))
 	app, err := fetchApplicant(w, r, "appid", false)
 	if err != nil {
+		log.Printf("fetch error %s", err)
 		return
 	}
 	values := viewmodel{
