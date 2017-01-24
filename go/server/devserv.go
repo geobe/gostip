@@ -88,7 +88,7 @@ func main() {
 		Addr:    "0.0.0.0:8090",
 		Handler: mux,
 	}
-	log.Printf("server started\n")
 	// und starte ihn
 	server.ListenAndServe()
+	log.Printf("server started\n")
 }
