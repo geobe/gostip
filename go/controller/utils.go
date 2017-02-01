@@ -218,7 +218,6 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 			log.Printf("error %v, status %v\n", "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
 			return
 		}
-		// log.Printf("json diff: \n%s\n", json)
 		// store in session
 		if err := storeApplicant(w, r, appModified, action); err != nil {
 			log.Printf("Session store error %v\n", err)
@@ -231,17 +230,6 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
-
-//// save edited test results
-//func saveResultSubmission(w http.ResponseWriter, r *http.Request) {
-//	app, err := fetchApplicant(w, r, "appid")
-//	if err == nil {
-//		setApplicantData(&app, r, false)
-//		setResultData(&app, r)
-//		model.Db().Save(&app)
-//		w.WriteHeader(http.StatusNoContent)
-//	}
-//}
 
 // allow only http POST methods
 func checkMethodAllowed(method string, w http.ResponseWriter, r *http.Request) error {
