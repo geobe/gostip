@@ -38,7 +38,7 @@ type Applicant struct {
 }
 
 // all data of an applicant are stored in a separate structure in order
-// to maintain a full history of changes to these sensitrive data
+// to maintain a full history of changes to these sensitive data
 // form: tags are used to identify html form fields and request parameters
 type ApplicantData struct {
 	Model
@@ -62,7 +62,7 @@ type ApplicantData struct {
 	OrtMath        int16 `form:"ortmath"`
 	OrtPhys        int16 `form:"ortphys"`
 	OrtOk          bool `form:"ortok"`
-	Results        [NQESTION]int `gorm:"-" form:"r#1"` // marks multiplied by 10
+	Results        [NQESTION]int `gorm:"-" form:"result#"` // marks multiplied by 10
 	Resultsave     string
 	LanguageResult int `form:"languageresult"`
 	Language       Lang `form:"language"`
@@ -159,8 +159,6 @@ func (app *Applicant) BeforeUpdate(tx *gorm.DB) (err error) {
 		return
 	}
 	data := app.Data
-	//upid, upsig := signature()
-	//data.Model = Model{UpdatedBy: upsig, Updater: upid}
 	data.Model = Model{
 		UpdatedBy: data.Model.UpdatedBy,
 		Updater:   data.Model.Updater,

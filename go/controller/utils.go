@@ -66,7 +66,7 @@ func setResultData(app *model.Applicant, r *http.Request) {
 		app.Data.LanguageResult = 0
 	}
 	for i := 0; i < model.NQESTION; i++ {
-		rIndex := "r" + strconv.Itoa(i)
+		rIndex := "result" + strconv.Itoa(i)
 		val = html.EscapeString(r.PostFormValue(rIndex))
 		n, err = fmt.Sscanf(val, "%f", &f)
 		if n == 1 && err == nil {
@@ -210,6 +210,7 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 			log.Printf("error %v, status %v\n", "Submission merge error: " + err.Error(), http.StatusInternalServerError)
 			return
 		}
+		MergeScaleResults(merge, "result")
 		json, err := json.Marshal(merge)
 		if err != nil {
 			log.Printf("Json marshalling error %v\n", err)
@@ -217,6 +218,8 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 			log.Printf("error %v, status %v\n", "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
 			return
 		}
+		// log.Printf("json diff: \n%s\n", json)
+		// store in session
 		if err := storeApplicant(w, r, appModified, action); err != nil {
 			log.Printf("Session store error %v\n", err)
 			http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)

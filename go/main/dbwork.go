@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func main() {
+func main1() {
 	model.Setup("")
 	db := model.Db()
 	//db.LogMode(true)

@@ -66,8 +66,11 @@
     function postResults() {
         enableCoreData();
         var formVars = $("#resultsform").serialize();
+        postSubmissionAndReload("/results/submit", formVars, "/results/show", "#resultsarea");
+    }
+
         //var valid = $("#resultsform").validator('validate').has('.has-error').length;
-        var sid = $('#sresult').val();
+/*        var sid = $('#sresult').val();
         var idx = $('#sresult').prop('selectedIndex');
         $.post("/results/submit", formVars, function() {
             $('option[value="'+sid+'"]').remove();
@@ -86,8 +89,8 @@
                 $('#resultsarea').html("");
             }
         });
-
     }
+*/
 </script>
 {{end}}
 
@@ -106,7 +109,7 @@
     {{$ipt := "col-xs-8 col-sm-4 col-md-2 col-lg-2" -}}
     {{$numval := concat "min='0' max='" $val.max "' step='0.5'" -}}
     {{$title := concat "Punkte: 0, 0.5, 1, ... ," $val.max -}}
-    {{$tplpms := dict "dot" . "itype" "number" "id" (concat "r" $idx) "value" $val.val "caption" $val.no -}}
+    {{$tplpms := dict "dot" . "itype" "number" "id" (concat "result" $idx) "value" $val.val "caption" $val.no -}}
     {{$tplpms := adddict $tplpms "icon" "certificate" "def" "0" "validate" $numval -}}
     {{$tplpms := adddict $tplpms "flabel" $lbl "finput" $ipt "style" "width: 5em" "title" $title -}}
     {{template "forminput" $tplpms }}

@@ -5,28 +5,37 @@ import (
 	"errors"
 	"strings"
 	"strconv"
+	"fmt"
 )
 
-// type to record value changes for feb forms
+type MergeDiffType int
+
+const (
+	NONE MergeDiffType = iota       // no changes at all
+	MINE                            // only my value changed
+	THEIRS                          // only their value changed
+	BOTH                            // both values changed and are different
+	SAME                            // both values changed but are equal
+)
+
+// type to record value changes for web forms
 type MergeInfo struct {
 	Mine     interface{}
 	Other    interface{}
-	Conflict bool
+	Conflict MergeDiffType
 }
 
 // function MergeDiff runs a three way diff between the old and new versions of my struct and a
-// different changed version of the same struct, similar to git merge. If attributes were not changed
-// from my old and new versions and automerge is false, differences between me new version and the
-// other version are recorded and flagged with conflict = false. If automerge is true, these differences
-// are not recorded. Differences between my new changed version and a changed other version are always
-// recorded and flagged with conflict = true.
-// mineOld, mineNew, other must be pointers to same types
-func MergeDiff(mineOld, mineNew, other interface{}, infomerge bool, tags ...string) (diffs map[string]MergeInfo, err error) {
+// different changed version of the same struct, similar to git merge. Differences are flagged in
+// return parameter diffs using type MergeDiffType.If automerge is true, mineNew fields get
+// updated to updated fields of otherNew and only changed fields are flagged in diffs.
+// mineOld, mineNew, otherNew must be pointers to same struct types
+func MergeDiff(mineOld, mineNew, otherNew interface{}, automerge bool, tags ...string) (diffs map[string]MergeInfo, err error) {
 	useTags := len(tags) == 1
 	// get value objects of struct variables referenced by interfaces
 	vMineOld := reflect.ValueOf(mineOld).Elem()
 	vMineNew := reflect.ValueOf(mineNew).Elem()
-	vOther := reflect.ValueOf(other).Elem()
+	vOther := reflect.ValueOf(otherNew).Elem()
 	diffs = make(map[string]MergeInfo)
 	// make sure you don't compare apples to pears
 	if vMineOld.Type() != vOther.Type() || vMineOld.Type() != vMineNew.Type() {
@@ -52,21 +61,46 @@ func MergeDiff(mineOld, mineNew, other interface{}, infomerge bool, tags ...stri
 			} else {
 				diffkey = fieldName
 			}
-			// other has changed and is different from self -> update self
-			if fieldMineNew != fieldOther && fieldOther != fieldMineOld {
-				switch fieldInfo.Type.Kind() {
-				case reflect.Array:
+			// simple field of array/slice?
+			switch fieldInfo.Type.Kind() {
+			case reflect.Array:
+				fallthrough
+			case reflect.Slice:
+				mergeArray(vMineOld.Field(i), vMineNew.Field(i), vOther.Field(i),
+					diffkey, diffs, automerge)
+			default:
+				cmine := fieldMineNew == fieldMineOld   // has my field changed
+				ctheirs := fieldOther == fieldMineOld   // has their field changed
+				cdiff := fieldMineNew == fieldOther     // are new fields same
+				var mergeDiff MergeDiffType
+				if cdiff && cmine {
+					// no change
+					mergeDiff = NONE
+				} else if !cdiff && cmine {
+					// they changed
+					mergeDiff = THEIRS
+				} else if !cdiff && !cmine && ctheirs {
+					// mine changed
+					mergeDiff = MINE
+				} else if !cdiff && !cmine && ! ctheirs {
+					// both changed differently
+					mergeDiff = BOTH
+				} else {
+					// both changed but are same
+					mergeDiff = SAME
+				}
+				switch mergeDiff {
+				case THEIRS:
 					fallthrough
-				case reflect.Slice:
-					mergeArray(vMineOld.Field(i), vMineNew.Field(i), vOther.Field(i),
-						diffkey, diffs, infomerge)
-				default:
-					// if self changed, too -> inform about conflict to be resolved
-					// or infomerge is set -> inform about update
-					if infomerge || fieldMineNew != fieldMineOld {
-						diffs[diffkey] = MergeInfo{fieldMineNew, fieldOther, fieldMineNew != fieldMineOld}
-					}
+				case BOTH:
 					vMineNew.Field(i).Set(vOther.Field(i))
+					diffs[diffkey] = MergeInfo{fieldMineNew, fieldOther, mergeDiff}
+				case MINE:
+					fallthrough
+				case SAME:
+					if automerge {
+						diffs[diffkey] = MergeInfo{fieldMineNew, fieldMineNew, mergeDiff}
+					}
 				}
 			}
 		}
@@ -92,22 +126,59 @@ func mergeArray(mold, mnew, other reflect.Value, key string, diffs map[string]Me
 	}
 	lng := min(lmo, lmn, lot)
 	for i := 0; i < lng; i++ {
-		vmo := mold.Index(i)
-		vmn := mnew.Index(i)
-		vot := other.Index(i)
-		if vmn.Interface() != vot.Interface() && vmo.Interface() != vot.Interface() {
-			// other has changed and is different from self
-			if automerge || vmn.Interface() != vmo.Interface() {
-				// if self changed, too or automerge is set
-				dkey := key + strconv.Itoa(idx + i)
-				// record change in map
-				diffs[dkey] = MergeInfo{vmn.Interface(), vot.Interface(), vmn.Interface() != vmo.Interface()}
+		vmo := mold.Index(i).Interface()
+		vmn := mnew.Index(i).Interface()
+		vot := other.Index(i).Interface()
+		cmine := vmn == vmo     // has my field changed
+		ctheirs := vot == vmo   // has their field changed
+		cdiff := vmn == vot     // are new fields same
+		var mergeDiff MergeDiffType
+		if cdiff && cmine {
+			// no change
+			mergeDiff = NONE
+		} else if !cdiff && cmine {
+			// they changed
+			mergeDiff = THEIRS
+		} else if !cdiff && !cmine && ctheirs {
+			// mine changed
+			mergeDiff = MINE
+		} else if !cdiff && !cmine && ! ctheirs {
+			// both changed differently
+			mergeDiff = BOTH
+		} else {
+			// both changed but are same
+			mergeDiff = SAME
+		}
+		dkey := key + strconv.Itoa(idx + i)
+		switch mergeDiff {
+		case THEIRS:
+			fallthrough
+		case BOTH:
+			mnew.Index(i).Set(other.Index(i))
+			diffs[dkey] = MergeInfo{vmn, vot, mergeDiff}
+		case MINE:
+			fallthrough
+		case SAME:
+			if automerge {
+				diffs[dkey] = MergeInfo{vmn, vmn, mergeDiff}
 			}
-			// update self to changed value
-			vmn.Set(vot)
 		}
 	}
 
+}
+
+// function MergeScale scales integral values by factor for all
+// map keys that contain string key
+func MergeScaleResults(diffs map[string]MergeInfo, key string) {
+	for k, v := range diffs {
+		if strings.Contains(k, key) && reflect.ValueOf(v.Mine).Kind() == reflect.Int {
+			diffs[k] = MergeInfo{
+				fmt.Sprintf("%.1f", float32(v.Mine.(int)) / 10.),
+				fmt.Sprintf("%.1f", float32(v.Other.(int)) / 10.),
+				v.Conflict,
+			}
+		}
+	}
 }
 
 func min(i0 int, i ...int) int {

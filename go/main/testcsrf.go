@@ -33,7 +33,7 @@ var form = `
 
 var t = template.Must(template.New("signup_form.tmpl").Parse(form))
 
-func main() {
+func main4() {
 	r := mux.NewRouter()
 	r.HandleFunc("/signup", ShowSignupForm)
 	// All POST requests without a valid token will return HTTP 403 Forbidden.

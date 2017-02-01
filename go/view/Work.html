@@ -349,7 +349,7 @@
                 } else {
                     var keys = Object.keys(data);
                     keys.forEach(function(key) {
-                        mergeVal(key, data[key]);
+                        mergeVal(key, data[key], area);
                     });
                 }
             } else {
@@ -359,10 +359,33 @@
     }
 
     // update fields with changed values and mark these fields
-    function mergeVal( key, value ) {
+    function mergeVal( key, value, area ) {
         elements = Object.keys(value);
-        $('#' + key).attr('value', value['Other'])
-        $('#' + key + '-icon').attr('style', value['Conflict'] ? "background-color: red" : "background-color: yellow");
+        // console.log("area: " + area + " key: " + key + " value: " + value['Other']);
+        $(area + ' #' + key).val(value['Other'])
+        bg = ""
+        /*
+            NONE MergeDiffType = iota       // no changes at all
+            MINE                            // only my value changed
+            THEIRS                          // only their value changed
+            BOTH                            // both values changed and are different
+            SAME                            // both values changed but are equal
+        */
+        switch(value['Conflict']) {
+            case 1:
+                bg = "background-color: lightblue";
+                break;
+            case 2:
+                bg = "background-color: yellow";
+                break;
+            case 3:
+                bg = "background-color: orangered";
+                break;
+            case 4:
+                bg = "background-color: lightblue";
+                break;
+        }
+        $(area + ' #' + key + '-icon').attr('style', bg);
     }
 
     // load tab area with next from search field, removing previous fron search results.
