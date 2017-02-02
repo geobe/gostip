@@ -1,5 +1,3 @@
-// results.go implements handler and helper functions
-// for the results and resultslist tabs
 package controller
 
 import (

@@ -29,9 +29,11 @@ type MergeInfo struct {
 // different changed version of the same struct, similar to git merge. Differences are flagged in
 // return parameter diffs using type MergeDiffType.If automerge is true, mineNew fields get
 // updated to updated fields of otherNew and only changed fields are flagged in diffs.
-// mineOld, mineNew, otherNew must be pointers to same struct types
-func MergeDiff(mineOld, mineNew, otherNew interface{}, automerge bool, tags ...string) (diffs map[string]MergeInfo, err error) {
-	useTags := len(tags) == 1
+// mineOld, mineNew, otherNew must be pointers to same struct types.
+// If tag is not empty, only fields are compared that are tagged with the given tag and the tag value
+// will be used as key in the diffs map.
+func MergeDiff(mineOld, mineNew, otherNew interface{}, automerge bool, tag ...string) (diffs map[string]MergeInfo, err error) {
+	useTags := len(tag) == 1
 	// get value objects of struct variables referenced by interfaces
 	vMineOld := reflect.ValueOf(mineOld).Elem()
 	vMineNew := reflect.ValueOf(mineNew).Elem()
@@ -54,14 +56,14 @@ func MergeDiff(mineOld, mineNew, otherNew interface{}, automerge bool, tags ...s
 		if !fieldInfo.Anonymous {
 			var diffkey string
 			if useTags {
-				diffkey = fieldTags.Get(tags[0])
+				diffkey = fieldTags.Get(tag[0])
 				if diffkey == "" {
 					continue
 				}
 			} else {
 				diffkey = fieldName
 			}
-			// simple field of array/slice?
+			// simple field or array/slice?
 			switch fieldInfo.Type.Kind() {
 			case reflect.Array:
 				fallthrough
@@ -93,7 +95,7 @@ func MergeDiff(mineOld, mineNew, otherNew interface{}, automerge bool, tags ...s
 				case THEIRS:
 					fallthrough
 				case BOTH:
-					vMineNew.Field(i).Set(vOther.Field(i))
+					//vMineNew.Field(i).Set(vOther.Field(i))
 					diffs[diffkey] = MergeInfo{fieldMineNew, fieldOther, mergeDiff}
 				case MINE:
 					fallthrough

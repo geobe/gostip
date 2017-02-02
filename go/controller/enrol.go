@@ -1,5 +1,3 @@
-// Package controller file enrol.go implements handler and helper functions for enrolment.
-// I.e. for tabs enrol and edit.
 package controller
 
 import (

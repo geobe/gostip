@@ -1,5 +1,3 @@
-// Package controller file registration.go implements all handlers
-// and helper functions for applicant registration.
 package controller
 
 import (

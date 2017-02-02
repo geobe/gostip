@@ -1,5 +1,5 @@
 // work.go implements all controller actions and their helper functions
-// for the superordinated work.html template. This also comprises the
+// for the parent work.html template. This also comprises the
 // search functionality. All user work is done on tabs that are dynamically
 // loaded into the work template. These have their own controller files.
 package controller
