@@ -7,6 +7,7 @@ import (
 	"time"
 	"fmt"
 	"github.com/geobe/gostip/go/transcription"
+	"github.com/pkg/errors"
 )
 
 // # of questions that could appear in one test
@@ -154,8 +155,7 @@ func (app *Applicant) BeforeUpdate(tx *gorm.DB) (err error) {
 		tx.Unscoped().First(&appdb, app.ID)
 	}
 	if ! appdb.UpdatedAt.Equal(app.UpdatedAt) {
-		fmt.Printf("stale error updating applicant %d\n", app.ID)
-		err = fmt.Errorf("stale object")
+		err = errors.New("stale object")
 		return
 	}
 	data := app.Data

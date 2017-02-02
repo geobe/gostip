@@ -169,32 +169,40 @@ func applicantFromSession(key string, r *http.Request) (app model.Applicant, err
 }
 
 // save edited applicant data to database
-func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
+func saveApplicantSubmission(w http.ResponseWriter, r *http.Request, maySetResults bool) {
 	if err := parseSubmission(w, r); err != nil {
 		http.Error(w, "Request parse error: " + err.Error(), http.StatusInternalServerError)
-		log.Printf("error %v, status %v\n", "Request parse error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("error %v, status %v\n", "Request parse error: " + err.Error(),
+			http.StatusInternalServerError)
 		return
 	}
 	action := html.EscapeString(r.PostFormValue("action"))
-	app, err := applicantFromSession(action, r)
+	appsession, err := applicantFromSession(action, r)
 	if err != nil {
 		http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)
-		log.Printf("action %s, error %v, status %v\n", action, "Session store error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("action %s, error %v, status %v\n", action, "Session store error: " + err.Error(),
+			http.StatusInternalServerError)
 		return
 	}
-	// save the base data in any case
+	// copy old applicant from session
+	app := appsession
+	// update data from form values
 	setApplicantData(&app, r)
 	switch action {
 	case "enrol":
 		setEnrolledAt(&app)
 	case "results":
-		setResultData(&app, r)
+		// make sure that results may be modified by current user
+		if maySetResults {
+			setResultData(&app, r)
+		}
 	}
 	if err := model.Db().Save(&app).Error; err != nil {
 		var appModified model.Applicant
-		var dataOld model.ApplicantData
+		dataOld := appsession.Data
 		dataSubmitted := app.Data
-		model.Db().Preload("Data").Preload("Data.Oblast").First(&appModified, app.ID)
+		// read modified applicant from db
+		model.Db().Preload("Data").Preload("Data.Oblast").First(&appModified, appsession.ID)
 		if appModified.ID == 0 {
 			w.Header().Set("Content-Type", "application/json")
 			json, _ := json.Marshal("Object was deleted")
@@ -202,12 +210,12 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 			w.Write(json)
 			return
 		}
-		model.Db().Unscoped().First(&dataOld, dataSubmitted.ID)
 		dataModified := appModified.Data
 		merge, err := MergeDiff(&dataOld, &dataSubmitted, &dataModified, true, "form")
 		if err != nil {
 			http.Error(w, "Submission merge error: " + err.Error(), http.StatusInternalServerError)
-			log.Printf("error %v, status %v\n", "Submission merge error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Submission merge error: " + err.Error(),
+				http.StatusInternalServerError)
 			return
 		}
 		MergeScaleResults(merge, "result")
@@ -215,14 +223,16 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("Json marshalling error %v\n", err)
 			http.Error(w, "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
-			log.Printf("error %v, status %v\n", "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Json marshalling error: " + err.Error(),
+				http.StatusInternalServerError)
 			return
 		}
 		// store in session
 		if err := storeApplicant(w, r, appModified, action); err != nil {
 			log.Printf("Session store error %v\n", err)
 			http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)
-			log.Printf("error %v, status %v\n", "Session store error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Session store error: " + err.Error(),
+				http.StatusInternalServerError)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(json)

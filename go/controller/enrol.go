@@ -44,7 +44,7 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 // Only http POST method is accepted.
 func SubmitEnrol(w http.ResponseWriter, r *http.Request) {
 	if err := checkMethodAllowed(http.MethodPost, w, r); err == nil {
-		saveApplicantSubmission(w, r)
+		saveApplicantSubmission(w, r, false)
 	}
 }
 
@@ -52,6 +52,6 @@ func SubmitEnrol(w http.ResponseWriter, r *http.Request) {
 // Only http POST method is accepted.
 func SubmitApplicantEdit(w http.ResponseWriter, r *http.Request) {
 	if err := checkMethodAllowed(http.MethodPost, w, r); err == nil {
-		saveApplicantSubmission(w, r)
+		saveApplicantSubmission(w, r, false)
 	}
 }
