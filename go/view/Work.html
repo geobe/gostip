@@ -362,8 +362,8 @@
     function mergeVal( key, value, area ) {
         elements = Object.keys(value);
         // console.log("area: " + area + " key: " + key + " value: " + value['Other']);
-        $(area + ' #' + key).val(value['Other'])
         bg = ""
+        setval = value['Other']
         /*
             NONE MergeDiffType = iota       // no changes at all
             MINE                            // only my value changed
@@ -374,6 +374,7 @@
         switch(value['Conflict']) {
             case 1:
                 bg = "background-color: lightblue";
+                setval = value['Mine']
                 break;
             case 2:
                 bg = "background-color: yellow";
@@ -382,11 +383,12 @@
                 bg = "background-color: orangered";
                 break;
             case 4:
-                bg = "background-color: lightblue";
+                bg = "background-color: lightgreen";
                 break;
         }
         $(area + ' #' + key + '-icon').attr('style', bg);
-    }
+        $(area + ' #' + key).val(setval)
+   }
 
     // load tab area with next from search field, removing previous fron search results.
     // clear area if no further results in search results list.

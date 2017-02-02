@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
 	"github.com/geobe/gostip/go/transcription"
 	"github.com/pkg/errors"
 )

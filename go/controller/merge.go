@@ -99,7 +99,7 @@ func MergeDiff(mineOld, mineNew, otherNew interface{}, automerge bool, tags ...s
 					fallthrough
 				case SAME:
 					if automerge {
-						diffs[diffkey] = MergeInfo{fieldMineNew, fieldMineNew, mergeDiff}
+						diffs[diffkey] = MergeInfo{fieldMineNew, fieldOther, mergeDiff}
 					}
 				}
 			}
@@ -160,7 +160,7 @@ func mergeArray(mold, mnew, other reflect.Value, key string, diffs map[string]Me
 			fallthrough
 		case SAME:
 			if automerge {
-				diffs[dkey] = MergeInfo{vmn, vmn, mergeDiff}
+				diffs[dkey] = MergeInfo{vmn, vot, mergeDiff}
 			}
 		}
 	}
