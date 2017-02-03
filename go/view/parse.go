@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const base = model.Base + "/go/view/*.html"
+const base = model.Base + "/go/view/*.go.html"
 
 var views = Templates()
 
@@ -17,7 +17,7 @@ func Templates() *template.Template {
 	pwd += "/"
 	var path string
 	if strings.HasSuffix(pwd, "main/") {
-		path = pwd + "../view/*.html"
+		path = pwd + "../view/*.go.html"
 	} else {
 		path = pwd + base
 	}
