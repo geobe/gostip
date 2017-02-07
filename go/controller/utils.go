@@ -10,22 +10,24 @@ import (
 	"fmt"
 	"log"
 	"encoding/json"
+	"reflect"
 )
 
 // set an Applicants Data from http form parameters
 func setApplicantData(app *model.Applicant, r *http.Request) {
-	app.Data.LastName = html.EscapeString(r.PostFormValue("lastname"))
-	app.Data.FirstName = html.EscapeString(r.PostFormValue("firstname"))
-	app.Data.FathersName = html.EscapeString(r.PostFormValue("fathersname"))
-	app.Data.Phone = html.EscapeString(r.PostFormValue("phone"))
-	app.Data.Email = html.EscapeString(r.PostFormValue("email"))
-	app.Data.Home = html.EscapeString(r.PostFormValue("home"))
-	app.Data.School = html.EscapeString(r.PostFormValue("school"))
-	app.Data.OrtSum = atoint16(html.EscapeString(r.PostFormValue("ort")))
-	app.Data.OrtMath = atoint16(html.EscapeString(r.PostFormValue("ortmath")))
-	app.Data.OrtPhys = atoint16(html.EscapeString(r.PostFormValue("ortphys")))
-	oblastID := atouint(html.EscapeString(r.PostFormValue("district")))
-	if app.Data.OblastID != oblastID {
+	setIfPosted(&app.Data.LastName, "lastname", r)
+	setIfPosted(&app.Data.FirstName, "firstname", r)
+	setIfPosted(&app.Data.FathersName, "fathersname", r)
+	setIfPosted(&app.Data.Phone, "phone", r)
+	setIfPosted(&app.Data.Email, "email", r)
+	setIfPosted(&app.Data.Home, "home", r)
+	setIfPosted(&app.Data.School, "school", r)
+	setIfPosted(&app.Data.OrtSum, "ort", r)
+	setIfPosted(&app.Data.OrtMath, "ortmath", r)
+	setIfPosted(&app.Data.OrtPhys, "ortphys", r)
+	var oblastID uint
+	ok := setIfPosted(&oblastID, "district", r)
+	if ok && app.Data.OblastID != oblastID {
 		var o model.Oblast
 		model.Db().First(&o, oblastID)
 		app.Data.Oblast = o
@@ -278,26 +280,32 @@ func setViewModel(app model.Applicant, vmod viewmodel) {
 
 }
 
-// convert string with digits into int16
-func atoint16(s string) (v int16) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		v = 0
-	} else {
-		v = int16(i)
+// Only change values if there is a value in the PostForm
+// We need some help from reflect to make it work
+func setIfPosted(target interface{}, key string, r *http.Request) bool {
+	_, ok := r.Form[key]
+	if ok {
+		val := html.EscapeString(r.PostFormValue(key))
+		// settable references the variable target points to
+		targetref := reflect.ValueOf(target).Elem()
+		ok = targetref.CanSet()
+		if ! ok {
+			return false
+		}
+		switch target.(type) {
+		case *string:
+			targetref.SetString(val)
+		case *uint:
+			targetref.SetUint(uint64(atoint(val)))
+		case *int16:
+			targetref.SetInt(int64(atoint(val)))
+		case *int:
+			targetref.SetInt(int64(atoint(val)))
+		default:
+			log.Printf("cannot convert to type %v\n", target)
+		}
 	}
-	return
-}
-
-// convert string with digits into uint
-func atouint(s string) (id uint) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		id = 0
-	} else {
-		id = uint(i)
-	}
-	return
+	return ok
 }
 
 // convert string with digits into int avoiding errors

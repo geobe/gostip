@@ -30,7 +30,7 @@ func ShowRegistration(w http.ResponseWriter, r *http.Request) {
 	if err := checkMethodAllowed(http.MethodGet, w, r); err == nil {
 		var appId uint
 		if v, ok := r.Form["appid"]; ok {
-			appId = atouint(html.EscapeString(v[0]))
+			appId = uint(atoint(html.EscapeString(v[0])))
 		} else {
 			appId = 0
 		}

@@ -46,51 +46,16 @@
     // so all element configurations can be done here
     $(document).ready(function () {
         // set action listener functions
-        $('#change-results').click(enableCoreData);
-        //$('#submit-results').click(postResults);
+        $('#change-results').click({b: '#change-results', f: '#resultsform'}, enableFormFields);
         // update validator after form load
         $('#resultsform').validator('update')
     });
 
-    // enable all input fields
-    function enableCoreData() {
-        $('#resultsform input[disabled]').removeAttr("disabled");
-        $('#resultsform select[disabled]').removeAttr("disabled");
-        $('#change-results').attr('disabled', 'disabled');
-    }
-
-    function testFormValid(form) {
-        return $(form).validator('validate').has('.has-error').length == 0;
-    }
-
     function postResults() {
-        enableCoreData();
         var formVars = $("#resultsform").serialize();
         postSubmissionAndReload("/results/submit", formVars, "/results/show", "#resultsarea");
     }
 
-        //var valid = $("#resultsform").validator('validate').has('.has-error').length;
-/*        var sid = $('#sresult').val();
-        var idx = $('#sresult').prop('selectedIndex');
-        $.post("/results/submit", formVars, function() {
-            $('option[value="'+sid+'"]').remove();
-            var l = $('#sresult').children('option').length;
-            // goto next in list
-            if(l > idx) {
-                $('#sresult').prop('selectedIndex', idx);
-            // else goto prev or empty
-            } else {
-                $('#sresult').prop('selectedIndex', idx - 1);
-            }
-            if(l > 0) {
-                var selid = $('#sresult').val();
-                $("#resultsarea").load("/results/show", {appid: selid, action: actTab});
-            } else {
-                $('#resultsarea').html("");
-            }
-        });
-    }
-*/
 </script>
 {{end}}
 

@@ -1,3 +1,27 @@
+/*
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2016.  Georg Beier. All rights reserved.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+*/
+
     var actTab = 'enrol';
     var prevTab = '';
     var searchFlag = '';
@@ -17,12 +41,11 @@
         var search1 = $("input#search1").val()
         var search2 = $("input#search2").val()
         var csrfid = $("input#csrf_id_find").val()
-        console.log("csrfid: " + csrfid);
         var findUrl;
         if(typeof(finderValues[actTab]) !== 'undefined') {
             findUrl = finderValues[actTab].findUrl;
             $("#qapps").load(findUrl, {lastname: search1, firstname: search2, csrf_token: csrfid,
-                action: actTab, flag: actTab == 'cancellation' ? searchFlag : ''},
+                action: actTab, flag: actTab === 'cancellation' ? searchFlag : ''},
                 showSelect);
         }
     }
@@ -95,8 +118,8 @@
         $.post(posturl, values, function( data ) {
             if( data ) {
                 if (typeof data === 'string' || data instanceof String) {
+                    // unexpected!
                     alert(data);
-                    //$("#find").click(defaultFind);
                     loadArea(loadurl, area);
                 } else {
                     var keys = Object.keys(data);
@@ -143,7 +166,7 @@
         $(area + ' #' + key).val(setval)
    }
 
-    // load tab area with next from search field, removing previous fron search results.
+    // load tab area with next from search field, removing previous from search results.
     // clear area if no further results in search results list.
     function loadArea(url, area) {
         var sid = $('#sresult').val();
@@ -163,5 +186,20 @@
             $(area).load(url, {appid: selid, csrf_token: csrfid, action: actTab});
         } else {
             $(area).html("");
+        }
+    }
+
+    // enable all input fields of current form, disable button
+    // event.data should have to fields:
+    // f: id of form with fields to be enabled
+    // b: id of button to be disabled
+    function enableFormFields(event) {
+        aForm = event.data.f;
+        aButton = event.data.b
+        console.log('aButton: ' + aButton);
+        $(aForm + ' input[disabled]').removeAttr("disabled");
+        $(aForm + ' select[disabled]').removeAttr("disabled");
+        if(aButton) {
+            $(aButton).attr('disabled', 'disabled');
         }
     }

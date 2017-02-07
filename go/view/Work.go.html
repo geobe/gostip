@@ -109,8 +109,6 @@
         finderValues['enrol'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#enrolarea'};
         finderValues['edit'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#editarea'};
         finderValues['cancellation'] = {findUrl: '/find/applicant', targetUrl: '/cancellation/show', target: '#cancellationarea'};
-
-
     </script>
     <li class="active" data-toggle="tooltip" data-placement="top" title="Enrol Candidates">
         <a data-toggle="tab" href="#enrol"><span class="glyphicon glyphicon-education"></span> </a>
@@ -128,8 +126,6 @@
         searchStates['resultlist'] = new SearchState('#qapps', '', '');
         finderValues['results'] = {findUrl: '/find/applicant', targetUrl: '/results/show', target: '#resultsarea'};
         finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultlistarea'};
-
-
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Capture Test Results">
         <a data-toggle="tab" href="#results"><span class="glyphicon glyphicon-certificate"></span></a>
@@ -141,8 +137,6 @@
     {{if .authuadmin}}
     <script type="text/javascript">
         searchStates['users'] = new SearchState('#qapps', '', '');
-
-
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Edit Users">
         <a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span></a>
@@ -151,8 +145,6 @@
     <script type="text/javascript">
         searchStates['admin'] = new SearchState('#qapps', '', '');
         searchStates['trace'] = new SearchState('#qapps', '', '');
-
-
     </script>
     {{if .authfulladmin}}
     <li data-toggle="tooltip" data-placement="top" title="Administration">
@@ -165,8 +157,6 @@
     {{if .authall}}
     <script type="text/javascript">
         searchStates['set'] = new SearchState('#qapps', '', '');
-
-
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Profile Settings">
         <a data-toggle="tab" href="#set"><span class="glyphicon glyphicon-cog"></span></a>

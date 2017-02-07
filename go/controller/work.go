@@ -28,7 +28,6 @@ func HandleWork(w http.ResponseWriter, r *http.Request) {
 // handler function that executes a database search for applicants and
 // returns an html fragment for a select box.
 func FindApplicant(w http.ResponseWriter, r *http.Request) {
-	//session, _ := SessionStore().Get(r, S_DKFAI)
 	l := r.Header["Accept-Language"]
 	getKyr := transcription.UsesKyrillic(l)
 	r.ParseForm()
