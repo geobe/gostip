@@ -11,6 +11,7 @@ import (
 	"log"
 	"encoding/json"
 	"reflect"
+	"github.com/justinas/nosurf"
 )
 
 // set an Applicants Data from http form parameters
@@ -315,4 +316,22 @@ func atoint(s string) (id int) {
 		id = 0
 	}
 	return
+}
+
+func checkForRegistration(r *http.Request) uint {
+	var appId uint
+	if v, ok := r.Form["appid"]; ok {
+		appId = uint(atoint(html.EscapeString(v[0])))
+	} else {
+		appId = 0
+	}
+	if token, ok := r.Form["csrf_token"]; ok {
+		if ! nosurf.VerifyToken(nosurf.Token(r), token[0]) {
+			appId = 0
+		}
+
+	} else {
+		appId = 0
+	}
+	return appId
 }

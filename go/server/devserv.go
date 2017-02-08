@@ -48,13 +48,14 @@ func main() {
 	// Zugriff auf das Verzeichnis via Präfic /pages/
 	mux.PathPrefix("/pages/").Handler(requestLogging.Then(files))
 	// Zugriff auf die Resourcen-Verzeichnisse mit regular expression
-	mux.PathPrefix("/{dir:(css|fonts|js)}/").Handler(requestLogging.Then(resources))
+	mux.PathPrefix("/{dir:(css|fonts|js|images)}/").Handler(requestLogging.Then(resources))
 	// Zugriff auf *.htm[l] Dateien im /pages Verzeichnis
 	mux.Handle("/{dir:\\w+\\.html?}", requestLogging.Then(pages))
 	// error
 	mux.HandleFunc("/err", err)
 	// index
-	mux.Handle("/", csrfChecking.ThenFunc(controller.HandleLogin))
+	mux.Handle("/", csrfChecking.ThenFunc(controller.HandleIndex))
+	mux.Handle("/index", csrfChecking.ThenFunc(controller.HandleIndex))
 	// login
 	mux.Handle("/login", csrfChecking.ThenFunc(controller.HandleLogin))
 	// logout

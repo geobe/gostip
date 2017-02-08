@@ -28,20 +28,21 @@ func ShowRegistration(w http.ResponseWriter, r *http.Request) {
 		"csrftoken":    nosurf.Token(r),
 	}
 	if err := checkMethodAllowed(http.MethodGet, w, r); err == nil {
-		var appId uint
-		if v, ok := r.Form["appid"]; ok {
-			appId = uint(atoint(html.EscapeString(v[0])))
-		} else {
-			appId = 0
-		}
-		if token, ok := r.Form["csrf_token"]; ok {
-			if ! nosurf.VerifyToken(nosurf.Token(r), token[0]) {
-				appId = 0
-			}
-
-		} else {
-			appId = 0
-		}
+		//var appId uint
+		//if v, ok := r.Form["appid"]; ok {
+		//	appId = uint(atoint(html.EscapeString(v[0])))
+		//} else {
+		//	appId = 0
+		//}
+		//if token, ok := r.Form["csrf_token"]; ok {
+		//	if ! nosurf.VerifyToken(nosurf.Token(r), token[0]) {
+		//		appId = 0
+		//	}
+		//
+		//} else {
+		//	appId = 0
+		//}
+		appId := checkForRegistration(r)
 		if appId > 0 {
 			var app model.Applicant
 			db.Preload("Data").Preload("Data.Oblast").First(&app, appId)
