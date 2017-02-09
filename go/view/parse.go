@@ -21,7 +21,6 @@ func Templates() *template.Template {
 	} else {
 		path = pwd + base
 	}
-	//t := template.Must(template.ParseGlob(pwd + base))
 	// Create a function map with dict and refer function
 	funcs := map[string]interface{}{
 		"dict": Dict,

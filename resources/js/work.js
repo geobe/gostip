@@ -76,7 +76,6 @@
         }
     }
 
-
     // select the target area and service url for active tab and load from server
     function showSelect() {
         var selid = $('#sresult').val();
@@ -95,18 +94,24 @@
         var search1 = s1id;
         var search2 = s2id;
         var content =  $(selectid).html();
+        var sval1 = '';
+        var sval2 = ''
         var idx = -1;
         this.saveContent = function() {
             content = $(selectid).html();
-            if($('#sresult').length) {
-                idx = $('#sresult').val();
+            if($(selectid +' select').length) {
+                idx = $(selectid +' select').val();
             }
+            sval1 = $(search1).val();
+            sval2 = $(search2).val();
         };
         this.restoreContent = function() {
             $(selectid).html(content);
-            if($('#sresult').length) {
-                $('#sresult').val(idx);
+            if($(selectid +' select').length) {
+                $(selectid +' select').val(idx);
             }
+            $(search1).val(sval1);
+            $(search2).val(sval2);
         };
     }
 

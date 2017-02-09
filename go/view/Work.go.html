@@ -102,9 +102,9 @@
     {{if .authenrol}}
     <script type="text/javascript">
         // objects that cache the search result select values of every tab
-        searchStates['enrol'] = new SearchState('#qapps', '', '');
-        searchStates['edit'] = new SearchState('#qapps', '', '');
-        searchStates['cancellation'] = new SearchState('#qapps', '', '');
+        searchStates['enrol'] = new SearchState('#qapps', '#search1', '#search2');
+        searchStates['edit'] = new SearchState('#qapps', '#search1', '#search2');
+        searchStates['cancellation'] = new SearchState('#qapps', '#search1', '#search2');
         // information to configure the search click url and result area of every tab
         finderValues['enrol'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#enrolarea'};
         finderValues['edit'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#editarea'};
@@ -122,8 +122,8 @@
     {{end}}
     {{if .authpoff}}
     <script type="text/javascript">
-        searchStates['results'] = new SearchState('#qapps', '', '');
-        searchStates['resultlist'] = new SearchState('#qapps', '', '');
+        searchStates['results'] = new SearchState('#qapps', '#search1', '#search2');
+        searchStates['resultlist'] = new SearchState('#qapps', '#search1', '#search2');
         finderValues['results'] = {findUrl: '/find/applicant', targetUrl: '/results/show', target: '#resultsarea'};
         finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultlistarea'};
     </script>
@@ -136,15 +136,15 @@
     {{end}}
     {{if .authuadmin}}
     <script type="text/javascript">
-        searchStates['users'] = new SearchState('#qapps', '', '');
+        searchStates['users'] = new SearchState('#qapps', '#search1', '#search2');
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Edit Users">
         <a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span></a>
     </li>
     {{end}}
     <script type="text/javascript">
-        searchStates['admin'] = new SearchState('#qapps', '', '');
-        searchStates['trace'] = new SearchState('#qapps', '', '');
+        searchStates['admin'] = new SearchState('#qapps', '#search1', '#search2');
+        searchStates['trace'] = new SearchState('#qapps', '#search1', '#search2');
     </script>
     {{if .authfulladmin}}
     <li data-toggle="tooltip" data-placement="top" title="Administration">
@@ -156,7 +156,7 @@
     {{end}}
     {{if .authall}}
     <script type="text/javascript">
-        searchStates['set'] = new SearchState('#qapps', '', '');
+        searchStates['set'] = new SearchState('#qapps', '#search1', '#search2');
     </script>
     <li data-toggle="tooltip" data-placement="top" title="Profile Settings">
         <a data-toggle="tab" href="#set"><span class="glyphicon glyphicon-cog"></span></a>

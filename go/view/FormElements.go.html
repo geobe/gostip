@@ -22,7 +22,7 @@
   ~ SOFTWARE.
   -->*/}}
 
-{{/*
+<!-- {{/*
 A reuseable template for form input fields formatted with bootstrap. The template is
 called with a map or struct with the following keys or fields:
 id:         unique html element id
@@ -37,14 +37,14 @@ value:      preset value of input field. if value is empty, dot.id is used (opti
 tx:         transcription of the value (optional)
 style:      additional style attributes (optional)
 validate:   validation attributes like 'required', 'min', 'pattern' etc. WARNING: this parameter is
-escaped with HTMLAttr, so beware of letting user input get into it. This could easily be exploited!
+            escaped with HTMLAttr, so beware of letting user input get into it. This could easily be exploited!
 def:        define placeholder text for input fields (optional). If empty, caption parameter will be used for
-field types "text" "tel" "email".
+            field types "text" "tel" "email".
 disabled:   make input field disabled
 default bootstrap formats:
 label: $cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1"
 input: $cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"
-*/}}
+*/}} -->
 {{define "forminput"}}
 {{$cfl := "control-label col-xs-4 col-sm-2 col-md-2 col-lg-1" -}}
 {{$cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2" -}}
