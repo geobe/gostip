@@ -47,13 +47,13 @@ func MergeDiff(mineOld, mineNew, otherNew interface{}, automerge bool, tag ...st
 	// loop over all fields
 	for i := 0; i < vMineOld.NumField(); i++ {
 		fieldInfo := vMineOld.Type().Field(i)
-		fieldName := fieldInfo.Name
-		fieldTags := fieldInfo.Tag
-		fieldMineOld := vMineOld.Field(i).Interface()
-		fieldMineNew := vMineNew.Field(i).Interface()
-		fieldOther := vOther.Field(i).Interface()
 		// ignore anonymous fields
 		if !fieldInfo.Anonymous {
+			fieldName := fieldInfo.Name
+			fieldTags := fieldInfo.Tag
+			fieldMineOld := vMineOld.Field(i).Interface()
+			fieldMineNew := vMineNew.Field(i).Interface()
+			fieldOther := vOther.Field(i).Interface()
 			var diffkey string
 			if useTags {
 				diffkey = fieldTags.Get(tag[0])
