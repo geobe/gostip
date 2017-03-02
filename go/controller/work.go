@@ -64,7 +64,7 @@ func applicantResultList(appls []model.Applicant, getKyr bool) (res []map[string
 
 // find applicants based on lastname and/or firstname. Per default, a wildcard search
 // character (%) is appended to the search strings and query uses LIKE condition.
-// Search is performed also in trnscription fields
+// Search is performed also in transcription fields
 // ln, fn:      lastname, firstname search strings
 // enrol:       true -> searching from the enrol use case for new applicants
 // active:      true -> active applicant, not cancelled
@@ -85,8 +85,6 @@ func findApplicants(ln, fn string, enrol bool, active bool) (apps []model.Applic
 			Joins("INNER JOIN applicant_data ON applicants.id = applicant_data.applicant_id").
 			Where("applicant_data.deleted_at IS NULL").
 			Where(qs).
-		//Where("applicant_data.last_name like ?", ln + "%").
-		//Where("applicant_data.first_name like ?", fn + "%").
 			Where("applicant_data.last_name like ? OR applicant_data.last_name_tx like ?",
 			ln + "%", ln + "%").
 			Where("applicant_data.first_name like ? OR applicant_data.first_name_tx like ?",

@@ -26,6 +26,8 @@
     var prevTab = '';
     var searchFlag = '';
     var bounceProtect = '';
+    var searchStates = {};
+    var finderValues = {};
     $(document).ready(function(){
         // bind function to #find button:
         $("#find").click(defaultFind);
