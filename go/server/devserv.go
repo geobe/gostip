@@ -5,18 +5,14 @@ import (
 	"github.com/geobe/gostip/go/model"
 	"net/http"
 	"log"
-	//"net"
-	"net/url"
-	"strings"
-	"regexp"
 	"golang.org/x/crypto/acme/autocert"
 	"crypto/tls"
 )
 
+// Server Ports, zu denen  Ports 80 und 443
+// vom Internet Router (z.B. FritzBox) mit Port Forwarding weitergeleitet wird
 const httpport = ":8070"
 const tlsport = ":8443"
-const tlsextern = ":443"
-const schema = "https"
 
 func main() {
 	// prepare database
@@ -26,8 +22,10 @@ func main() {
 	model.ClearTestDb(db)
 	model.InitTestDb(db)
 
+	// mux verwaltet die Routen
 	mux := controller.SetRouting()
 
+	// der Verwalter der LetsEncrypt Zertifikate
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
 		HostPolicy: autocert.HostWhitelist("dkfai.spdns.org", "geobe.spdns.org"), //your domain here
@@ -47,9 +45,9 @@ func main() {
 	}
 
 	// switching redirect handler
-	handlerSwitch := &HandlerSwitch{
+	handlerSwitch := &controller.HandlerSwitch{
 		Mux:    mux,
-		Redirect: http.HandlerFunc(RedirectHTTP),
+		Redirect: http.HandlerFunc(controller.RedirectHTTP),
 	}
 
 	// konfiguriere redirect server
@@ -57,47 +55,10 @@ func main() {
 		Addr:    "0.0.0.0" + httpport,
 		Handler: handlerSwitch, //http.HandlerFunc(RedirectHTTP),
 	}
-	// starte den redirect server
+	// starte den redirect server auf HTTP
 	go redirectserver.ListenAndServe()
 
-	// und starte den primären server
+	// und starte den primären server auf HTTPS
 	log.Printf("server starting\n")
 	server.ListenAndServeTLS("", "")
-}
-
-
-// RedirectHTTP is an HTTP handler (suitable for use with http.HandleFunc)
-// that responds to all requests by redirecting to the same URL served over HTTPS.
-// It should only be invoked for requests received over HTTP.
-func RedirectHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.TLS != nil || r.Host == "" {
-		http.Error(w, "not found", 404)
-	}
-
-	var u *url.URL
-	u = r.URL
-	host := r.Host
-	u.Host = strings.Split(host, ":")[0] + tlsextern
-	u.Scheme = schema
-	log.Printf("redirect to u.host  %s -> %s\n", r.Host, u.String())
-	http.Redirect(w, r, u.String(), 302)
-}
-
-// interne Aufrufe vom gleichen lokalen Netz mit Mux annehmen, sonst redirect auf HTTPS
-type HandlerSwitch struct {
-	Mux      http.Handler
-	Redirect http.Handler
-}
-
-// nicht richtig für 172.16.0.0/12
-var matcher = regexp.MustCompile("(192\\.168.*)|(localhost)|(10\\..*)|(172\\..*)")
-
-func (h *HandlerSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	host := r.Host
-	local := matcher.MatchString(host)
-	if local {
-		h.Mux.ServeHTTP(w, r)
-	} else {
-		h.Redirect.ServeHTTP(w, r)
-	}
 }
