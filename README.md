@@ -6,6 +6,10 @@ Besides its primary purpose, this application is used as part of a tutorial to d
 to write a complete and working web application.
 
 ##### <a id="de"></a> Go Web Anwendung für Abiturienten, die sich für ein DAAD Stipendium an der DKFAI bewerben wollen
+###### Neue Features
+23.05.2017:
+Applikation unterstützt jetzt HTTPS mit LetsEncrypt Zertifikaten. Der Lokale Zugriff aus einem 
+privaten Netz kann auch über HTTP erfolgen, um TLS Fehler zu vermeiden.
 ###### Installation
 go get lädt nicht die transitiven Abhängigkeiten, daher werden diese mit go get ... aufgelöst. Dabei gibt es einige 
 harmlose Fehlerausgaben.
