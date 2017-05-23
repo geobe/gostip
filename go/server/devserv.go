@@ -9,11 +9,14 @@ import (
 	"net/url"
 	"strings"
 	"regexp"
+	"golang.org/x/crypto/acme/autocert"
+	"crypto/tls"
 )
 
 const httpport = ":8070"
-const tlsport = ":8090"
-const schema = "http"
+const tlsport = ":8443"
+const tlsextern = ":443"
+const schema = "https"
 
 func main() {
 	// prepare database
@@ -25,9 +28,21 @@ func main() {
 
 	mux := controller.SetRouting()
 
+	certManager := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist("dkfai.spdns.org", "geobe.spdns.org"), //your domain here
+		Email: 	    "georg.beier@fh-zwickau.de",
+		Cache:      autocert.DirCache("certs"), //folder for storing certificates
+	}
+
+
+
 	// konfiguriere server
 	server := &http.Server{
 		Addr:    "0.0.0.0" + tlsport,
+		TLSConfig: &tls.Config{
+			GetCertificate: certManager.GetCertificate,
+		},
 		Handler: mux,
 	}
 
@@ -47,7 +62,7 @@ func main() {
 
 	// und starte den primären server
 	log.Printf("server starting\n")
-	server.ListenAndServe()
+	server.ListenAndServeTLS("", "")
 }
 
 
@@ -62,12 +77,13 @@ func RedirectHTTP(w http.ResponseWriter, r *http.Request) {
 	var u *url.URL
 	u = r.URL
 	host := r.Host
-	u.Host = strings.Split(host, ":")[0] + tlsport
+	u.Host = strings.Split(host, ":")[0] + tlsextern
 	u.Scheme = schema
 	log.Printf("redirect to u.host  %s -> %s\n", r.Host, u.String())
 	http.Redirect(w, r, u.String(), 302)
 }
 
+// interne Aufrufe vom gleichen lokalen Netz mit Mux annehmen, sonst redirect auf HTTPS
 type HandlerSwitch struct {
 	Mux      http.Handler
 	Redirect http.Handler

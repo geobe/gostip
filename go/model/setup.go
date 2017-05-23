@@ -43,7 +43,8 @@ func Db() *gorm.DB {
 func ConnectDb() *gorm.DB {
 	db, err := gorm.Open(viper.GetString("db.type"), viper.GetString("db.connect"))
 	if err != nil {
-		panic("failed to connect database")
+		fmt.Errorf("db error is %s", err)
+		panic("failed to connect database with err " + fmt.Sprint(err))
 	}
 	return db
 }
