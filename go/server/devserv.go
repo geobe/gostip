@@ -45,7 +45,7 @@ func main() {
 	enroleChecking := alice.New(controller.RequestLogger, nosurf.NewPure, controller.SessionChecker, controller.AuthEnrol)
 	anyChecking := alice.New(controller.RequestLogger, nosurf.NewPure, controller.SessionChecker, controller.AuthAny)
 
-	// Zugriff auf das Verzeichnis via Präfic /pages/
+	// Zugriff auf das Verzeichnis via Präfix /pages/
 	mux.PathPrefix("/pages/").Handler(requestLogging.Then(files))
 	// Zugriff auf die Resourcen-Verzeichnisse mit regular expression
 	mux.PathPrefix("/{dir:(css|fonts|js)}/").Handler(requestLogging.Then(resources))
