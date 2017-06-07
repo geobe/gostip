@@ -89,7 +89,7 @@ var namesLat = [...]string{
 	"Kasymbekov Sultanmyrza",
 	"Kudaibergenov Ulukbek",
 }
-func main() {
+func main2() {
 	//var teststrings = [...]string{
 	//	"Verrückte im Taxi und heulende Wölfe in Sachsen",
 	//	"Franz jagt im komplett verwahrlosten Taxi quer durch Bayern",

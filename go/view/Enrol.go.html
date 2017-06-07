@@ -48,20 +48,13 @@
     // so all element configurations can be done here
     $(document).ready(function () {
         // set action listener functions
-        $('#change-enrol').click(enableAll);
+        $('#change-enrol').click({b: '#change-enrol', f:'#enrolform'}, enableFormFields);
         // update validator after form load
         $('#enrolform').validator('update')
     });
 
-    // enable all input fields
-    function enableAll() {
-        $('input[disabled]').removeAttr("disabled");
-        $('select[disabled]').removeAttr("disabled");
-        $('#change-enrol').attr('disabled', 'disabled');
-    }
-
+    // submit the enrol form
     function postEnrol() {
-        enableAll();
         var formVars = $("#enrolform").serialize();
         postSubmissionAndReload("/enrol/submit", formVars, "/enrol/show", "#enrolarea");
     }

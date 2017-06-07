@@ -59,17 +59,26 @@ func AddDict(dict map[string]interface{}, values ...interface{}) (map[string]int
 	return dict, nil
 }
 
-// function MergeDict merges dictionaries for use in templates
+// function MergeDict merges dictionaries for use in templates into
+// a new dictionary
 func MergeDict(dict map[string]interface{}, more ...map[string]interface{}) (map[string]interface{}, error) {
 	if len(more) == 0 {
 		return nil, errors.New("invalid MergeDict call")
 	}
+	l:= len(dict)
+	for _, m := range more {
+		l += len(m)
+	}
+	ret := make(map[string] interface{}, l)
+	for k, v := range dict {
+		ret[k] = v
+	}
 	for _, m := range more {
 		for k, v := range m {
-			dict[k] = v
+			ret[k] = v
 		}
 	}
-	return dict, nil
+	return ret, nil
 }
 
 // function IsKind tests an object obj for a given reflect.Kind

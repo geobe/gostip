@@ -27,7 +27,7 @@ type viewmodel map[string]interface{}
 func makeStore() sessions.Store {
 	// store sessions in temp directory to allow sessions stores larger than 4 kB
 	// IE restricts cookie stores to 4 kB
-	store := sessions.NewFilesystemStore("", //NewCookieStore(
+	store := sessions.NewFilesystemStore("",
 		scc.GenerateRandomKey(32),
 		scc.GenerateRandomKey(32))
 	registerTypes()

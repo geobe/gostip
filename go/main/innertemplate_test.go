@@ -41,7 +41,7 @@ Reference to named field of a struct {{refer (index . 3) "Name"}}
 	// Create a function map with dict and refer function
 	funcs := map[string]interface{}{
 		"dict": view.Dict,
-		"refer": view.DotReference,
+		//"refer": view.DotReference,
 	}
 	// Create a new template and add function map.
 	tpl := template.New("test").Funcs(funcs)

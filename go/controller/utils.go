@@ -10,22 +10,25 @@ import (
 	"fmt"
 	"log"
 	"encoding/json"
+	"reflect"
+	"github.com/justinas/nosurf"
 )
 
 // set an Applicants Data from http form parameters
 func setApplicantData(app *model.Applicant, r *http.Request) {
-	app.Data.LastName = html.EscapeString(r.PostFormValue("lastname"))
-	app.Data.FirstName = html.EscapeString(r.PostFormValue("firstname"))
-	app.Data.FathersName = html.EscapeString(r.PostFormValue("fathersname"))
-	app.Data.Phone = html.EscapeString(r.PostFormValue("phone"))
-	app.Data.Email = html.EscapeString(r.PostFormValue("email"))
-	app.Data.Home = html.EscapeString(r.PostFormValue("home"))
-	app.Data.School = html.EscapeString(r.PostFormValue("school"))
-	app.Data.OrtSum = atoint16(html.EscapeString(r.PostFormValue("ort")))
-	app.Data.OrtMath = atoint16(html.EscapeString(r.PostFormValue("ortmath")))
-	app.Data.OrtPhys = atoint16(html.EscapeString(r.PostFormValue("ortphys")))
-	oblastID := atouint(html.EscapeString(r.PostFormValue("district")))
-	if app.Data.OblastID != oblastID {
+	setIfPosted(&app.Data.LastName, "lastname", r)
+	setIfPosted(&app.Data.FirstName, "firstname", r)
+	setIfPosted(&app.Data.FathersName, "fathersname", r)
+	setIfPosted(&app.Data.Phone, "phone", r)
+	setIfPosted(&app.Data.Email, "email", r)
+	setIfPosted(&app.Data.Home, "home", r)
+	setIfPosted(&app.Data.School, "school", r)
+	setIfPosted(&app.Data.OrtSum, "ort", r)
+	setIfPosted(&app.Data.OrtMath, "ortmath", r)
+	setIfPosted(&app.Data.OrtPhys, "ortphys", r)
+	var oblastID uint
+	ok := setIfPosted(&oblastID, "district", r)
+	if ok && app.Data.OblastID != oblastID {
 		var o model.Oblast
 		model.Db().First(&o, oblastID)
 		app.Data.Oblast = o
@@ -66,7 +69,7 @@ func setResultData(app *model.Applicant, r *http.Request) {
 		app.Data.LanguageResult = 0
 	}
 	for i := 0; i < model.NQESTION; i++ {
-		rIndex := "r" + strconv.Itoa(i)
+		rIndex := "result" + strconv.Itoa(i)
 		val = html.EscapeString(r.PostFormValue(rIndex))
 		n, err = fmt.Sscanf(val, "%f", &f)
 		if n == 1 && err == nil {
@@ -169,32 +172,40 @@ func applicantFromSession(key string, r *http.Request) (app model.Applicant, err
 }
 
 // save edited applicant data to database
-func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
+func saveApplicantSubmission(w http.ResponseWriter, r *http.Request, maySetResults bool) {
 	if err := parseSubmission(w, r); err != nil {
 		http.Error(w, "Request parse error: " + err.Error(), http.StatusInternalServerError)
-		log.Printf("error %v, status %v\n", "Request parse error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("error %v, status %v\n", "Request parse error: " + err.Error(),
+			http.StatusInternalServerError)
 		return
 	}
 	action := html.EscapeString(r.PostFormValue("action"))
-	app, err := applicantFromSession(action, r)
+	appsession, err := applicantFromSession(action, r)
 	if err != nil {
 		http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)
-		log.Printf("action %s, error %v, status %v\n", action, "Session store error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("action %s, error %v, status %v\n", action, "Session store error: " + err.Error(),
+			http.StatusInternalServerError)
 		return
 	}
-	// save the base data in any case
+	// copy old applicant from session
+	app := appsession
+	// update data from form values
 	setApplicantData(&app, r)
 	switch action {
 	case "enrol":
 		setEnrolledAt(&app)
 	case "results":
-		setResultData(&app, r)
+		// make sure that results may be modified by current user
+		if maySetResults {
+			setResultData(&app, r)
+		}
 	}
 	if err := model.Db().Save(&app).Error; err != nil {
 		var appModified model.Applicant
-		var dataOld model.ApplicantData
+		dataOld := appsession.Data
 		dataSubmitted := app.Data
-		model.Db().Preload("Data").Preload("Data.Oblast").First(&appModified, app.ID)
+		// read modified applicant from db
+		model.Db().Preload("Data").Preload("Data.Oblast").First(&appModified, appsession.ID)
 		if appModified.ID == 0 {
 			w.Header().Set("Content-Type", "application/json")
 			json, _ := json.Marshal("Object was deleted")
@@ -202,25 +213,29 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 			w.Write(json)
 			return
 		}
-		model.Db().Unscoped().First(&dataOld, dataSubmitted.ID)
 		dataModified := appModified.Data
 		merge, err := MergeDiff(&dataOld, &dataSubmitted, &dataModified, true, "form")
 		if err != nil {
 			http.Error(w, "Submission merge error: " + err.Error(), http.StatusInternalServerError)
-			log.Printf("error %v, status %v\n", "Submission merge error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Submission merge error: " + err.Error(),
+				http.StatusInternalServerError)
 			return
 		}
+		MergeScaleResults(merge, "result")
 		json, err := json.Marshal(merge)
 		if err != nil {
 			log.Printf("Json marshalling error %v\n", err)
 			http.Error(w, "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
-			log.Printf("error %v, status %v\n", "Json marshalling error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Json marshalling error: " + err.Error(),
+				http.StatusInternalServerError)
 			return
 		}
+		// store in session
 		if err := storeApplicant(w, r, appModified, action); err != nil {
 			log.Printf("Session store error %v\n", err)
 			http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)
-			log.Printf("error %v, status %v\n", "Session store error: " + err.Error(), http.StatusInternalServerError)
+			log.Printf("error %v, status %v\n", "Session store error: " + err.Error(),
+				http.StatusInternalServerError)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(json)
@@ -228,17 +243,6 @@ func saveApplicantSubmission(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
-
-//// save edited test results
-//func saveResultSubmission(w http.ResponseWriter, r *http.Request) {
-//	app, err := fetchApplicant(w, r, "appid")
-//	if err == nil {
-//		setApplicantData(&app, r, false)
-//		setResultData(&app, r)
-//		model.Db().Save(&app)
-//		w.WriteHeader(http.StatusNoContent)
-//	}
-//}
 
 // allow only http POST methods
 func checkMethodAllowed(method string, w http.ResponseWriter, r *http.Request) error {
@@ -253,11 +257,6 @@ func checkMethodAllowed(method string, w http.ResponseWriter, r *http.Request) e
 // set applicant data into viewmodel
 func setViewModel(app model.Applicant, vmod viewmodel) {
 	data := app.Data
-	if app.UpdatedAt.Before(time.Unix(0.0, 0.0)) {
-		vmod["updatedat"] = time.Now().UnixNano()
-	} else {
-		vmod["updatedat"] = app.UpdatedAt.UnixNano()
-	}
 	vmod["appid"] = app.ID
 	vmod["lastname"] = data.LastName
 	vmod["firstname"] = data.FirstName
@@ -277,26 +276,32 @@ func setViewModel(app model.Applicant, vmod viewmodel) {
 
 }
 
-// convert string with digits into int16
-func atoint16(s string) (v int16) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		v = 0
-	} else {
-		v = int16(i)
+// Only change values if there is a value in the PostForm
+// We need some help from reflect to make it work
+func setIfPosted(target interface{}, key string, r *http.Request) bool {
+	_, ok := r.Form[key]
+	if ok {
+		val := html.EscapeString(r.PostFormValue(key))
+		// settable references the variable target points to
+		targetref := reflect.ValueOf(target).Elem()
+		ok = targetref.CanSet()
+		if ! ok {
+			return false
+		}
+		switch target.(type) {
+		case *string:
+			targetref.SetString(val)
+		case *uint:
+			targetref.SetUint(uint64(atoint(val)))
+		case *int16:
+			targetref.SetInt(int64(atoint(val)))
+		case *int:
+			targetref.SetInt(int64(atoint(val)))
+		default:
+			log.Printf("cannot convert to type %v\n", target)
+		}
 	}
-	return
-}
-
-// convert string with digits into uint
-func atouint(s string) (id uint) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		id = 0
-	} else {
-		id = uint(i)
-	}
-	return
+	return ok
 }
 
 // convert string with digits into int avoiding errors
@@ -306,4 +311,22 @@ func atoint(s string) (id int) {
 		id = 0
 	}
 	return
+}
+
+func checkForRegistration(r *http.Request) uint {
+	var appId uint
+	if v, ok := r.Form["appid"]; ok {
+		appId = uint(atoint(html.EscapeString(v[0])))
+	} else {
+		appId = 0
+	}
+	if token, ok := r.Form["csrf_token"]; ok {
+		if ! nosurf.VerifyToken(nosurf.Token(r), token[0]) {
+			appId = 0
+		}
+
+	} else {
+		appId = 0
+	}
+	return appId
 }

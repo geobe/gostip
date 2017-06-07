@@ -6,6 +6,10 @@ Besides its primary purpose, this application is used as part of a tutorial to d
 to write a complete and working web application.
 
 ##### <a id="de"></a> Go Web Anwendung für Abiturienten, die sich für ein DAAD Stipendium an der DKFAI bewerben wollen
+###### Neue Features
+23.05.2017:
+Applikation unterstützt jetzt HTTPS mit LetsEncrypt Zertifikaten. Der Lokale Zugriff aus einem 
+privaten Netz kann auch über HTTP erfolgen, um TLS Fehler zu vermeiden.
 ###### Installation
 go get lädt nicht die transitiven Abhängigkeiten, daher werden diese mit go get ... aufgelöst. Dabei gibt es einige 
 harmlose Fehlerausgaben.
@@ -24,12 +28,14 @@ Installer von EDB.
 [Konfigurationsdatei](https://github.com/geobe/gostip/blob/master/config/devconfig.json) festgelegt.
 * In der pgSql Konfigurationsdatei postgresql.conf timezone auf 'UTC' setzen. Mit anderen timezone Einstellungen gibt es 
 möglicherweise Fehler.
+
+Eine [ausführliche Installationsanleitung](https://www.georgbeier.de/tutorials-java-und-mehr/go-single-page-web-applikationen/go-web-basics/beispielapplikation-und-datenbank-installieren/) steht im Online-Tutorial.
  
-######Entwicklung
+###### Entwicklung
 Die Applikation wird mit IntelliJ Community Edition entwickelt. Sinnvollerweise legt man dazu ein 
 Go Projekt im $GOPATH Verzeichnis an. Dann kann das Projekt aus der IDE getartet werden.
 
-######Tutorial
+###### Tutorial
 Neben dem eigentlichen Zweck der Anwendung ist dies gleichzeitig eine Demo-Applikation für ein 
 go Webapp Tutorial, in der verschiedene Bibliotheken benutzt werden, um eine
 vollständige Webanwendung zu entwickeln:

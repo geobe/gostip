@@ -1,5 +1,3 @@
-// results.go implements handler and helper functions
-// for the results and resultslist tabs
 package controller
 
 import (
@@ -35,7 +33,7 @@ func ShowResults(w http.ResponseWriter, r *http.Request) {
 
 func SubmitResults(w http.ResponseWriter, r *http.Request) {
 	if err := checkMethodAllowed(http.MethodPost, w, r); err == nil {
-		saveApplicantSubmission(w, r)
+		saveApplicantSubmission(w, r, true)
 	}
 
 }

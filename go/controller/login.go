@@ -10,6 +10,11 @@ import (
 	"html"
 )
 
+// func HandleLogin handles requests to login.
+// For GET requests, the login form gets displayed.
+// POST requests are checked for a valid username/password.
+// If check succeeds, a user session is initiated and username
+// and user information are stored in the session store.
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		f := nosurf.Token(r)
@@ -40,6 +45,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// helper function to create a new session and store user related info in the session store.
 func createUserSession(user model.User, w http.ResponseWriter, r *http.Request) (err error) {
 	// let's start or retrieve a session
 	session, err := SessionStore().Get(r, S_DKFAI)
@@ -65,6 +71,8 @@ func createUserSession(user model.User, w http.ResponseWriter, r *http.Request) 
 	return
 }
 
+// helper function to get user information for current session
+// from session store
 func getUserFromSession(r *http.Request) (model.User, error) {
 	session, err := SessionStore().Get(r, S_DKFAI)
 	user := model.User{}
@@ -78,6 +86,8 @@ func getUserFromSession(r *http.Request) (model.User, error) {
 	return user, err
 }
 
+// func HandleLogout serves requests to /logout. It cancels the current
+// user session and redirects to login page.
 func HandleLogout(w http.ResponseWriter, r *http.Request) {
 	session, err := SessionStore().Get(r, S_DKFAI)
 	if err != nil {

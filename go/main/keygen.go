@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func main() {
+func main3() {
 	k := securecookie.GenerateRandomKey(32)
 	fmt.Printf("%v\n",k)
 	model.Setup("")
