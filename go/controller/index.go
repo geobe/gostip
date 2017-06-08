@@ -25,5 +25,6 @@ func HandleIndex(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	values["language"] = view.PreferedLanguages(r) [0]
 	view.Views().ExecuteTemplate(w, "index", values)
 }

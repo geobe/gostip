@@ -1,13 +1,15 @@
 keywords,de,ru
+_dkfai_tregister,DKFAI Registrierung,Добро пожаловать в КГФИ
 _dkfai_welcome,DKFAI Welcome,Добро пожаловать в КГФИ
 _dkfai_h2,Deutsch-Kirgisische Fakultät für Angewandte Informatik,Кыргызско-Германский факультет прикладной информатики
-_dkfai_teaser,"Informatik ist das spannendste Handwerk der Gegenwart. In unserer Fakultät lernst du, wie heute Software 
+_dkfai_goto_register,"Melde dich jetzt bei uns an",""
+_dkfai_teaser,"Informatik ist das spannendste Handwerk der Gegenwart. In unserer Fakultät lernst du, wie heute Software
 geschrieben wird, wie moderne Apps für Web und Smartphone entstehen, wie man Drohnen fliegen lässt und warum auch 
 Gewächshäuser mit Informatik besser werden. Wir bringen dir bei, wie man Software entwickelt. 
 Jedes Jahr vergeben wir Studienstipendien vom Deutschen Akademischen Austauschdienst. Und jedes Jahr geht 
 Eine Gruppe von Studenten nach Deutschland, um ein oder mehrere Semester in Zwickau zu studieren.","На сегодняшний день информатика является увлекательным ремеслом. В нашем факультете вы узнаете, как на сегодня пишутся программные обеспечения, как возникают современные веб-приложения и мобильные приложения для смартфонов, как заставить дроны летать и как современные теплицы становятся лучше с информатикой. Мы научим вас, как разработать программное обеспечение. Каждый год мы предоставляем  стипендию от Германской службы академических обменов. И каждый год группа студентов едет в Германию, чтобы учится в Цвиккау один семестр или же несколько семестров."
 _hello_personal,"Hallo, {{.firstname}} {{.lastname}}, deine Anmeldung war erfolgreich. Eine Nachricht mit 
-deinen Anmeldedaten wurde an deine Mailadresse {{.email}} geschickt. Wenn du 
+deinen Anmeldedaten wurde an deine Mailadresse {{safeatt .email}} geschickt. Wenn du
 innerhalb eines Tages keine Mail von uns bekommst oder doch irgendwelche 
 Daten falsch sind, melde dich bitte per Mail bei <a href=""mailto:kgfi.project@gmail.com"">kgfi.project@gmail.com</a> 
 oder telefonisch unter +996 312 549238 im DKFAI Projektbüro.","Здравствуйте, {{.firstname}} {{.lastname}}, ваша регистрация прошла успешно. Сообщение с вашими регистрационными данными отправлено на вашу электронную почту {{.email}}. Если в течение одного дня вы не получили письмо от нас или какие то ваши данные неправильные, пожалуйста сообщите об этом на почту <a href=""mailto:kgfi.project@gmail.com"">kgfi.project@gmail.com</a> или по телефону  +996 312 549238 в проектное бюро КГФИ. "

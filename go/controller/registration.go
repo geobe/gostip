@@ -36,7 +36,7 @@ func ShowRegistration(w http.ResponseWriter, r *http.Request) {
 				setViewModel(app, values)
 			}
 		}
-		values["languages"] = PreferedLanguages(r)
+		values["language"] = view.PreferedLanguages(r) [0]
 		view.Views().ExecuteTemplate(w, "registration", values)
 	}
 
@@ -59,6 +59,7 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 			"thankyou":     true,
 			"displaystyle": "none",
 			"csrftoken":    nosurf.Token(r),
+			"language":     view.PreferedLanguages(r) [0],
 		}
 		var app model.Applicant
 		appId := atoint(html.EscapeString(r.PostFormValue("appid")))

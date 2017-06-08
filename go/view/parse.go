@@ -30,9 +30,12 @@ func Templates() *template.Template {
 		"concat": Concat,
 		"iskind": IsKind,
 		"ismod": IsMod,
+		"i18n": I18n,
 	}
 
+	// zuerst die function map in ein template parsen
 	t := template.New("gostip.html").Funcs(funcs)
+	// dann alle template files dazu parsen
 	template.Must(t.ParseGlob(path))
 	return t
 }

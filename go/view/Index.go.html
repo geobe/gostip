@@ -28,7 +28,7 @@
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>DKFAI Welcome</title>
+    <title>{{i18n "_dkfai_welcome" .language}}</title>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <!-- Optional Bootstrap theme -->
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
@@ -82,13 +82,9 @@
 {{define "newvisitor"}}
 <div class="jumbotron">
     <div class="container-fluid">
-        <h2>Deutsch-Kirgisische Fakultät für Angewandte Informatik</h2>
-        <p>Informatik ist das spannendste Handwerk der Gegenwart. In unserer Fakultät lernst du, wie heute Software
-        geschrieben wird, wie moderne Apps für Web und Smartphone entstehen, wie man Drohnen fliegen lässt und warum auch
-        Gewächshäuser mit Informatik besser werden. Wir bringen dir bei, wie man Software entwickelt.
-        <p>Jedes Jahr vergeben wir Studienstipendien vom Deutschen Akademischen Austauschdienst. Und jedes Jahr geht
-        eine Gruppe von Studenten nach Deutschland, um ein oder mehrere Semester in Zwickau zu studieren.</p>
-        <p><a href="/register" target="_blank" class="btn btn-success btn-lg">Melde dich jetzt bei uns an.</a></p>
+        {{i18n "_dkfai_h2" .language}}
+        {{i18n "_dkfai_teaser" .language}}
+        <p><a href="/register" target="_blank" class="btn btn-success btn-lg">{{i18n "_dkfai_goto_register" .language}}</a></p>
     </div>
 </div>
 {{end}}
@@ -96,14 +92,10 @@
 {{define "thankyou"}}
 <div class="jumbotron">
     <div class="container-fluid">
-        <h2>Deutsch-Kirgisische Fakultät für Angewandte Informatik</h2>
-        <p>Hallo, {{.firstname}} {{.lastname}}, deine Anmeldung war erfolgreich. Eine Nachricht mit
-        deinen Anmeldedaten wurde an deine Mailadresse {{.email}} geschickt. Wenn du
-        innerhalb eines Tages keine Mail von uns bekommst oder doch irgendwelche
-        Daten falsch sind, melde dich bitte per Mail bei <a href="mailto:kgfi.project@gmail.com">kgfi.project@gmail.com</a>
-        oder telefonisch unter +996 312 549238 im DKFAI Projektbüro.</p>
+        <h2>{{i18n "_dkfai_h2" .language}}</h2>
+        <p>{{i18n "_hello_personal" .language . | safeatt}}</p>
         <p><a href="https://www.facebook.com/kgfibishkek/" target="_blank" class="btn btn-success btn-lg">
-            Oder besuche uns auf Facebook und schreib uns, was dich besonders interessiert.</a></p>
+            {{i18n "_visit_us_fb" .language}}</a></p>
     </div>
 </div>
 {{end}}
