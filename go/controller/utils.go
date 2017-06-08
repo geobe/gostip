@@ -12,6 +12,8 @@ import (
 	"encoding/json"
 	"reflect"
 	"github.com/justinas/nosurf"
+	"regexp"
+	"strings"
 )
 
 // set an Applicants Data from http form parameters
@@ -329,4 +331,32 @@ func checkForRegistration(r *http.Request) uint {
 		appId = 0
 	}
 	return appId
+}
+var cleanSub = regexp.MustCompile("(-[A-Z][A-Z])|(;q=0.\\d)")
+var splitter = regexp.MustCompile("(q=0.\\d),")
+var quality =	regexp.MustCompile(".*q=0.([0-9])")
+func PreferedLanguages(r *http.Request) []string {
+	lnghdr := r.Header["Accept-Language"]
+	slnghdr := strings.Split(splitter.ReplaceAllString(lnghdr[0], "$1|"), "|")
+	var langs [4]string
+	found := make(map[string]bool)
+	i := 0
+outer:	for _, v := range slnghdr {
+		qlty, _ := strconv.Atoi(quality.ReplaceAllString(v, "$1"))
+		if qlty < 5 {
+			break
+		}
+		lgs := cleanSub.ReplaceAllString(v, "")
+		for _, lg := range strings.Split(lgs, ",") {
+			if i == 4 {
+				break outer
+			}
+			if ! found[lg] {
+				langs[i] = lg
+				found[lg] = true
+				i++
+			}
+		}
+	}
+	return  langs[0:i]
 }

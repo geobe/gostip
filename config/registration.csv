@@ -1,0 +1,17 @@
+keywords,de,ru
+_dkfai_register,DKFAI Registration,Регистрация КГФИ
+_reminder_documents,"Bitte beachten Sie: Für das Studium und die Teilnahme am Stipendientest müssen Sie sich 
+Zusätzlich mit Ihren Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.","Обратите внимание: Для учебы и для участия в тесте на стипендию, вы должны дополнительно, с документами зарегистрироваться в Кыргызско-Германский факультет информатики, КГУСТА."
+_check_input,Bitte überprüfen Sie noch einmal Ihre Angaben,"Пожалуйста, проверьте еще раз ваши данные"
+_input_ok,Alle Angaben sind richtig,Все данные правильные
+_input_change,Angaben korrigieren,Изменить данные
+_lastname,Nachname,Фамилия
+_firstname,Vorname,Имя
+_fathersname,Vatersname,Отчество
+_mail,Email,Электронная почта
+_city,Wohnort,Местожительство
+_school,Abitur-Schule,Школа
+_district,Oblast,Область
+_ort_exam,ORT,ОРТ
+_ort_math,ORT Mathe,ОРТ по математике
+_ort_phys,ORT Physik,ОРТ по физике
