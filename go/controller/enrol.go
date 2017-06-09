@@ -27,6 +27,7 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 		"oblasts": model.Oblasts(),
 		"csrftoken": nosurf.Token(r),
 		"csrfid": "csrf_id_enrol",
+		"language":     view.PreferedLanguages(r) [0],
 	}
 	setViewModel(app, values)
 

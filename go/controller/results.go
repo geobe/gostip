@@ -24,6 +24,7 @@ func ShowResults(w http.ResponseWriter, r *http.Request) {
 		"oblasts":  model.Oblasts(),
 		"csrftoken": nosurf.Token(r),
 		"csrfid": "csrf_id_results",
+		"language":     view.PreferedLanguages(r) [0],
 	}
 	setViewModel(app, values)
 	addResultsConfig(time.Now().Year(), app, values)
@@ -47,7 +48,7 @@ func addResultsConfig(y int, app model.Applicant, data viewmodel) {
 	}
 	var nq int
 	for i, v := range exref.Results {
-		if v == 0 || i == model.NQESTION-1 {
+		if v == 0 || i == model.NQESTION - 1 {
 			nq = i
 			break
 		}
@@ -56,13 +57,13 @@ func addResultsConfig(y int, app model.Applicant, data viewmodel) {
 	var results [model.NQESTION]map[string]float32
 	for i := 0; i <= nq; i++ {
 		results[i] = map[string]float32{
-			"val": float32(app.Data.Results[i])/10.,
-			"max": float32(exref.Results[i])/10.,
+			"val": float32(app.Data.Results[i]) / 10.,
+			"max": float32(exref.Results[i]) / 10.,
 			"no":  float32(i + 1),
 		}
 	}
 	data["results"] = results[:nq]
-	data["languageresult"] = fmt.Sprintf("%.1f",float32(app.Data.LanguageResult)/10.)
-	data["language"] = app.Data.Language
+	data["languageresult"] = fmt.Sprintf("%.1f", float32(app.Data.LanguageResult) / 10.)
+	data["lang"] = app.Data.Language
 	data["languages"] = model.InitialLanguages
 }

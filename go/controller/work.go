@@ -21,6 +21,7 @@ func HandleWork(w http.ResponseWriter, r *http.Request) {
 	roles := viewmodel{}
 	roles["csrftoken"] = nosurf.Token(r)
 	roles["csrfid"] = "csrf_id_find"
+	roles["language"] = view.PreferedLanguages(r)[0]
 	addRoles(r, roles)
 	view.Views().ExecuteTemplate(w, "work", roles)
 }

@@ -82,8 +82,8 @@
 {{define "newvisitor"}}
 <div class="jumbotron">
     <div class="container-fluid">
-        {{i18n "_dkfai_h2" .language}}
-        {{i18n "_dkfai_teaser" .language}}
+        <h2>{{i18n "_dkfai_h2" .language}}</h2>
+        <p>{{i18n "_dkfai_teaser" .language}}</p>
         <p><a href="/register" target="_blank" class="btn btn-success btn-lg">{{i18n "_dkfai_goto_register" .language}}</a></p>
     </div>
 </div>
@@ -93,7 +93,10 @@
 <div class="jumbotron">
     <div class="container-fluid">
         <h2>{{i18n "_dkfai_h2" .language}}</h2>
-        <p>{{i18n "_hello_personal" .language . | safeatt}}</p>
+        <p>{{i18n "_hello_personal_1" .language .}}
+            <a href="mailto:kgfi.project@gmail.com">kgfi.project@gmail.com</a>
+            {{i18n "_hello_personal_2" .language}}
+        </p>
         <p><a href="https://www.facebook.com/kgfibishkek/" target="_blank" class="btn btn-success btn-lg">
             {{i18n "_visit_us_fb" .language}}</a></p>
     </div>

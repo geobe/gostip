@@ -64,6 +64,7 @@ func createUserSession(user model.User, w http.ResponseWriter, r *http.Request) 
 	session.Values["fullname"] = user.Fullname
 	session.Values["role"] = user.Role
 	session.Values["userid"] = user.ID
+	session.Values["language"] = view.PreferedLanguages(r) [0]
 	session.Options.MaxAge = 60 * 20 // limit session to 20 min
 	if err := session.Save(r, w); err != nil {
 		http.Error(w, "Save error: " + err.Error(), http.StatusInternalServerError)

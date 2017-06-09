@@ -106,13 +106,13 @@
         finderValues['edit'] = {findUrl: '/find/applicant', targetUrl: '/enrol/show', target: '#editarea'};
         finderValues['cancellation'] = {findUrl: '/find/applicant', targetUrl: '/cancellation/show', target: '#cancellationarea'};
     </script>
-    <li class="active" data-toggle="tooltip" data-placement="top" title="Enrol Candidates">
+    <li class="active" data-toggle="tooltip" data-placement="top" title='{{i18n "_title_enrol" .language}}'>
         <a data-toggle="tab" href="#enrol"><span class="glyphicon glyphicon-education"></span> </a>
     </li>
-    <li data-toggle="tooltip" data-placement="top" title="Edit Candidate Data">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_edit_candidate" .language}}'>
         <a data-toggle="tab" href="#edit"><span class="glyphicon glyphicon-pencil"></span></a>
     </li>
-    <li data-toggle="tooltip" data-placement="top" title="Candidate Cancellation">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_cancel_candidate" .language}}'>
         <a data-toggle="tab" href="#cancellation"><span class="glyphicon glyphicon-remove-sign"></span></a>
     </li>
     {{end}}
@@ -123,10 +123,10 @@
         finderValues['results'] = {findUrl: '/find/applicant', targetUrl: '/results/show', target: '#resultsarea'};
         finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultlistarea'};
     </script>
-    <li data-toggle="tooltip" data-placement="top" title="Capture Test Results">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_capture_results" .language}}'>
         <a data-toggle="tab" href="#results"><span class="glyphicon glyphicon-certificate"></span></a>
     </li>
-    <li data-toggle="tooltip" data-placement="top" title="Results List">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_result_list" .language}}'>
         <a data-toggle="tab" href="#resultlist"><span class="glyphicon glyphicon-th-list"></span></a>
     </li>
     {{end}}
@@ -134,7 +134,7 @@
     <script type="text/javascript">
         searchStates['users'] = new SearchState('#qapps', '#search1', '#search2');
     </script>
-    <li data-toggle="tooltip" data-placement="top" title="Edit Users">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_edit_users" .language}}'>
         <a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span></a>
     </li>
     {{end}}
@@ -143,10 +143,10 @@
         searchStates['trace'] = new SearchState('#qapps', '#search1', '#search2');
     </script>
     {{if .authfulladmin}}
-    <li data-toggle="tooltip" data-placement="top" title="Administration">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_admin" .language}}'>
         <a data-toggle="tab" href="#admin"><span class="glyphicon glyphicon-wrench"></span></a>
     </li>
-    <li data-toggle="tooltip" data-placement="top" title="Trace Data Changes">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_audit" .language}}'>
         <a data-toggle="tab" href="#trace"><span class="glyphicon glyphicon-eye-open"></span></a>
     </li>
     {{end}}
@@ -154,7 +154,7 @@
     <script type="text/javascript">
         searchStates['set'] = new SearchState('#qapps', '#search1', '#search2');
     </script>
-    <li data-toggle="tooltip" data-placement="top" title="Profile Settings">
+    <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_profile" .language}}'>
         <a data-toggle="tab" href="#set"><span class="glyphicon glyphicon-cog"></span></a>
     </li>
     {{end}}
@@ -175,13 +175,13 @@
         <div class="radio-inline">
             <label for="do-cancellation" class="control-label">
                 <input id="do-cancellation" type="radio" name="cancellation" value="" checked="checked">
-                Exmatrikulieren
+                {{i18n "_cancellation" .language}}
             </label>
         </div>
         <div class="radio-inline">
             <label for="undo-cancellation" class="control-label">
                 <input id="undo-cancellation" type="radio" name="cancellation" value="undo">
-                Exmatrikulation rückgängig machen
+                {{i18n "_undo_cancellation" .language}}
             </label>
         </div>
         <div id="cancellationarea" style="margin: 20px">

@@ -28,6 +28,7 @@ func ShowCancellation(w http.ResponseWriter, r *http.Request) {
 	values := viewmodel{
 		"csrftoken": nosurf.Token(r),
 		"csrfid": "csrf_id_cancel",
+		"language":     view.PreferedLanguages(r) [0],
 	}
 	setViewModel(app, values)
 	view.Views().ExecuteTemplate(w, "work_cancellation", values)

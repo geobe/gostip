@@ -37,7 +37,7 @@
 <body>
 <div class="col-xs-12">
     <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1">
-        DKFAI-Registration
+        {{i18n "_dkfai_register" .language}}
     </h3>
 </div>
 <div class="ncontainer" style="padding-right: 15px;">
@@ -57,15 +57,14 @@
         <span class="text-info">
             <div class="jumbotron" style="background-color: #d3eed3;">
                 <h3 class="">Danke für Ihre Anmeldung!</h3>
-                <div class=""> Bitte beachten Sie: Für das Studium und die Teilnahme am Stipendientest müssen Sie sich
-                zusätzlich mit Ihren Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.</div>
-                <div class="">Bitte überprüfen Sie noch einmal Ihre Angaben</div>
+                <div class=""> {{i18n "_reminder_documents" .language}}</div>
+                <div class="">{{i18n "_check_input" .language}}</div>
                 <div class="clearfix">
                     <p><div class="pull-right">
                         <a href="/index?appid={{.appid}}&{{if .csrffield}}{{.csrffield}}{{else}}csrf_token{{end}}={{.csrftoken}}"
-                           class="btn btn-primary">Alle Angaben sind richtig</a>
+                           class="btn btn-primary">{{i18n "_input_ok" .language}}</a>
                         <a href="/register?appid={{.appid}}&{{if .csrffield}}{{.csrffield}}{{else}}csrf_token{{end}}={{.csrftoken}}"
-                           class="btn btn-warning">Angaben korrigieren</a>
+                           class="btn btn-warning">{{i18n "_input_change" .language}}</a>
                     </div>
                     </p>
                 </div>
@@ -88,21 +87,21 @@
 
 {{define "registrationfields"}}
 {{$defuser := dict "dot" . "itype" "text" "icon" "user" "disabled" .disabled "validate" "required" -}}
-{{template "forminput" mergedict $defuser (dict "id" "lastname" "caption" "Nachname" "tx" .lastnametx)}}
-{{template "forminput" mergedict $defuser (dict "id" "firstname" "caption" "Vorname" "tx" .firstnametx)}}
+{{template "forminput" mergedict $defuser (dict "id" "lastname" "caption" (i18n "_lastname" .language) "tx" .lastnametx)}}
+{{template "forminput" mergedict $defuser (dict "id" "firstname" "caption" (i18n "_firstname" .language) "tx" .firstnametx)}}
 <div class="clearfix visible-sm-block visible-md-block"></div>
-{{template "forminput" mergedict $defuser (dict "id" "fathersname" "caption" "Vatersname" "validate" "" "tx" .fathersnametx)}}
-{{$tel := dict "itype" "tel" "id" "phone" "caption" "Telefon" "icon" "phone" "def" "0123 456789" -}}
+{{template "forminput" mergedict $defuser (dict "id" "fathersname" "caption" (i18n "_fathersname" .language) "validate" "" "tx" .fathersnametx)}}
+{{$tel := dict "itype" "tel" "id" "phone" "caption" (i18n "_phone" .language) "icon" "phone" "def" "0123 456789" -}}
 {{template "forminput" mergedict $defuser $tel}}
 <div class="clearfix"></div>
-{{$mail := dict "itype" "email" "id" "email" "caption" "Email" "icon" "envelope" "def" "stc@mail.ru" -}}
+{{$mail := dict "itype" "email" "id" "email" "caption" (i18n "_mail" .language) "icon" "envelope" "def" "stc@mail.ru" -}}
 {{template "forminput" mergedict $defuser $mail}}
-{{$home := dict "itype" "text" "id" "home" "caption" "Wohnort" "icon" "home" "def" "Karakol" -}}
+{{$home := dict "itype" "text" "id" "home" "caption" (i18n "_city" .language) "icon" "home" -}}
 {{template "forminput" mergedict $defuser $home}}
 <div class="clearfix visible-sm-block visible-md-block"></div>
-{{$school := dict "id" "school" "caption" "Abitur-Schule" "icon" "education" -}}
+{{$school := dict "id" "school" "caption" (i18n "_school" .language) "icon" "education" -}}
 {{template "forminput" mergedict $defuser $school}}
-{{$obl := dict "id" "district" "range" "oblasts" "caption" "Oblast" "icon" "tent"}}
+{{$obl := dict "id" "district" "range" "oblasts" "caption" (i18n "_district" .language) "icon" "tent"}}
 {{template "formselect" mergedict $defuser $obl}}
 <div class="clearfix"></div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
@@ -113,12 +112,12 @@
     {{$numort := `min="100" max="250" step="1" required` -}}
     {{$numortx := `min="0" max="100" step="1"` -}}
     {{$defort := dict "dot" . "itype" "number" "icon" "education" "disabled" .disabled "finput" $oix -}}
-    {{$ort := dict "id" "ort" "caption" "ORT" "def" "99" "validate" $numort "flabel" $ol1 -}}
+    {{$ort := dict "id" "ort" "caption" (i18n "_ort_exam" .language) "def" "99" "validate" $numort "flabel" $ol1 -}}
     {{template "forminput" mergedict $defort $ort}}
-    {{$ortm := dict "id" "ortmath" "caption" "ORT Mathe" "validate" $numortx "flabel" $olm -}}
+    {{$ortm := dict "id" "ortmath" "caption" (i18n "_ort_math" .language) "validate" $numortx "flabel" $olm -}}
     {{template "forminput" mergedict $defort $ortm}}
     <div class="clearfix visible-sm-block visible-md-block"></div>
-    {{$ortp := dict "id" "ortphys" "caption" "ORT Physik" "validate" $numortx "flabel" $olp -}}
+    {{$ortp := dict "id" "ortphys" "caption" (i18n "_ort_phys" .language) "validate" $numortx "flabel" $olp -}}
     {{template "forminput" mergedict $defort $ortp}}
 </div>
 {{end}}

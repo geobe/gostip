@@ -1,32 +1,27 @@
 keywords,de,ru
-_dkfai_tregister,DKFAI Registrierung,Добро пожаловать в КГФИ
 _dkfai_welcome,DKFAI Welcome,Добро пожаловать в КГФИ
+_dkfai_tregister,DKFAI Registrierung,Добро пожаловать в КГФИ
 _dkfai_h2,Deutsch-Kirgisische Fakultät für Angewandte Informatik,Кыргызско-Германский факультет прикладной информатики
-_dkfai_goto_register,"Melde dich jetzt bei uns an",""
-_dkfai_teaser,"Informatik ist das spannendste Handwerk der Gegenwart. In unserer Fakultät lernst du, wie heute Software
-geschrieben wird, wie moderne Apps für Web und Smartphone entstehen, wie man Drohnen fliegen lässt und warum auch 
-Gewächshäuser mit Informatik besser werden. Wir bringen dir bei, wie man Software entwickelt. 
-Jedes Jahr vergeben wir Studienstipendien vom Deutschen Akademischen Austauschdienst. Und jedes Jahr geht 
-Eine Gruppe von Studenten nach Deutschland, um ein oder mehrere Semester in Zwickau zu studieren.","На сегодняшний день информатика является увлекательным ремеслом. В нашем факультете вы узнаете, как на сегодня пишутся программные обеспечения, как возникают современные веб-приложения и мобильные приложения для смартфонов, как заставить дроны летать и как современные теплицы становятся лучше с информатикой. Мы научим вас, как разработать программное обеспечение. Каждый год мы предоставляем  стипендию от Германской службы академических обменов. И каждый год группа студентов едет в Германию, чтобы учится в Цвиккау один семестр или же несколько семестров."
-_hello_personal,"Hallo, {{.firstname}} {{.lastname}}, deine Anmeldung war erfolgreich. Eine Nachricht mit 
-deinen Anmeldedaten wurde an deine Mailadresse {{safeatt .email}} geschickt. Wenn du
+_dkfai_goto_register,Melde dich jetzt bei uns an.,
+_dkfai_teaser,"Informatik ist das spannendste Handwerk der Gegenwart. In unserer Fakultät lernst du, wie heute Software geschrieben wird, wie moderne Apps für Web und Smartphone entstehen, wie man Drohnen fliegen lässt und warum auch Gewächshäuser mit Informatik besser werden. Wir bringen dir bei, wie man Software entwickelt. Jedes Jahr vergeben wir Studienstipendien vom Deutschen Akademischen Austauschdienst. Und jedes Jahr geht eine Gruppe von Studenten nach Deutschland, um ein oder mehrere Semester in Zwickau zu studieren.","На сегодняшний день информатика является увлекательным ремеслом. В нашем факультете вы узнаете, как на сегодня пишутся программные обеспечения, как возникают современные веб-приложения и мобильные приложения для смартфонов, как заставить дроны летать и как современные теплицы становятся лучше с информатикой. Мы научим вас, как разработать программное обеспечение. Каждый год мы предоставляем  стипендию от Германской службы академических обменов. И каждый год группа студентов едет в Германию, чтобы учится в Цвиккау один семестр или же несколько семестров."
+_hello_personal_1,"Hallo, {{.firstname}} {{.lastname}}, deine Anmeldung war erfolgreich. Eine Nachricht mit 
+deinen Anmeldedaten wurde an deine Mailadresse {{.email}} geschickt. Wenn du 
 innerhalb eines Tages keine Mail von uns bekommst oder doch irgendwelche 
-Daten falsch sind, melde dich bitte per Mail bei <a href=""mailto:kgfi.project@gmail.com"">kgfi.project@gmail.com</a> 
-oder telefonisch unter +996 312 549238 im DKFAI Projektbüro.","Здравствуйте, {{.firstname}} {{.lastname}}, ваша регистрация прошла успешно. Сообщение с вашими регистрационными данными отправлено на вашу электронную почту {{.email}}. Если в течение одного дня вы не получили письмо от нас или какие то ваши данные неправильные, пожалуйста сообщите об этом на почту <a href=""mailto:kgfi.project@gmail.com"">kgfi.project@gmail.com</a> или по телефону  +996 312 549238 в проектное бюро КГФИ. "
+Daten falsch sind, melde dich bitte per Mail bei ","Здравствуйте, {{.firstname}} {{.lastname}}, ваша регистрация прошла успешно. Сообщение с вашими регистрационными данными отправлено на вашу электронную почту {{.email}}. Если в течение одного дня вы не получили письмо от нас или какие то ваши данные неправильные, пожалуйста сообщите об этом на почту "
+_hello_personal_2,oder telefonisch unter +996 312 549238 im DKFAI Projektbüro.,или по телефону  +996 312 549238 в проектное бюро КГФИ. 
 _visit_us_fb,"Oder besuche uns auf Facebook und schreib uns, was dich besonders interessiert.","Или посетите нас на Facebook и напишите нам, что вас особенно интересует. "
-_ok_or_change, Bitte bestätigen oder korrigieren Sie folgende Angaben: ,"Пожалуйста, подтвердите или исправьте последующие данные:"
-_school,Schule:,Школа:
-_district,Oblast:,Область:
-_ort_exam,ORT:,ОРТ:
-_lastname,Nachname: ,Фамилия: 
-_firstname,Vorname:,Имя:
-_middlename,Vatersname:,Отчество: 
-_phone,Telefon: ,Телефон: 
-_mail,Email:,Электронная почта:
+_ok_or_change,Ist alles richtig? Bestätige oder korrigiere bitte folgende Angaben: ,"Пожалуйста, подтвердите или исправьте последующие данные:"
+_ok_or_correct,Bitte bestätigen oder korrigieren Sie folgende Angaben:,"Пожалуйста, подтвердите или исправьте последующие данные:"
+_district,Oblast,Область
+_ort_exam,ORT,ОРТ
+_lastname,Nachname ,Фамилия 
+_firstname,Vorname,Имя
+_middlename,Vatersname,Отчество 
+_phone,Telefon ,Телефон 
+_mail,Email,Электронная почта
 _dkfai_register,DKFAI Registration,Регистрация КГФИ
-_reminder_documents,"Bitte beachten Sie: Für das Studium und die Teilnahme am Stipendientest müssen Sie sich 
-Zusätzlich mit Ihren Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.","Обратите внимание: Для учебы и для участия в тесте на стипендию, вы должны дополнительно, с документами зарегистрироваться в Кыргызско-Германский факультет информатики, КГУСТА."
-_check_input,Bitte überprüfen Sie noch einmal Ihre Angaben,"Пожалуйста, проверьте еще раз ваши данные"
+_reminder_documents,Beachte bitte: Für das Studium und die Teilnahme am Stipendientest musst du dich zusätzlich mit deinen Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.,"Обратите внимание: Для учебы и для участия в тесте на стипендию, вы должны дополнительно, с документами зарегистрироваться в Кыргызско-Германский факультет информатики, КГУСТА."
+_check_input,Bitte überprüfe noch einmal deine Angaben,"Пожалуйста, проверьте еще раз ваши данные"
 _input_ok,Alle Angaben sind richtig,Все данные правильные
 _input_change,Angaben korrigieren,Изменить данные
 _lastname,Nachname,Фамилия
@@ -39,13 +34,27 @@ _district,Oblast,Область
 _ort_exam,ORT,ОРТ
 _ort_math,ORT Mathe,ОРТ по математике
 _ort_phys,ORT Physik,ОРТ по физике
+_correct,richtig,
+_total,Gesamt,
+_math,Mathe,
+_physics,Physik,
+_text,Text,
+_language,Sprache,
+_cancellation,Exmatrikulieren,
+_undo_cancellation,Exmatrikulation rückgängig machen,
 _xplain_marks,"Punkte: 0, 0.5, 1, ... ,","Пункты: 0, 0.5, 1, ... ,"
 _xplain_language_marks,"Note: 0 ... 5, eine Kommastelle","Оценка: 0 ... 5, оценки с запятыми"
-_title_enrol,Enrol Candidates,Зарегистрировать кандидатов
-_title_edit_candidate,Edit Candidate Data,Редактирование данных кандидата
-_title_cancel_candidate,Candidate Cancellation,Отмена Кандидата
-_title_capture_results,Capture Test Results,Результаты тестирования
-_title_edit_users,Edit Users,Редактировать пользователей
+_title_enrol,Bewerber immatrikulieren,Зарегистрировать кандидатов
+_title_edit_candidate,Bewerberdaten editieren,Редактирование данных кандидата
+_title_cancel_candidate,Exmatrikulieren,Отмена Кандидата
+_title_capture_results,Testergebnisse erfassen,Результаты тестирования
+_title_result_list,Ergebnisliste,
+_title_edit_users,Benutzer bearbeiten,Редактировать пользователей
 _title_admin,Administration,Администрация
-_title_audit,Trace Data Changes,Прослеживание изменения данных
-_title_profile,Profile Settings,Настройки профиля
+_title_audit,Daten Audit,Прослеживание изменения данных
+_title_profile,Profil bearbeiten,Настройки профиля
+_correct_data,Angaben berichtigen,
+_confirm_data,Angaben bestätigen,
+_daad_test_results,Ergebnisse des DAAD Stipendientests,
+_edit_base_data,Stammdaten berichtigen,
+_submit,Absenden,

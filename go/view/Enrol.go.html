@@ -32,7 +32,7 @@
         {{template "registrationfields" .}}
         <div class="clearfix"></div>
         <h3 class="col-xs-offset-2 col-sm-offset-2 col-lg-offset-1" style="margin-top: 3em;">
-            Bitte bestätigen oder korrigieren Sie folgende Angaben:
+            {{i18n "_ok_or_correct" .language}}
         </h3>
         {{template "enrol_fields" .}}
     </div>
@@ -64,24 +64,24 @@
 
 {{define "enrol_fields"}}
 <label class="control-label col-xs-5 col-sm-5 col-md-5 col-lg-3">
-    Schule: {{.school}}
+    {{i18n "_school" .language}}: {{.school}}
 </label>
 <label class="checkbox col-xs-3 col-sm-2 col-md-1 col-lg-1">
-    <input type="checkbox" name="schoolok" value="ok" required> richtig
+    <input type="checkbox" name="schoolok" value="ok" required> {{i18n "_correct" .language}}
 </label>
 <div class="clearfix"></div>
 <label class="control-label col-xs-5 col-sm-5 col-md-5 col-lg-3">
-    Oblast: {{.districtname}}
+    {{i18n "_district" .language}}: {{.districtname}}
 </label>
 <label class="checkbox col-xs-3 col-sm-2 col-md-1 col-lg-1">
-    <input type="checkbox" name="districtok" value="ok" required> richtig
+    <input type="checkbox" name="districtok" value="ok" required> {{i18n "_correct" .language}}
 </label>
 <div class="clearfix"></div>
 <label class="control-label col-xs-5 col-sm-5 col-md-5 col-lg-3">
-    ORT: {{.ort}}, {{.ortmath}}, {{.ortphys}} (Gesamt,&nbsp;Mathematik,&nbsp;Physik)
+    {{i18n "_ort_exam" .language}}: {{.ort}}, {{.ortmath}}, {{.ortphys}} ({{i18n "_total" .language}},&nbsp;{{i18n "_math" .language}},&nbsp;{{i18n "_physics" .language}})
 </label>
 <label class="checkbox col-xs-3 col-sm-2 col-md-1 col-lg-1">
-    <input type="checkbox" name="ortok" value="ok" required> richtig
+    <input type="checkbox" name="ortok" value="ok" required> {{i18n "_correct" .language}}
 </label>
 <div class="clearfix"></div>
 {{end}}
@@ -162,28 +162,28 @@
 {{define "identification"}}
 <div class="col-xs-6 col-sm-4">
     <label >
-        Nachname:
+        {{i18n "_lastname" .language}}:
     </label> {{.lastname}}
 </div>
 <div class="col-xs-6 col-sm-4">
     <label >
-        Vorname:
+        {{i18n "_firstname" .language}}:
     </label> {{.firstname}}
 </div>
 <div class="col-xs-6 col-sm-4">
     <label >
-        Vatersname:
+        {{i18n "_fathersname" .language}}:
     </label> {{.fathersname}}
 </div>
 <div class="clearfix"></div>
 <div class="col-xs-12 col-sm-4">
     <label >
-        Telefon:
+        {{i18n "_phone" .language}}:
     </label> {{.phone}}
 </div>
 <div class="col-xs-12 col-sm-8">
     <label >
-        Email:
+        {{i18n "_mail" .language}}:
     </label> {{.email}}
 </div>
 {{end}}
