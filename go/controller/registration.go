@@ -17,15 +17,17 @@ func ShowRegistration(w http.ResponseWriter, r *http.Request) {
 	if err := parseSubmission(w, r); err != nil {
 		return
 	}
+	i18nlanguage := view.PreferedLanguages(r) [0]
 	values := viewmodel{
 		// HTMLAttr unescapes string for use as HTML Attribute
 		"disabled":     template.HTMLAttr(""),
 		"action":       "register/submit",
-		"oblasts":      model.Oblasts(),
+		"oblasts":      view.OblastsI18n(i18nlanguage),
 		"district":     0,
 		"buttons":      true,
 		"displaystyle": "block",
 		"csrftoken":    nosurf.Token(r),
+		"language": i18nlanguage,
 	}
 	if err := checkMethodAllowed(http.MethodGet, w, r); err == nil {
 		appId := checkForRegistration(r)
@@ -36,7 +38,6 @@ func ShowRegistration(w http.ResponseWriter, r *http.Request) {
 				setViewModel(app, values)
 			}
 		}
-		values["language"] = view.PreferedLanguages(r) [0]
 		view.Views().ExecuteTemplate(w, "registration", values)
 	}
 

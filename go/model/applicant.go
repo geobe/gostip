@@ -22,9 +22,6 @@ const (
 	EN
 	RU
 	KG
-	FR
-	ES
-	CN
 	OTHER = 99
 )
 
@@ -77,28 +74,25 @@ type Oblast struct {
 }
 
 var InitialOblasts = []Oblast{
-	{Name: "Bishkek City"},
-	{Name: "Osh City"},
-	{Name: "Batken"},
-	{Name: "Chuy"},
-	{Name: "Jalal-Abad"},
-	{Name: "Naryn"},
-	{Name: "Osh"},
-	{Name: "Talas"},
-	{Name: "Yssykköl"},
-	{Name: "Foreign"},
+	{Name: "_bishkek"},
+	{Name: "_osh_city"},
+	{Name: "_batken"},
+	{Name: "_chuy"},
+	{Name: "_jalalabad"},
+	{Name: "_naryn"},
+	{Name: "_osh"},
+	{Name: "_talas"},
+	{Name: "_yssykköl"},
+	{Name: "_foreign"},
 }
 
 var InitialLanguages = map[Lang]string{
-	NONE:        "keine",
-	DE:        "Deutsch",
-	EN:        "Englisch",
-	RU:        "Russisch",
-	KG:        "Kirgisisch",
-	FR:        "Französisch",
-	ES:        "Spanisch",
-	CN:        "Chinesisch",
-	OTHER:        "andere",
+	NONE:      "_none",
+	DE:        "_de",
+	EN:        "_en",
+	RU:        "_ru",
+	KG:        "_kg",
+	OTHER:     "_other",
 }
 
 // to easily store grant exam results in db with gorm,

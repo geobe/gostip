@@ -19,12 +19,14 @@ func ShowResults(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+	i18nlanguage := view.PreferedLanguages(r) [0]
 	values := viewmodel{
 		"disabled": template.HTMLAttr("disabled='true'"),
-		"oblasts":  model.Oblasts(),
+		"oblasts":  view.OblastsI18n(i18nlanguage),
 		"csrftoken": nosurf.Token(r),
 		"csrfid": "csrf_id_results",
-		"language":     view.PreferedLanguages(r) [0],
+		"language":     i18nlanguage,
+		"languages":	view.LanguagesI18n(i18nlanguage),
 	}
 	setViewModel(app, values)
 	addResultsConfig(time.Now().Year(), app, values)
@@ -65,5 +67,4 @@ func addResultsConfig(y int, app model.Applicant, data viewmodel) {
 	data["results"] = results[:nq]
 	data["languageresult"] = fmt.Sprintf("%.1f", float32(app.Data.LanguageResult) / 10.)
 	data["lang"] = app.Data.Language
-	data["languages"] = model.InitialLanguages
 }

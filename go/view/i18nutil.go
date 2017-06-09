@@ -14,7 +14,7 @@ import (
 )
 
 const DEFAULT_TRANSLATIONS_FILE = "allInOne.csv"
-const DEFAULT_LANGUAGE = "de"
+const DEFAULT_LANGUAGE = "en"
 
 var translations map[string]map[string]string
 var trtemplates map[string]map[string]*template.Template
@@ -102,6 +102,24 @@ func GetTranslation(key, lang string) string {
 	}
 	return tr
 }
+
+func OblastsI18n(lang string) []model.Oblast {
+	o := model.Oblasts()
+	ointl := make([]model.Oblast, len(o))
+	for i, v := range o {
+		ointl[i] = model.Oblast{ v.ID, I18n(v.Name, lang) }
+	}
+	return ointl
+}
+
+func LanguagesI18n(lang string) map[model.Lang]string {
+	langs := make(map[model.Lang]string)
+	for k, v := range model.InitialLanguages {
+		langs[k] = I18n(v, lang)
+	}
+	return langs
+}
+
 func GetTrtemplates(lang string) map[string]*template.Template {
 	if trtemplates == nil {
 		ReadTranslations(DEFAULT_TRANSLATIONS_FILE)

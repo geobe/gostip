@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/geobe/gostip/go/model"
 	"github.com/geobe/gostip/go/view"
 	"html"
 	"html/template"
@@ -23,11 +22,12 @@ func ShowEnrol(w http.ResponseWriter, r *http.Request) {
 		log.Printf("fetch error %s", err)
 		return
 	}
+	i18nlanguage := view.PreferedLanguages(r) [0]
 	values := viewmodel{
-		"oblasts": model.Oblasts(),
+		"oblasts": view.OblastsI18n(i18nlanguage),
 		"csrftoken": nosurf.Token(r),
 		"csrfid": "csrf_id_enrol",
-		"language":     view.PreferedLanguages(r) [0],
+		"language":     i18nlanguage,
 	}
 	setViewModel(app, values)
 
