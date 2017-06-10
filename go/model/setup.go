@@ -28,6 +28,7 @@ func Setup(cfgfile string) {
 var db *gorm.DB
 var dbsem, oblsem sync.Mutex
 var oblasts []Oblast
+var mailaccount, mailpw string
 
 // make database connection available as a singleton
 func Db() *gorm.DB {
@@ -47,6 +48,19 @@ func ConnectDb() *gorm.DB {
 		panic("failed to connect database with err " + fmt.Sprint(err))
 	}
 	return db
+}
+
+func SetMailer(maccount, mpw string) {
+	mailaccount = maccount
+	mailpw = mpw
+}
+
+func CanMail() bool {
+	return mailaccount != "" && mailpw != ""
+}
+
+func GetMailer() (string, string) {
+	return mailaccount, mailpw
 }
 
 // make some initial users available for testing and bootstrap

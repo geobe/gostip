@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"github.com/justinas/nosurf"
+	"log"
 )
 
 // ShowRegistration is handler for registration form get requests:
@@ -65,6 +66,8 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 		}
 		var app model.Applicant
 		appId := atoint(html.EscapeString(r.PostFormValue("appid")))
+		log.Printf("registration app id %d", appId)
+		log.Print(*r)
 		if appId > 0 {
 			var err error
 			app, err = retrieveApplicant(appId, w)

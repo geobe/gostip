@@ -1,21 +1,42 @@
+{{define "confirmation_mail"}}
 <h3>{{i18n "_mail_greet" .language .}}</h3>
-
 <p>{{i18n "_mail_body1" .language}}</p>
 <table>
     <tr>
-        <td>{{i18n "_firstname" .language}}</td><td>{{.firstname}}</td>
-        <td>{{i18n "_fathersname" .language}}</td><td>{{.fathersname}}</td>
-        <td>{{i18n "_lastname" .language}}</td><td>{{.lastname}}</td>
-        <td>{{i18n "_phone" .language}}</td><td>{{.phone}}</td>
-        <td>{{i18n "_mail" .language}}</td><td>{{.email}}</td>
-        <td>{{i18n "_city" .language}}</td><td>{{.home}}</td>
-        <td>{{i18n "_district" .language}}</td><td>{{.}}</td>
-        <td>{{i18n "_school" .language}}</td><td>{{.school}}</td>
-        <td>{{i18n "_ort_exam" .language}}</td><td>{{.ort}}</td>
-        <td>{{i18n "_ort_math" .language}}</td><td>{{.ortmath}}</td>
-        <td>{{i18n "_ort_physics" .language}}</td><td>{{.ortphysics}}</td>
+        <td>{{i18n "_firstname" .language}}:</td><td>{{.firstname}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_fathersname" .language}}:</td><td>{{.fathersname}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_lastname" .language}}:</td><td>{{.lastname}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_phone" .language}}:</td><td>{{.phone}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_mail" .language}}:</td><td>{{.email}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_city" .language}}:</td><td>{{.home}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_district" .language}}:</td><td>{{.districtname}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_school" .language}}:</td><td>{{.school}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_ort_exam" .language}}:</td><td>{{.ort}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_ort_math" .language}}:</td><td>{{.ortmath}}</td>
+    </tr>
+    <tr>
+        <td>{{i18n "_ort_phys" .language}}:</td><td>{{.ortphys}}</td>
     </tr>
 </table>
 <p>{{i18n "_mail_body2" .language}}</p>
 <p>{{i18n "_mail_bye" .language}}</p>
 <p>{{i18n "_mail_signature" .language}}</p>
+{{end}}
