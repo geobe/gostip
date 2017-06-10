@@ -7,6 +7,7 @@ import (
 	"log"
 	"golang.org/x/crypto/acme/autocert"
 	"crypto/tls"
+	"flag"
 )
 
 // Server Ports, zu denen  Ports 80 und 443
@@ -15,6 +16,12 @@ const httpport = ":8070"
 const tlsport = ":8443"
 
 func main() {
+	// read command line parameters
+	account := flag.String("mail", "", "a mail account")
+	mailpw := flag.String("mailpw", "", "password of the mail account")
+	flag.Parse()
+	// setup mailer info
+	model.SetMailer(*account, *mailpw)
 	// prepare database
 	model.Setup("")
 	db := model.Db()

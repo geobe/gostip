@@ -121,3 +121,9 @@ input: $cfi := "col-xs-8 col-sm-4 col-md-4 col-lg-2"
        name="{{if .csrffield}}{{.csrffield}}{{else}}csrf_token{{end}}"
        value="{{.csrftoken}}">
 {{end}}
+
+{{define "appid"}}
+<input type="hidden" id="{{if .appid_id}}{{.appid_id}}{{else}}appid{{end}}"
+       name="{{if .appidfield}}{{.appidfield}}{{else}}appid{{end}}"
+       value="{{.appid}}">
+{{end}}

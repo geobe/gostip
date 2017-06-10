@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"github.com/justinas/nosurf"
+	"log"
 )
 
 // ShowRegistration is handler for registration form get requests:
@@ -51,19 +52,22 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 		if err := parseSubmission(w, r); err != nil {
 			return
 		}
+		i18nlanguage := view.PreferedLanguages(r) [0]
 		values := viewmodel{
 			// HTMLAttr unescapes string for use as HTML Attribute
 			"disabled":     template.HTMLAttr("disabled"),
 			"action":       "register",
-			"oblasts":      model.Oblasts(),
+			"oblasts":      view.OblastsI18n(i18nlanguage),
 			"buttons":      false,
 			"thankyou":     true,
 			"displaystyle": "none",
 			"csrftoken":    nosurf.Token(r),
-			"language":     view.PreferedLanguages(r) [0],
+			"language":     i18nlanguage,
 		}
 		var app model.Applicant
 		appId := atoint(html.EscapeString(r.PostFormValue("appid")))
+		log.Printf("registration app id %d", appId)
+		log.Print(*r)
 		if appId > 0 {
 			var err error
 			app, err = retrieveApplicant(appId, w)

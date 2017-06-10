@@ -56,7 +56,7 @@
     <div class="col-xs-12">
         <span class="text-info">
             <div class="jumbotron" style="background-color: #d3eed3;">
-                <h3 class="">Danke für Ihre Anmeldung!</h3>
+                <h3 class=""> {{i18n "_dkfai_thankyou" .language}}!</h3>
                 <div class=""> {{i18n "_reminder_documents" .language}}</div>
                 <div class="">{{i18n "_check_input" .language}}</div>
                 <div class="clearfix">
@@ -75,6 +75,7 @@
 {{end}}
 <form class="form-horizontal" data-toggle="validator" style="margin-right: 0;" method="POST" action="{{.action}}">
     {{template "csrf" . }}
+    {{template "appid" . }}
     {{template "registrationfields" .}}
     {{if .buttons}}
     <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">

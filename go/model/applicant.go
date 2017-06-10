@@ -27,7 +27,7 @@ const (
 
 // an applicant for a place at university
 type Applicant struct {
-	ID        uint `gorm:"primary_key"`
+	ID        int `gorm:"primary_key"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time    `sql:"index"`
@@ -39,7 +39,7 @@ type Applicant struct {
 // form: tags are used to identify html form fields and request parameters
 type ApplicantData struct {
 	Model
-	ApplicantID    uint
+	ApplicantID    int
 	Number         uint `gorm:"AUTO_INCREMENT" form:"applid"`
 	LastName       string `form:"lastname"`
 	FirstName      string `form:"firstname"`

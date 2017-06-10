@@ -12,6 +12,9 @@ import (
 	"encoding/json"
 	"reflect"
 	"github.com/justinas/nosurf"
+	"bytes"
+	"github.com/geobe/gostip/go/view"
+	"github.com/SlyMarbo/gmail"
 )
 
 // set an Applicants Data from http form parameters
@@ -313,10 +316,10 @@ func atoint(s string) (id int) {
 	return
 }
 
-func checkForRegistration(r *http.Request) uint {
-	var appId uint
+func checkForRegistration(r *http.Request) int {
+	var appId int
 	if v, ok := r.Form["appid"]; ok {
-		appId = uint(atoint(html.EscapeString(v[0])))
+		appId = atoint(html.EscapeString(v[0]))
 	} else {
 		appId = 0
 	}
@@ -329,4 +332,32 @@ func checkForRegistration(r *http.Request) uint {
 		appId = 0
 	}
 	return appId
+}
+
+func makeMail(templatename, language string, vm viewmodel) {
+	if ! model.CanMail() {
+		log.Print("no mailer info, cannot send")
+	} else {
+		var b bytes.Buffer
+		view.Views().ExecuteTemplate(&b, templatename, vm)
+		body := b.String()
+		subject := view.I18n("_mail_subject", language)
+		from, passwd := model.GetMailer()
+		email := gmail.Compose(subject, body)
+		email.From = from
+		email.Password = passwd
+		recipient := vm["email"].(string)
+		// Defaults to "text/plain; charset=utf-8" if unset.
+		email.ContentType = "text/html; charset=utf-8"
+
+		email.AddRecipient(recipient)
+
+		err := email.Send()
+		if err != nil {
+			log.Printf("mail send error to %s: %s", recipient, err)
+		} else {
+			log.Printf("mail sent to %s", recipient)
+		}
+	}
+
 }
