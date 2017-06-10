@@ -71,3 +71,9 @@ _en,Englisch,English,xxxx,yyyy
 _ru,Russisch,Russian,xxxx,yyyy
 _kg,Kirgisisch,Kyrgyz,xxxx,yyyy
 _none,Keine,None,xxxx,yyyy
+_mail_subject,Deine Registrierung bei der DKFAI,Your registration at KGFAI,,
+_mail_greet,"Hallo {{.firstname}} {{.lastname}},","Hello {{.firstname}} {{.lastname}},",,
+_mail_body1,die folgenden Daten haben wir für deine Immatrikulation und die Teilnahme am DAAD Stipendientest gespeichert:,the following data for your enrolment and your participation in the DAAD grant exam are stroed on our system:,,
+_mail_body2,"Wenn die Daten nicht richtig sind, wenn du Fragen hast oder etwas genauer wissen möchtest, schicke uns eine Mail oder rufe uns an unter +996 312 549238.","When anything is wrong with the data, if you have questions or are just curious on some detail, send us a mail or call us at +996 312 549238.",,
+_mail_bye,"Wir freuen uns auf dich,","Looking forward to seeing you soon,",,
+_mail_signature,das Team von der DKFAI!,the KGFAI team!,,

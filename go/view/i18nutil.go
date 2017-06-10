@@ -154,9 +154,9 @@ func ExpandTemplate(key, lang string, values map[string]interface{}) string {
 
 func I18n(key, lang string, values ...map[string]interface{})string {
 	if len(values) == 0 {
-		return GetTranslation(key, lang)
+		return strings.TrimSpace(GetTranslation(key, lang))
 	} else {
-		return ExpandTemplate(key, lang, values[0])
+		return strings.TrimSpace(ExpandTemplate(key, lang, values[0]))
 	}
 }
 
