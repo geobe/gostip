@@ -17,9 +17,9 @@ const tlsport = ":8443"
 
 func main() {
 	// read command line parameters
-	account := flag.String("mail", "", "a mail account")
+	account := flag.String("mail", "kgfi.project@gmail.com", "a mail account")
 	mailpw := flag.String("mailpw", "", "password of the mail account")
-	cfgfile := flag.String("cfgfile", "", "name of config file")
+	cfgfile := flag.String("cfgfile", "prodconfig", "name of config file")
 	flag.Parse()
 	// setup mailer info
 	model.SetMailer(*account, *mailpw)
@@ -27,7 +27,6 @@ func main() {
 	model.Setup(*cfgfile)
 	db := model.Db()
 	defer db.Close()
-//	model.ClearTestDb(db)
 	model.InitProdDb(db)
 
 	// mux verwaltet die Routen
@@ -36,8 +35,8 @@ func main() {
 	// der Verwalter der LetsEncrypt Zertifikate
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("dkfai.spdns.org", "geobe.spdns.org"), //your domain here
-		Email: 	    "georg.beier@fh-zwickau.de",
+		HostPolicy: autocert.HostWhitelist("dkfai.ksucta.kg"), //your domain here
+		Email: 	    "kgfi.project@gmail.com",
 		Cache:      autocert.DirCache("certs"), //folder for storing certificates
 	}
 

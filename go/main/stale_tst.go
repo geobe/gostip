@@ -15,7 +15,7 @@ func main() {
 	db := model.Db()
 	defer db.Close()
 	model.ClearTestDb(db)
-	model.InitTestDb(db)
+	//model.InitTestDb(db)
 
 	var app0, app1, app2 model.Applicant
 

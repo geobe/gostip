@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"github.com/geobe/gostip/go/view"
 	"github.com/geobe/gostip/go/model"
-	"log"
 )
 
 func HandleIndex(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +16,6 @@ func HandleIndex(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		appId := checkForRegistration(r)
-		log.Printf("appId = %d", appId)
 		if appId > 0 {
 			var app model.Applicant
 			app, err = retrieveApplicant(appId, w)

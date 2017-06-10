@@ -13,7 +13,7 @@ func main1() {
 	defer db.Close()
 
 	//model.ClearTestDb(db)
-	model.InitTestDb(db)
+	//model.InitTestDb(db)
 
 	// retrieve an applicant from db
 	var appli model.Applicant

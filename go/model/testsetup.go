@@ -146,7 +146,7 @@ func InitTestDb(db *gorm.DB) *gorm.DB {
 	}
 	var nuser int
 	if db.Model(&User{}).Count(&nuser); nuser < 1 {
-		users := InitialUsers()
+		users, _ := InitialValues()
 		for _, user := range users {
 			db.Save(&user)
 		}

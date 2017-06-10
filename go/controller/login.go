@@ -16,8 +16,8 @@ import (
 // If check succeeds, a user session is initiated and username
 // and user information are stored in the session store.
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
+	f := nosurf.Token(r)
 	if r.Method == http.MethodGet {
-		f := nosurf.Token(r)
 		values := viewmodel{
 			"csrftoken": f,
 		}
@@ -39,8 +39,11 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		} else {
-			view.Views().ExecuteTemplate(w, "login",
-				map[string]string{"failure": "Failure, wrong login or password"})
+			values := viewmodel{
+				"csrftoken": f,
+				"failure": "Failure, wrong login or password",
+			}
+			view.Views().ExecuteTemplate(w, "login", values)
 		}
 	}
 }

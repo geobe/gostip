@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 	"sync"
+	"time"
 )
 
 // the relative location of project files
@@ -50,6 +51,63 @@ func ConnectDb() *gorm.DB {
 	return db
 }
 
+// create some test applicants in a developpment db
+func InitProdDb(db *gorm.DB) *gorm.DB {
+
+	// Migrate the schema
+	db.AutoMigrate(classes...)
+
+	// initialize if db empty
+	var nOblasts int
+	if db.Model(&Oblast{}).Count(&nOblasts); nOblasts < 1 {
+		for _, oblast := range InitialOblasts {
+			db.Create(&oblast)
+		}
+	}
+	// retrieve oblasts from db
+	var oblasts []Oblast
+	db.Find(&oblasts)
+
+	//if db.Model(&ExamReference{}).Count(&nxref); nxref < 1 {
+	//	xref := ExamReference{
+	//		Year:    time.Now().Year(),
+	//		Results: [NQESTION]int{50, 50, 20, 30, 100, 150, 100, 100, 0, 0},
+	//	}
+	//	db.Create(&xref)
+	//}
+
+	users, maxresults := InitialValues()
+	var aUser User
+	for _, user := range users {
+		db.First(&aUser, "Login = ?", user.Login)
+		if aUser.Login == user.Login {
+			aUser.Password = user.Password
+			aUser.Role = user.Role
+			db.Save(&aUser)
+		} else {
+			db.Save(&user)
+		}
+	}
+
+	var r [NQESTION]int
+	copy(r[:], maxresults)
+	var xref ExamReference
+	db.First(&xref, "Year = ?", time.Now().Year())
+	if xref.ID != 0 {
+		xref.Results = r
+		xref.UpdatedBy = ""
+		db.Save(&xref)
+	} else {
+		xref := ExamReference{
+			Year:    time.Now().Year(),
+			Results: r,
+		}
+		db.Create(&xref)
+	}
+
+	return db
+}
+
 func SetMailer(maccount, mpw string) {
 	mailaccount = maccount
 	mailpw = mpw
@@ -64,7 +122,7 @@ func GetMailer() (string, string) {
 }
 
 // make some initial users available for testing and bootstrap
-func InitialUsers() (users []User) {
+func InitialValues() (users []User, maxresults []int) {
 	uv := viper.Get("users").([]interface{})
 	for _, v := range uv {
 		switch user := v.(type) {
@@ -81,6 +139,11 @@ func InitialUsers() (users []User) {
 
 			}
 		}
+	}
+	mr := viper.Get("maxresults").([]interface{})
+	maxresults = make([]int, len(mr))
+	for i, v := range mr {
+		maxresults[i] = int(v.(float64) + 0.5)
 	}
 	return
 }
