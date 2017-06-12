@@ -19,10 +19,6 @@ const DEFAULT_LANGUAGE = "en"
 var translations map[string]map[string]string
 var trtemplates map[string]map[string]*template.Template
 
-// regular expressions for filteing HTTP language headers
-var cleanSub = regexp.MustCompile("(-[A-Z][A-Z])|(;q=0.\\d)")
-var splitter = regexp.MustCompile("(q=0.\\d),")
-var quality =	regexp.MustCompile(".*q=0.([0-9])")
 // is translation a template?
 var t4template = regexp.MustCompile(".*\\{\\{.+}}.*")
 
@@ -160,34 +156,40 @@ func I18n(key, lang string, values ...map[string]interface{})string {
 	}
 }
 
+// regular expressions for filteing HTTP language headers
+var cleanSub = regexp.MustCompile("(-[A-Z][A-Z])|(;q=0.\\d)")
+var splitter = regexp.MustCompile("(q=0.\\d),")
+var quality =	regexp.MustCompile(".*q=0.([0-9])")
 
 // extract languages with q >= 0.5 from HTTP language header
 func PreferedLanguages(r *http.Request) []string {
-	lnghdr := r.Header["Accept-Language"]
-	slnghdr := strings.Split(splitter.ReplaceAllString(lnghdr[0], "$1|"), "|")
 	var langs [4]string
-	found := make(map[string]bool)
-	i := -1
-	outer:	for _, v := range slnghdr {
-		qlty, _ := strconv.Atoi(quality.ReplaceAllString(v, "$1"))
-		if qlty < 5 {
-			break
-		}
-		lgs := cleanSub.ReplaceAllString(v, "")
-		for _, lg := range strings.Split(lgs, ",") {
-			if i == 3 {
-				break outer
+	i := 0
+	lnghdr := r.Header["Accept-Language"]
+	if len(lnghdr) != 0 && lnghdr[0] != "" {
+		slnghdr := strings.Split(splitter.ReplaceAllString(lnghdr[0], "$1|"), "|")
+		found := make(map[string]bool)
+		outer:        for _, v := range slnghdr {
+			qlty, ok := strconv.Atoi(quality.ReplaceAllString(v, "$1"))
+			if ok == nil && qlty < 5 {
+				break
 			}
-			if ! found[lg] {
-				i++
-				langs[i] = lg
-				found[lg] = true
+			lgs := cleanSub.ReplaceAllString(v, "")
+			for _, lg := range strings.Split(lgs, ",") {
+				if i == 3 {
+					break outer
+				}
+				if ! found[lg] {
+					langs[i] = lg
+					found[lg] = true
+					i++
+				}
 			}
 		}
 	}
-	if i < 0 {
-		i = 0
+	if i == 0 {
 		langs[0] = DEFAULT_LANGUAGE
+		i = 1
 	}
 	return  langs[0:i]
 }
