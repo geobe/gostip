@@ -140,10 +140,12 @@ func InitialValues() (users []User, maxresults []int) {
 			}
 		}
 	}
-	mr := viper.Get("maxresults").([]interface{})
-	maxresults = make([]int, len(mr))
-	for i, v := range mr {
-		maxresults[i] = int(v.(float64) + 0.5)
+	if viper.IsSet("maxresults") {
+		mr := viper.Get("maxresults").([]interface{})
+		maxresults = make([]int, len(mr))
+		for i, v := range mr {
+			maxresults[i] = int(v.(float64) + 0.5)
+		}
 	}
 	return
 }

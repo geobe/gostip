@@ -62,7 +62,7 @@ func setEnrolledAt(app *model.Applicant) {
 }
 
 func setResultData(app *model.Applicant, r *http.Request) {
-	app.Data.Language = model.Lang(atoint(html.EscapeString(r.PostFormValue("language"))))
+	app.Data.Language = model.Lang(atoint(html.EscapeString(r.PostFormValue("lang"))))
 	val := html.EscapeString(r.PostFormValue("languageresult"))
 	var f float32
 	n, err := fmt.Sscanf(val, "%f", &f)
