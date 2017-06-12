@@ -14,7 +14,7 @@ import (
 // It should only be invoked for requests received over HTTP.
 func RedirectHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.TLS != nil || r.Host == "" {
-		http.Error(w, "not found", 404)
+		http.Error(w, "", http.StatusNotFound)
 	}
 
 	var u *url.URL
@@ -28,8 +28,9 @@ func RedirectHTTP(w http.ResponseWriter, r *http.Request) {
 
 // interne Aufrufe vom gleichen lokalen Netz mit Mux annehmen, sonst redirect auf HTTPS
 type HandlerSwitch struct {
-	Mux      http.Handler
-	Redirect http.Handler
+	Mux          http.Handler
+	Redirect     http.Handler
+	AllowedHosts []string
 }
 
 // nicht richtig für 172.16.0.0/12
@@ -43,6 +44,17 @@ func (h *HandlerSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if local {
 		h.Mux.ServeHTTP(w, r)
 	} else {
-		h.Redirect.ServeHTTP(w, r)
+		var serve bool
+		for _, v := range h.AllowedHosts {
+			if strings.Contains(host, v) {
+				serve = true
+				break
+			}
+		}
+		if serve {
+			h.Redirect.ServeHTTP(w, r)
+		} else {
+			http.Error(w, "", http.StatusGone)
+		}
 	}
 }
