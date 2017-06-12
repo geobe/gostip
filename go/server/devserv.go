@@ -33,10 +33,13 @@ func main() {
 	// mux verwaltet die Routen
 	mux := controller.SetRouting()
 
+	// die zugelassenen host namen
+	allowedHosts := []string{"dkfai.spdns.org", "geobe.spdns.org"}
+
 	// der Verwalter der LetsEncrypt Zertifikate
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("dkfai.spdns.org", "geobe.spdns.org"), //your domain here
+		HostPolicy: autocert.HostWhitelist(allowedHosts...), //your domain here
 		Email: 	    "georg.beier@fh-zwickau.de",
 		Cache:      autocert.DirCache("certs"), //folder for storing certificates
 	}
@@ -56,6 +59,7 @@ func main() {
 	handlerSwitch := &controller.HandlerSwitch{
 		Mux:    mux,
 		Redirect: http.HandlerFunc(controller.RedirectHTTP),
+		AllowedHosts: allowedHosts,
 	}
 
 	// konfiguriere redirect server
