@@ -111,7 +111,7 @@
     {{$olp := "control-label col-xs-4 col-xs-offset-0 col-sm-2 col-sm-offset-6 col-md-2 col-md-offset-6 col-lg-offset-0 col-lg-1" -}}
     {{$oix := "col-xs-6 col-sm-2 col-lg-2" -}}
     {{$numort := `min="100" max="250" step="1" required` -}}
-    {{$numortx := `min="0" max="100" step="1"` -}}
+    {{$numortx := `min="0" max="150" step="1"` -}}
     {{$defort := dict "dot" . "itype" "number" "icon" "education" "disabled" .disabled "finput" $oix -}}
     {{$ort := dict "id" "ort" "caption" (i18n "_ort_exam" .language) "def" "99" "validate" $numort "flabel" $ol1 -}}
     {{template "forminput" mergedict $defort $ort}}
