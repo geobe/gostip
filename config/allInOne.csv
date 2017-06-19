@@ -1,80 +1,80 @@
 keywords,de,en,ru,kg
-_dkfai_welcome,DKFAI Welcome,KGFAI Welcome,Добро пожаловать на КГФАИ,КГФАИге кош келиниздер
-_dkfai_tregister,DKFAI Registrierung,KGFAI Registration,Регистрация на КГФАИ,КГФАИге каттоо
-_dkfai_thankyou,Danke für deine Anmeldung,Thank you for registering,,
+_dkfai_welcome,DKFAI Welcome,KGFAI Welcome,Добро пожаловать на КГФАИ,КГКИФге кош келиңиздер
+_dkfai_tregister,DKFAI Registrierung,KGFAI Registration,Регистрация на КГФАИ,КГКИФге каттоо
+_dkfai_thankyou,Danke für deine Anmeldung,Thank you for registering,Благодарим за регистрацию,Каттоодон отконунузго рахмат
 _dkfai_h2,Deutsch-Kirgisische Fakultät für Angewandte Informatik,Kyrgyz-German Faculty for Applied Informatics,Кыргызско-Германский факультет прикладной информатики,Кыргыз-Герман колдонмо информатика факультети
-_dkfai_goto_register,Melde dich jetzt bei uns an.,Register now with us.,Пройди регистрацию сейчас,Бизге азыр кошул
-_dkfai_teaser,"Informatik ist das spannendste Handwerk der Gegenwart. In unserer Fakultät lernst du, wie heute Software geschrieben wird, wie moderne Apps für Web und Smartphone entstehen, wie man Drohnen fliegen lässt und warum auch Gewächshäuser mit Informatik besser werden. Wir bringen dir bei, wie man Software entwickelt. Jedes Jahr vergeben wir Studienstipendien vom Deutschen Akademischen Austauschdienst. Und jedes Jahr geht eine Gruppe von Studenten nach Deutschland, um ein oder mehrere Semester in Zwickau zu studieren.","Software development is todays most exciting craftsmanship. In our faculty you will learn how software is developed nowadays, how to create modern apps for web and smartphone, how to fly UAVs and why even greenhouses will be improved by smart programs. We will teach you to efficiently develop software systems. And every year a group of our students is going to Germany to study for one ore two terms in the city of Zwickau.","На сегодняшний день информатика является увлекательным ремеслом. На нашем факультете ты сможешь узнать, как сегодня пишутся программные обеспечения, как возникают современные веб-приложения и мобильные приложения для смартфонов, как заставить  летать дроны и как современные теплицы становятся лучше с информатикой. Мы научим также разрабатывать программное обеспечение. Каждый год мы предоставляем  стипендии от Германской службы академических обменов. Ежегодно группа студентов едет в Германию для учебы в Цвиккау  на один  или несколько семестров.","Бүгүнкү күнгө чейин, компьютер илими кызыктуу өнөрчүлүк болуп саналат. Биздин факультетте  веб-тиркемелерди жана смартфондорго үчүн мобилдик тиркемелерди, компьютер  программаны жазууга үйрөнүү мумкунчулук бар.  Жыл сайын  Германиянын академиялык алмашуу кызматынын стипендиялары берилет. Жыл сайын студенттердин бир тобу бир же бир нече семестр боюнча Цвикау окуу үчүн Германияга барышат."
+_dkfai_goto_register,Melde dich jetzt bei uns an.,Register now with us.,Пройди регистрацию сейчас,Каттдон азыр өтүңүз
+_dkfai_teaser,"Informatik ist das spannendste Handwerk der Gegenwart. In unserer Fakultät lernst du, wie heute Software geschrieben wird, wie moderne Apps für Web und Smartphone entstehen, wie man Drohnen fliegen lässt und warum auch Gewächshäuser mit Informatik besser werden. Wir bringen dir bei, wie man Software entwickelt. Jedes Jahr vergeben wir Studienstipendien vom Deutschen Akademischen Austauschdienst. Und jedes Jahr geht eine Gruppe von Studenten nach Deutschland, um ein oder mehrere Semester in Zwickau zu studieren.","Software development is todays most exciting craftsmanship. In our faculty you will learn how software is developed nowadays, how to create modern apps for web and smartphone, how to fly UAVs and why even greenhouses will be improved by smart programs. We will teach you to efficiently develop software systems. And every year a group of our students is going to Germany to study for one ore two terms in the city of Zwickau.","На сегодняшний день информатика является увлекательным ремеслом. На нашем факультете ты сможешь узнать, как сегодня пишутся программные обеспечения, как возникают современные веб-приложения и мобильные приложения для смартфонов, как заставить  летать дроны и как современные теплицы становятся лучше с информатикой. Мы научим также разрабатывать программное обеспечение. Каждый год мы предоставляем  стипендии от Германской службы академических обменов. Ежегодно группа студентов едет в Германию для учебы в Цвиккау  на один  или несколько семестров.","Азыркы күндө инфооматика кызыктыруучу өнөр болуп саналат.  Биздин факультеттен сен, азыркы күндө программалык камсыздоо кантип түзүлөрүн,  смартфон үчүн мобилдик тиркеме жана заманбап веб-тиркеме кантип пайда болорун, информатика менен азыркы теплица кантип мыкты болорун жана дронду кантип учуруу керектигин биле аласың. Мындан тышкары биз сага программалык камсыздоону иштеп чыгууну үйрөтөбүз.   Жыл сайын Германиянын академиялык алмашуу кызматынын стипедиясын сунуштайбыз. Жыл сайын студенттер тобу Германиянын Цвикау шаарына  бир же бир нече семестр окуу үчүн барышат. "
 _hello_personal_1,"Hallo, {{.firstname}} {{.lastname}}, deine Anmeldung war erfolgreich. Eine Nachricht mit 
 deinen Anmeldedaten wurde an deine Mailadresse {{.email}} geschickt. Wenn du 
 innerhalb eines Tages keine Mail von uns bekommst oder doch irgendwelche 
-Daten falsch sind, melde dich bitte per Mail bei ","Hello, {{.firstname}} {{.lastname}}, you registered successfully. A mail with your registration data was sent to your mail address {{.email}}. If you didn“t receive a mail from us within one day or if any of the registered data are wrong, please contact us by mail at  ","Привет, {{.firstname}} {{.lastname}},  регистрация прошла успешно. Сообщение с  регистрационными данными отправлено на твою электронную почту {{.email}}. Если в течение одного дня ты не получишь письмо от нас или какие-то твои данные окажутся неправильными, пожалуйста, сообщи об этом нам по почте ",yyyy
-_hello_personal_2,oder telefonisch unter +996 312 549238 im DKFAI Projektbüro.,or by phone +996 312 549238 at our KGFAI project office.,или по телефону  +996 312 549238 в проектное бюро КГФАИ. ,yyyy
-_visit_us_fb,"Oder besuche uns auf Facebook und schreib uns, was dich besonders interessiert.",Or visit us on facebook and tell us what is really interesting you.,"Или посетите нас на Facebook и напишите нам, что вас особенно интересует. ",yyyy
-_ok_or_change,Ist alles richtig? Bestätige oder korrigiere bitte folgende Angaben: ,Is everything recorded correctly? Please confirm or correct your registration data:,Все верно? Тогда подтверди или исправь следующие данные:,yyyy
-_ok_or_correct,Bitte bestätigen oder korrigieren Sie folgende Angaben:,Please confirm or correct these entries:,"Пожалуйста, подтверди или исправь следующие данные:",yyyy
-_district,Oblast,Oblast,Область,yyyy
-_ort_exam,ORT,ORT,ОРТ,yyyy
-_lastname,Nachname ,Last name,Фамилия ,yyyy
-_firstname,Vorname,First name,Имя,yyyy
-_middlename,Vatersname,Fathers name,Отчество ,yyyy
-_phone,Telefon ,Phone,Телефон ,yyyy
-_mail,Email,Mail,Электронная почта,yyyy
-_dkfai_register,DKFAI Registration,KGFAI Registration,Регистрация КГФАИ,yyyy
-_reminder_documents,Beachte bitte: Für das Studium und die Teilnahme am Stipendientest musst du dich zusätzlich mit deinen Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.,Please note: To enrol at our faculty and participate in the DAAD grant exam you will have to enrol personally with your documents at the Kyrgyz-German Faculty of Applied Informatics at KSUCTA.,"Обрати внимание: Для учебы и для участия в тесте на стипендию, необходимо дополнительно пройти регистрацию с оригиналами документов на Кыргызско-Германском факультете информатики, КГУСТА.",yyyy
-_check_input,Bitte überprüfe noch einmal deine Angaben,Please check your data once again,"Пожалуйста, еще раз проверь свои данные",yyyy
-_input_ok,Alle Angaben sind richtig,Everything is correct,Все данные правильные,yyyy
-_input_change,Angaben korrigieren,Edit data,Изменить данные,yyyy
-_fathersname,Vatersname,Fathers name,Отчество,yyyy
-_mail,Email,mail,Электронная почта,yyyy
-_city,Wohnort,Home city,Местожительство,yyyy
-_school,Abitur-Schule,Graduating school,Школа,yyyy
-_ort_exam,ORT,ORT,ОРТ,yyyy
-_ort_math,ORT Mathe,ORT Math,ОРТ по математике,yyyy
-_ort_phys,ORT Physik,ORT Physics,ОРТ по физике,yyyy
-_correct,richtig,correct,правильно,yyyy
-_total,Gesamt,total,Итого,yyyy
-_math,Mathe,Math,Математика,yyyy
-_physics,Physik,Physics,Физика,yyyy
-_text,Text,Text,Текст,yyyy
-_language,Sprache,Language,Язык,yyyy
-_cancellation,Exmatrikulieren,Cancel enrolment,Отменить регистрацию,yyyy
-_undo_cancellation,Exmatrikulation rückgängig machen,Undo cancellation,Отменить аннулирование регистрации,yyyy
-_xplain_marks,"Punkte: 0, 0.5, 1, ... ,","Points: 0, 0.5, 1, ... ,","Пункты: 0, 0.5, 1, ... ,",yyyy
-_xplain_language_marks,"Note: 0 ... 5, eine Kommastelle","Mark: 0 ... 5, one decimal","Оценка: 0 ... 5, оценки с запятыми",yyyy
-_title_enrol,Bewerber immatrikulieren,Enrol candidate,Зарегистрировать кандидатов,yyyy
-_title_edit_candidate,Bewerberdaten editieren,Edit candidate data,Редактирование данных кандидата,yyyy
-_title_cancel_candidate,Exmatrikulieren,Cancellation,Отмена регистрации кандидата,yyyy
-_title_capture_results,Testergebnisse erfassen,Results list,Результаты тестирования,yyyy
-_title_result_list,Ergebnisliste,Results list,Список результатов,yyyy
-_title_edit_users,Benutzer bearbeiten,Edit user data,Редактировать пользователей,yyyy
-_title_admin,Administration,Administration,Администрация,yyyy
-_title_audit,Daten Audit,Data audit,Прослеживание изменения данных,yyyy
-_title_profile,Profil bearbeiten,Edit profile,Настройки профиля,yyyy
-_correct_data,Angaben berichtigen,Correct entered data,Правильно введенные данные,yyyy
-_confirm_data,Angaben bestätigen,Confirm entered data,Подтверждение данных,yyyy
-_daad_test_results,Ergebnisse des DAAD Stipendientests,Results of DAAD grant exam,Результаты ДААД тестирования,yyyy
-_edit_base_data,Stammdaten berichtigen,Edit base data,Изменение основных данных,yyyy
-_submit,Absenden,Submit,Отправить,yyyy
-_bishkek,Bishkek City,Bishkek City,Город Бишкек,yyyy
-_osh_city,Osh City,Osh City,Город Ош,yyyy
-_osh,Osh,Osh,Ош,yyyy
-_batken,Batken,Batken,Баткен,yyyy
-_chuy,Chuy,Chuy,Чуй,yyyy
-_jalalabad,Jalal-Abad,Jalal-Abad,Джалал-Абад,yyyy
-_naryn,Naryn,Naryn,Нарын,yyyy
-_talas,Talas,Talas,Талас,yyyy
-_yssykköl,Yssyk-köl,Yssyk-köl,Ыссык-Куль,yyyy
-_foreign,Ausland,Foreign,Заграница,yyyy
-_other,Other,Other,Другое,yyyy
-_de,Deutsch,German,Немецкий,yyyy
-_en,Englisch,English,Английский,yyyy
-_ru,Russisch,Russian,Русский,yyyy
-_kg,Kirgisisch,Kyrgyz,Кыргызский,yyyy
-_none,Keine,None,нет,yyyy
-_mail_subject,Deine Registrierung bei der DKFAI,Your registration at KGFAI,Регистрация на КГФАИ,
-_mail_greet,"Hallo {{.firstname}} {{.lastname}},","Hello {{.firstname}} {{.lastname}},","Здравствуйте, {{.firstname}} {{.lastname}},",
-_mail_body1,die folgenden Daten haben wir für deine Immatrikulation und die Teilnahme am DAAD Stipendientest gespeichert:,the following data for your enrolment and your participation in the DAAD grant exam are stroed on our system:,следующие данные были сохранены для регистрации и участия на тесте для получения гранта ДААД,
-_mail_body2,"Wenn die Daten nicht richtig sind, wenn du Fragen hast oder etwas genauer wissen möchtest, schicke uns eine Mail oder rufe uns an unter +996 312 549238.","When anything is wrong with the data, if you have questions or are just curious on some detail, send us a mail or call us at +996 312 549238.","В случае введения неправильных данных, при возникновении каких-либо вопросов или для получения подробной информации напиши нам на почту и свяжись по следующему телефону +996 312 549238",
-_mail_bye,"Wir freuen uns auf dich,","Looking forward to seeing you soon,",Мы очень рады тебе!,
-_mail_signature,das Team von der DKFAI!,the KGFAI team!,С уважением команда КГФАИ!,
+Daten falsch sind, melde dich bitte per Mail bei ","Hello, {{.firstname}} {{.lastname}}, you registered successfully. A mail with your registration data was sent to your mail address {{.email}}. If you didn“t receive a mail from us within one day or if any of the registered data are wrong, please contact us by mail at  ","Привет, {{.firstname}} {{.lastname}},  регистрация прошла успешно. Сообщение с  регистрационными данными отправлено на твою электронную почту {{.email}}. Если в течение одного дня ты не получишь письмо от нас или какие-то твои данные окажутся неправильными, пожалуйста, сообщи об этом нам по почте ","Саламатсызбы  {{.firstname}} {{.lastname}}, катталуу ийгиликтүү өттү. Катталуу маалыматтары менен билдирүү сиздин электрондук дарегиңизге жөнөтүлдү {{.email}}. Эгер бир күн ичинде сиз бизден эч кандай кат албасаң же сиздин кандайдыр бир маалыматтар туура эмес болсо, бизге почта аркылуу маалымат жибериңиз."
+_hello_personal_2,oder telefonisch unter +996 312 549238 im DKFAI Projektbüro.,or by phone +996 312 549238 at our KGFAI project office.,или по телефону  +996 312 549238 в проектное бюро КГФАИ. ,КГКИФнин долборлоо бюросуна  +996 312 549238 телефону боюнча байланышыңыз.
+_visit_us_fb,"Oder besuche uns auf Facebook und schreib uns, was dich besonders interessiert.",Or visit us on facebook and tell us what is really interesting you.,"Или посетите нас на Facebook и напишите нам, что вас особенно интересует. ",Facebook баракчабызга кирип өзгөчө сизди эмне кызыктырат бизге жазыңыз
+_ok_or_change,Ist alles richtig? Bestätige oder korrigiere bitte folgende Angaben: ,Is everything recorded correctly? Please confirm or correct your registration data:,Все верно? Тогда подтверди или исправь следующие данные:,Бары туурабы?  Анда кийинки маалыматтарды тактаңыз  же оңдоңуз:
+_ok_or_correct,Bitte bestätigen oder korrigieren Sie folgende Angaben:,Please confirm or correct these entries:,"Пожалуйста, подтверди или исправь следующие данные:",Сураныч кийинки маалыматтарды тактаңыз же оңдоңуз:
+_district,Oblast,Oblast,Область,Область
+_ort_exam,ORT,ORT,ОРТ,ЖРТ
+_lastname,Nachname ,Last name,Фамилия ,Фамилиясы
+_firstname,Vorname,First name,Имя,Аты
+_middlename,Vatersname,Fathers name,Отчество ,Атасынын аты
+_phone,Telefon ,Phone,Телефон ,Телефон
+_mail,Email,Mail,Электронная почта,Электрондук почта
+_dkfai_register,DKFAI Registration,KGFAI Registration,Регистрация КГФАИ,КГКИФге катталуусу
+_reminder_documents,Beachte bitte: Für das Studium und die Teilnahme am Stipendientest musst du dich zusätzlich mit deinen Unterlagen bei der Kirgisisch-Deutschen Fakultät der KSUCTA einschreiben.,Please note: To enrol at our faculty and participate in the DAAD grant exam you will have to enrol personally with your documents at the Kyrgyz-German Faculty of Applied Informatics at KSUCTA.,"Обрати внимание: Для учебы и для участия в тесте на стипендию, необходимо дополнительно пройти регистрацию с оригиналами документов на Кыргызско-Германском факультете информатики, КГУСТА.","Көңүл буруңуз: Окуу жана стипендияга катышуу тести үчүн КМКАжТУда , Кыргыз-Герман информатика факультетинен  документтердин түп нускасы менен кошумча каттоодон өтүү зарыл."
+_check_input,Bitte überprüfe noch einmal deine Angaben,Please check your data once again,"Пожалуйста, еще раз проверь свои данные",Өз маалыматтарыңызды дагы бир жолу текшериңиз
+_input_ok,Alle Angaben sind richtig,Everything is correct,Все данные правильные,Бардык маалыматтар туура
+_input_change,Angaben korrigieren,Edit data,Изменить данные,Маалыматтарды өзгөртүү
+_fathersname,Vatersname,Fathers name,Отчество,Атасынын аты
+_mail,Email,mail,Электронная почта,Электрондук почта
+_city,Wohnort,Home city,Местожительство,Жашаган жери
+_school,Abitur-Schule,Graduating school,Школа,Мектеп
+_ort_exam,ORT,ORT,ОРТ,ЖРТ
+_ort_math,ORT Mathe,ORT Math,ОРТ по математике,ЖРТ математика боюнча
+_ort_phys,ORT Physik,ORT Physics,ОРТ по физике,ЖРТ физика боюнча
+_correct,richtig,correct,правильно,Туура
+_total,Gesamt,total,Итого,Жыйынтыгы 
+_math,Mathe,Math,Математика,Математика
+_physics,Physik,Physics,Физика,Физика
+_text,Text,Text,Текст,Тест
+_language,Sprache,Language,Язык,Тил
+_cancellation,Exmatrikulieren,Cancel enrolment,Отменить регистрацию,Каттоону токтотуу
+_undo_cancellation,Exmatrikulation rückgängig machen,Undo cancellation,Отменить аннулирование регистрации,Каттоону жокко чыгарууну токтотуу
+_xplain_marks,"Punkte: 0, 0.5, 1, ... ,","Points: 0, 0.5, 1, ... ,","Пункты: 0, 0.5, 1, ... ,","Пункт: 0,0.5,1...,"
+_xplain_language_marks,"Note: 0 ... 5, eine Kommastelle","Mark: 0 ... 5, one decimal","Оценка: 0 ... 5, оценки с запятыми","Баасы: 0...5, үтүр менен баасы"
+_title_enrol,Bewerber immatrikulieren,Enrol candidate,Зарегистрировать кандидатов,Кандидаттарды каттоо
+_title_edit_candidate,Bewerberdaten editieren,Edit candidate data,Редактирование данных кандидата,Кандидаттардын маалыматтарын оңдоо
+_title_cancel_candidate,Exmatrikulieren,Cancellation,Отмена регистрации кандидата,Кандидаттарды каттоону токтотуу
+_title_capture_results,Testergebnisse erfassen,Results list,Результаты тестирования,Тестирлөөнүн жыйынтыгы
+_title_result_list,Ergebnisliste,Results list,Список результатов,Жыйынтыктын тизмеси 
+_title_edit_users,Benutzer bearbeiten,Edit user data,Редактировать пользователей,Колдонуучуларды оңдоо 
+_title_admin,Administration,Administration,Администрация,Админстрация
+_title_audit,Daten Audit,Data audit,Прослеживание изменения данных,Маалыматтардын өзгөрүүсүн көзөмөлдөө
+_title_profile,Profil bearbeiten,Edit profile,Настройки профиля,Профилди түзүү
+_correct_data,Angaben berichtigen,Correct entered data,Правильно введенные данные,Маалыматтар туура киргизилген
+_confirm_data,Angaben bestätigen,Confirm entered data,Подтверждение данных,Маалыматтарды тастыктоо
+_daad_test_results,Ergebnisse des DAAD Stipendientests,Results of DAAD grant exam,Результаты ДААД тестирования,ДААД тестирлөөсүнүн жыйынтыгы
+_edit_base_data,Stammdaten berichtigen,Edit base data,Изменение основных данных,Негизи маалыматтардын өзгөрүүсү
+_submit,Absenden,Submit,Отправить,Жөнөтүү
+_bishkek,Bishkek City,Bishkek City,Город Бишкек,Бишкек шаары
+_osh_city,Osh City,Osh City,Город Ош,Ош шаары
+_osh,Osh,Osh,Ош,Ош
+_batken,Batken,Batken,Баткен,Баткен 
+_chuy,Chuy,Chuy,Чуй,Чүй
+_jalalabad,Jalal-Abad,Jalal-Abad,Джалал-Абад,Жалал –Абад
+_naryn,Naryn,Naryn,Нарын,Нарын
+_talas,Talas,Talas,Талас,Талас
+_yssykköl,Yssyk-köl,Yssyk-köl,Ыссык-Куль,Ыссык-Көл
+_foreign,Ausland,Foreign,Заграница,Чет мамилекет
+_other,Other,Other,Другое,Башкалар
+_de,Deutsch,German,Немецкий,Немец
+_en,Englisch,English,Английский,Англис
+_ru,Russisch,Russian,Русский,Орус 
+_kg,Kirgisisch,Kyrgyz,Кыргызский,Кыргыз
+_none,Keine,None,нет,Жок
+_mail_subject,Deine Registrierung bei der DKFAI,Your registration at KGFAI,Регистрация на КГФАИ,КГКИФне катталуу
+_mail_greet,"Hallo {{.firstname}} {{.lastname}},","Hello {{.firstname}} {{.lastname}},","Здравствуйте, {{.firstname}} {{.lastname}},","Саламатсызбы, {{.firstname}} {{.lastname}},"
+_mail_body1,die folgenden Daten haben wir für deine Immatrikulation und die Teilnahme am DAAD Stipendientest gespeichert:,the following data for your enrolment and your participation in the DAAD grant exam are stroed on our system:,следующие данные были сохранены для регистрации и участия на тесте для получения гранта ДААД,Кийинки маалыматар ДААД грантын алуу үчүн тестке катышуу жана катталуу үчүн саталган
+_mail_body2,"Wenn die Daten nicht richtig sind, wenn du Fragen hast oder etwas genauer wissen möchtest, schicke uns eine Mail oder rufe uns an unter +996 312 549238.","When anything is wrong with the data, if you have questions or are just curious on some detail, send us a mail or call us at +996 312 549238.","В случае введения неправильных данных, при возникновении каких-либо вопросов или для получения подробной информации напиши нам на почту и свяжись по следующему телефону +996 312 549238","Маалыматтарды тура эмес киргизген учурда, кандайдыр бир суроо пайда болгондо же толук маалыматтарды алуу үчүн биздин почтага жазыңыз жана кийинки телефон боюнча байланышыңыз +996312549238"
+_mail_bye,"Wir freuen uns auf dich,","Looking forward to seeing you soon,",Мы очень рады тебе!,Биз абадан кубанычтабыз!
+_mail_signature,das Team von der DKFAI!,the KGFAI team!,С уважением команда КГФАИ!,Урматтоо менен КГКИФ командасы!
