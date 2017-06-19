@@ -80,7 +80,11 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 			appdata := model.ApplicantData{}
 			app.Data = appdata
 			setApplicantData(&app, r)
-			db.Create(&app)
+			if isAlreadyRegistered(&app) {
+				values["alreadyregistered"] = true
+			} else {
+				db.Create(&app)
+			}
 		}
 		setViewModel(app, values)
 		view.Views().ExecuteTemplate(w, "registration", values)

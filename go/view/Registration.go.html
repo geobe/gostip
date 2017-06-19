@@ -52,6 +52,25 @@
 
 {{define "registrationform"}}
 {{if .thankyou}}
+{{if .alreadyregistered}}
+<div class="container">
+    <div class="col-xs-12">
+        <span class="text-info">
+            <div class="jumbotron" style="background-color: #f2dede;">
+                <h3 class=""> {{i18n "_error" .language}}!</h3>
+                <div class=""> {{i18n "_already_registered" .language}}</div>
+                <div class="clearfix">
+                    <p><div class="pull-right">
+                        <a href="/"
+                           class="btn btn-warning">{{i18n "_cancel" .language}}</a>
+                    </div>
+                    </p>
+                </div>
+            </div>
+        </span>
+    </div>
+</div>
+{{else}}
 <div class="container">
     <div class="col-xs-12">
         <span class="text-info">
@@ -73,14 +92,15 @@
     </div>
 </div>
 {{end}}
+{{end}}
 <form class="form-horizontal" data-toggle="validator" style="margin-right: 0;" method="POST" action="{{.action}}">
     {{template "csrf" . }}
     {{template "appid" . }}
     {{template "registrationfields" .}}
     {{if .buttons}}
     <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">
-        <button type="reset" class="btn btn-default">Reset</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" onclick="window.location.href='/'" class="btn btn-default">{{i18n "_cancel" .language}}</button>
+        <button type="submit" class="btn btn-primary">{{i18n "_submit" .language}}</button>
     </div>
     {{end}}
 </form>

@@ -55,6 +55,13 @@ func setApplicantData(app *model.Applicant, r *http.Request) {
 	}
 }
 
+// check if applicant with same mail has already registered
+func isAlreadyRegistered(app *model.Applicant) bool {
+	var data model.ApplicantData
+	model.Db().First(&data, "email = ?", app.Data.Email)
+	return data.ID > 0
+}
+
 func setEnrolledAt(app *model.Applicant) {
 	if app.Data.EnrolledAt.IsZero() {
 		app.Data.EnrolledAt = time.Now()
