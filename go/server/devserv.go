@@ -12,8 +12,8 @@ import (
 
 // Server Ports, zu denen  Ports 80 und 443
 // vom Internet Router (z.B. FritzBox) mit Port Forwarding weitergeleitet wird
-const httpport = ":8070"
-const tlsport = ":8443"
+const httpport = ":18070"
+const tlsport = ":18443"
 
 func main() {
 	// read command line parameters
