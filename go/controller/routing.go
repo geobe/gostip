@@ -63,6 +63,8 @@ func SetRouting() *mux.Router {
 	mux.Handle("/enrol/show", enroleChecking.ThenFunc(ShowEnrol))
 	// process enrol form
 	mux.Handle("/enrol/submit", enroleChecking.ThenFunc(SubmitEnrol))
+	// process enrol delete
+	mux.Handle("/enrol/delete", enroleChecking.ThenFunc(SubmitApplicantDelete))
 	// show cancellation form
 	mux.Handle("/cancellation/show", enroleChecking.ThenFunc(ShowCancellation))
 	// process cancellation form

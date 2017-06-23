@@ -57,6 +57,10 @@ _daad_test_results,Ergebnisse des DAAD Stipendientests,Results of DAAD grant exa
 _edit_base_data,Stammdaten berichtigen,Edit base data,Изменение основных данных,Негизи маалыматтардын өзгөрүүсү
 _submit,Absenden,Submit,Отправить,Жөнөтүү
 _cancel,Abbrechen,Cancel,,
+_confirm_delete_head,Löschen bestätigen,Confirm Delete,,
+_confirm_delete_full,Diesen Eintrag endgültig löschen?,Permanently delete this entry?,,
+_confirm_delete_explain,Löschen kann nicht rückgängig gemacht werden.,Deletion cannot be undone.,,
+_delete,Bewerbung löschen,Delete application,,
 _error,Fehler,Error,,
 _already_registered,"Mit dieser Mail-Adresse hat sich schon jemand registriert. Bist du das? Du kannst dich nicht zweimal registrieren oder deine Angaben verändern. Falls du deine Angaben berichtigen willst, schicke uns bitte eine Mail mit den richtigen Angaben.","Someone has already registered with this mail address. Is that you? You cannot register twice or edit your submitted data. If you want to correct your data, send us a mail with the corrected data.",,
 _bishkek,Bishkek City,Bishkek City,Город Бишкек,Бишкек шаары

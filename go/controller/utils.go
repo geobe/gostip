@@ -47,11 +47,12 @@ func setApplicantData(app *model.Applicant, r *http.Request) {
 		app.Data.OrtOk = true
 	}
 	user, err := getUserFromSession(r)
-	if err == nil {
+	if err == nil && user.ID != 0 {
+		log.Print("user:", user)
 		app.Data.Model.UpdatedBy = fmt.Sprintf("%s(%s)",user.Fullname, user.Login)
 		app.Data.Model.Updater = user.ID
 	} else {
-		app.Data.Model.UpdatedBy = "self"
+		app.Data.Model.UpdatedBy = r.RemoteAddr
 	}
 }
 
@@ -179,6 +180,40 @@ func applicantFromSession(key string, r *http.Request) (app model.Applicant, err
 		return
 	}
 	return
+}
+
+// save edited applicant data to database
+func deleteApplicant(w http.ResponseWriter, r *http.Request) {
+	if err := parseSubmission(w, r); err != nil {
+		http.Error(w, "Request parse error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("error %v, status %v\n", "Request parse error: " + err.Error(),
+			http.StatusInternalServerError)
+		return
+	}
+	action := html.EscapeString(r.PostFormValue("action"))
+	appsession, err := applicantFromSession(action, r)
+	if err != nil {
+		http.Error(w, "Session store error: " + err.Error(), http.StatusInternalServerError)
+		log.Printf("action %s, error %v, status %v\n", action, "Session store error: " + err.Error(),
+			http.StatusInternalServerError)
+		return
+	}
+	// copy old applicant from session
+	app := appsession
+	data := app.Data
+	if app.ID != 0 && app.Data.ID != 0 {
+		user, err := getUserFromSession(r)
+		if err == nil {
+			data.Model.DeletedBy = fmt.Sprintf("%s(%s)",user.Fullname, user.Login)
+			data.Model.Deleter = user.ID
+		} else {
+			app.Data.Model.UpdatedBy = "self"
+		}
+		model.Db().Save(&data)
+		model.Db().Delete(&app)
+		model.Db().Delete(&data)
+	}
+	w.WriteHeader(http.StatusNoContent)
 }
 
 // save edited applicant data to database

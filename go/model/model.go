@@ -16,4 +16,6 @@ type Model struct {
 	// database accountable
 	UpdatedBy string
 	Updater   uint
+	DeletedBy string
+	Deleter   uint
 }

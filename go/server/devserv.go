@@ -27,8 +27,8 @@ func main() {
 	model.Setup(*cfgfile)
 	db := model.Db()
 	defer db.Close()
-//	model.ClearTestDb(db)
-	model.InitProdDb(db)
+	model.ClearTestDb(db)
+	model.InitTestDb(db)
 
 	// mux verwaltet die Routen
 	mux := controller.SetRouting()

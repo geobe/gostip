@@ -54,3 +54,11 @@ func SubmitApplicantEdit(w http.ResponseWriter, r *http.Request) {
 		saveApplicantSubmission(w, r, false)
 	}
 }
+
+// SubmitApplicantDelete is handler that accepts form submissions from the edit tab.
+// Only http POST method is accepted.
+func SubmitApplicantDelete(w http.ResponseWriter, r *http.Request) {
+	if err := checkMethodAllowed(http.MethodPost, w, r); err == nil {
+		deleteApplicant(w, r)
+	}
+}

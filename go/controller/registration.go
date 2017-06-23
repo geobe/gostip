@@ -83,6 +83,7 @@ func SubmitRegistration(w http.ResponseWriter, r *http.Request) {
 			if isAlreadyRegistered(&app) {
 				values["alreadyregistered"] = true
 			} else {
+				app.Data.Model.UpdatedBy = r.RemoteAddr
 				db.Create(&app)
 			}
 		}
