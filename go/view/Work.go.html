@@ -138,11 +138,13 @@
         <a data-toggle="tab" href="#users"><span class="glyphicon glyphicon-user"></span></a>
     </li>
     {{end}}
-    <script type="text/javascript">
-        searchStates['admin'] = new SearchState('#qapps', '#search1', '#search2');
-        searchStates['trace'] = new SearchState('#qapps', '#search1', '#search2');
-    </script>
     {{if .authfulladmin}}
+    <script type="text/javascript">
+        searchStates['admin'] = new SearchState('#qapps', '#search1', '#!search2');
+        searchStates['trace'] = new SearchState('#qapps', '#search1', '#search2');
+//        finderValues['admin'] = {findUrl: '/find/year', targetUrl: '/admin/result', target: '#adminarea'};
+//        finderValues['trace'] = {findUrl: '/find/applicant', targetUrl: '/admin/trace', target: '#tracearea'};
+    </script>
     <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_admin" .language}}'>
         <a data-toggle="tab" href="#admin"><span class="glyphicon glyphicon-wrench"></span></a>
     </li>

@@ -109,6 +109,16 @@
         };
         this.restoreContent = function() {
             $(selectid).html(content);
+            /*
+            if(search1.slice(1, 2) === '!') {
+                search1 = search1.replace('!', '');
+                console.log("replaced: " + search1);
+            }
+            if(search2.slice(1, 2) === '!') {
+                search2 = search2.replace('!', '');
+                console.log("replaced: " + search2);
+            }
+            */
             if($(selectid +' select').length) {
                 $(selectid +' select').val(idx);
             }
