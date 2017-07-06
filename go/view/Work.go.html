@@ -140,8 +140,8 @@
     {{end}}
     {{if .authfulladmin}}
     <script type="text/javascript">
-        searchStates['admin'] = new SearchState('#qapps', '#search1', '#!search2');
-        searchStates['trace'] = new SearchState('#qapps', '#search1', '#search2');
+        searchStates['admin'] = new SearchState('#qapps', '#search1', '#search2', true);
+        searchStates['trace'] = new SearchState('#qapps', '#search1', '#search2', true, true);
 //        finderValues['admin'] = {findUrl: '/find/year', targetUrl: '/admin/result', target: '#adminarea'};
 //        finderValues['trace'] = {findUrl: '/find/applicant', targetUrl: '/admin/trace', target: '#tracearea'};
     </script>

@@ -91,7 +91,7 @@
     }
 
     // constructor function for objects that save and recover search results html when tabs are changed
-    function SearchState(fid, s1id, s2id) {
+    function SearchState(fid, s1id, s2id, disab1, disab2) {
         var selectid = fid;
         var search1 = s1id;
         var search2 = s2id;
@@ -99,7 +99,9 @@
         var sval1 = '';
         var sval2 = ''
         var idx = -1;
-        this.saveContent = function() {
+        var disable1 = disab1 !== undefined && disab1 !== false;
+        var disable2 = disab2 !== undefined && disab2 !== false;
+       this.saveContent = function() {
             content = $(selectid).html();
             if($(selectid +' select').length) {
                 idx = $(selectid +' select').val();
@@ -109,16 +111,10 @@
         };
         this.restoreContent = function() {
             $(selectid).html(content);
-            /*
-            if(search1.slice(1, 2) === '!') {
-                search1 = search1.replace('!', '');
-                console.log("replaced: " + search1);
-            }
-            if(search2.slice(1, 2) === '!') {
-                search2 = search2.replace('!', '');
-                console.log("replaced: " + search2);
-            }
-            */
+//            console.log("disabled: " + disable1);
+            $(search1).prop('disabled', disable1);
+            $(search2).prop('disabled', disable2);
+            $('#find').prop('disabled', disable1 && disable2);
             if($(selectid +' select').length) {
                 $(selectid +' select').val(idx);
             }
