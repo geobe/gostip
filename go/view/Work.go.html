@@ -119,9 +119,9 @@
     {{if .authpoff}}
     <script type="text/javascript">
         searchStates['results'] = new SearchState('#qapps', '#search1', '#search2');
-        searchStates['resultlist'] = new SearchState('#qapps', '#search1', '#search2');
+        searchStates['resultlist'] = new SearchState('#qapps', '#search1', '#search2', true, true);
         finderValues['results'] = {findUrl: '/find/applicant', targetUrl: '/results/show', target: '#resultsarea'};
-        finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultlistarea'};
+//        finderValues['resultlist'] = {findUrl: '/find/applicant', targetUrl: '/enrol/resultlist', target: '#resultlistarea'};
     </script>
     <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_capture_results" .language}}'>
         <a data-toggle="tab" href="#results"><span class="glyphicon glyphicon-certificate"></span></a>
@@ -199,7 +199,7 @@
     </div>
     <div id="resultlist" class="tab-pane fade">
         <div id="resultlistarea" style="margin: 20px">
-            <p></p>
+            {{template "results_download" .}}
         </div>
     </div>
     {{end}}

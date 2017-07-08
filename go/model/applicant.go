@@ -25,6 +25,16 @@ const (
 	OTHER = 99
 )
 
+func (l *Lang) Lang() string {
+	if *l == DE {
+		return "d"
+	} else if *l == EN {
+		return "e"
+	} else {
+		return ""
+	}
+}
+
 // an applicant for a place at university
 type Applicant struct {
 	ID        int `gorm:"primary_key"`

@@ -97,3 +97,14 @@
 {{template "formselect" mergedict $base $lan}}
 
 {{end}}
+
+{{define "results_download" -}}
+    <!--button id="download-results" type="button" class="btn btn-default">{{i18n "_download_results" .language}}</button-->
+    <p><a href="/results/getcsv" class="btn btn-success btn-lg" download="results.csv">
+        {{i18n "_download_results" .language}}
+    </a></p>
+
+<script type="text/javascript">
+
+</script>
+{{end}}
