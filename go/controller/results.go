@@ -52,6 +52,13 @@ func GetResultsCsv(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// controller function to prepare a csv file with applicant enrol data for download
+func GetChecklistCsv(w http.ResponseWriter, r *http.Request) {
+	if err := checkMethodAllowed(http.MethodGet, w, r); err == nil {
+		getChecklistCsv(w, r)
+	}
+}
+
 func getApplicantCsv(w http.ResponseWriter, r *http.Request) {
 	var year int
 	ok := setIfPosted(&year, "year", r)
@@ -89,6 +96,31 @@ func getApplicantCsv(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, ";;%s;%.1f\n", app.Language.Lang(), float32(app.LanguageResult) / 10.)
 	}
 }
+
+func getChecklistCsv(w http.ResponseWriter, r *http.Request) {
+	var year int
+	ok := setIfPosted(&year, "year", r)
+	if ! ok {
+		year = time.Now().Year()
+	}
+	var participants []model.ApplicantData
+	i18nlanguage := view.PreferedLanguages(r) [0]
+
+	t0 := time.Date(year, time.January, 1, 0, 0, 0, 0, time.UTC)
+	t1 := time.Date(year + 1, time.January, 1, 0, 0, 0, 0, time.UTC)
+	model.Db().Order("last_name, first_name").Preload("Oblast").
+		Find(&participants, "updated_at >= ? AND updated_at < ? ", t0, t1)
+	fmt.Fprint(w, makeCheckHeader())
+	for _, app := range participants {
+		fmt.Fprintf(w, "%d;%s;%s;%s;%s;\"%s\";%s;%s;%s;%s;%d;%d;%d\n",
+			app.ID,
+			app.LastName, app.LastNameTx, app.FirstName, app.FirstNameTx,
+			app.Phone, app.Email, app.Home, app.School,
+			view.I18n(app.Oblast.Name, i18nlanguage),
+			app.OrtSum, app.OrtMath, app.OrtPhys)
+	}
+}
+
 func makeHeaderLines(nquestion int) string {
 	h11 := "ID;Name;NameTX;Vorname;VornameTx;" +
 		"Telefon;Email;Stadt;Schule;Oblast;" +
@@ -106,6 +138,13 @@ func makeHeaderLines(nquestion int) string {
 		pl = pl + ";"
 	}
 	return h11 + pl + h12 + h21 + qn + h22
+}
+
+func makeCheckHeader() string {
+	h11 := "ID;Name;NameTX;Vorname;VornameTx;" +
+		"Telefon;Email;Stadt;Schule;Oblast;" +
+		"ORT gesamt;Mathe;Physik\n"
+	return h11
 }
 
 // add a slice of possible test results for the given year to the viewmodel

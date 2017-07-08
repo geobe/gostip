@@ -59,8 +59,10 @@ func SetRouting() *mux.Router {
 	mux.Handle("/results/show", resultsChecking.ThenFunc(ShowResults))
 	// submit results edit form
 	mux.Handle("/results/submit", resultsChecking.ThenFunc(SubmitResults))
-	// download results csv
+	// download results as csv
 	mux.Handle("/results/getcsv", resultsChecking.ThenFunc(GetResultsCsv))
+	// download check list as csv
+	mux.Handle("/results/getcheckcsv", resultsChecking.ThenFunc(GetChecklistCsv))
 	// show enrol form
 	mux.Handle("/enrol/show", enroleChecking.ThenFunc(ShowEnrol))
 	// process enrol form
