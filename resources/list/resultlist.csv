@@ -1,0 +1,7 @@
+Test_ID,Vorname,Nachname,VornameTx,NachnameTx,Telefon,Email,Oblast,Stadt,Ort,ortMath,ortPhys,1,2,3,4,5,6,7,8,9,10,Gesamt,D/E,Language
+2167,Daisy,Duck,Даисы,Дукк,08980080099,Daisy@disney.com,,München,230,100,66,10,70,80,40,50,70,70,80,90,10,570,_none,0
+2168,Donald,Duck,Доналд,Дукк,08955443322,Donald@disney.com,,Oberpfaffenhofen,101,50,0,10,70,80,40,50,70,70,80,90,10,570,_none,0
+2169,Primus,Quack,Примус,Квьакк,04055443322,Primus.Quack@disney.com,,Hamburg,245,100,100,20,30,0,100,90,120,10,10,0,0,380,_none,0
+2165,Franzoa,Gansing,Франзоа,Гансинг,046774417,FraGa@goosemail.com,,Franzhausen,150,66,33,10,70,80,40,50,70,70,80,90,10,570,_none,0
+2164,Gisberto,Gansbek,Гисберто,Гансбек,040441777,Giga@goosemail.com,,Ducksburg,111,66,33,10,20,30,40,150,60,120,80,90,10,610,_none,0
+2166,Gertrude,Gans,Гертруде,Ганс,0467734567,Gerti@goosemail.com,,Ducksburg,178,99,36,10,70,80,40,50,70,70,80,90,10,570,_none,0
