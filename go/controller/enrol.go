@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"github.com/justinas/nosurf"
 	"log"
+	"github.com/geobe/gostip/go/model"
+
+//	"fmt"
 )
 
 // ShowEnrol is handler to show the selected applicant from the
@@ -53,4 +56,31 @@ func SubmitApplicantEdit(w http.ResponseWriter, r *http.Request) {
 	if err := checkMethodAllowed(http.MethodPost, w, r); err == nil {
 		saveApplicantSubmission(w, r, false)
 	}
+}
+
+func ShowUpdatedEnrol(w http.ResponseWriter, r *http.Request)  {
+
+	if checkMethodAllowed(http.MethodPost, w, r) != nil {
+		return
+	}
+
+
+	var updates []*model.ApplicantData = make([]*model.ApplicantData,0)
+	i18nlanguage := view.PreferedLanguages(r) [0]
+	values := viewmodel{
+		"oblasts": view.OblastsI18n(i18nlanguage),
+		"csrftoken": nosurf.Token(r),
+		"csrfid": "csrf_id_enrol",
+		"language":     i18nlanguage,
+	}
+	appid := atoint(html.EscapeString(r.FormValue("appid")))
+	db := model.Db()
+	db.Unscoped().Where("applicant_data.applicant_id = ?", appid).Find(&updates)
+
+
+	values["updates"] = updates
+
+	values["disabled"] = template.HTMLAttr("disabled='true'")
+	view.Views().ExecuteTemplate(w, "work_updated", values)
+
 }

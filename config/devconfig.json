@@ -1,7 +1,7 @@
 {
   "db": {
     "type": "postgres",
-    "connect": "user=dkfaiapp dbname=dkfaidev password=more4stud sslmode=disable"
+    "connect": "user=postgres dbname=godb password=root sslmode=disable"
   },
   "users": [
     {
@@ -19,7 +19,7 @@
     {
       "login": "enrol",
       "fullname": "Student enrolment",
-      "password": "enrol",
+      "password": "Tolya11)",
       "roles": [1,2]
     },
     {

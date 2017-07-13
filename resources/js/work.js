@@ -43,11 +43,14 @@
         var search1 = $("input#search1").val()
         var search2 = $("input#search2").val()
         var csrfid = $("input#csrf_id_find").val()
+
         var findUrl;
         if(typeof(finderValues[actTab]) !== 'undefined') {
             findUrl = finderValues[actTab].findUrl;
-            $("#qapps").load(findUrl, {lastname: search1, firstname: search2, csrf_token: csrfid,
-                action: actTab, flag: actTab === 'cancellation' ? searchFlag : ''},
+            $("#qapps").load(findUrl, {
+                    lastname: search1, firstname: search2, csrf_token: csrfid,
+                    action: actTab, flag: actTab === 'cancellation' ? searchFlag : ''
+                },
                 showSelect);
         }
     }
@@ -85,6 +88,7 @@
         if(typeof(finderValues[actTab]) !== 'undefined' && selid > 0) {
             var target = finderValues[actTab].target;
             var url = finderValues[actTab].targetUrl;
+
             $(target).load(url, {appid: selid, action: actTab, csrf_token: csrfid,
             flag: actTab == 'cancellation' ? searchFlag : ''});
         }
@@ -210,3 +214,4 @@
             $(aButton).attr('disabled', 'disabled');
         }
     }
+

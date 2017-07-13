@@ -30,8 +30,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{i18n "_dkfai_welcome" .language}}</title>
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-    <!-- Optional Bootstrap theme -->
+   <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
 </head>
 <body>
@@ -43,13 +43,12 @@
 <div class="ncontainer" style="padding-right: 15px;">
     {{template "registrationform" .}}
 </div>
-<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/jquery-3.1.1.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/validator.min.js"></script>
 </body>
 </html>
 {{end}}
-
 {{define "registrationform"}}
 {{if .thankyou}}
 <div class="container">
@@ -60,9 +59,10 @@
                 <div class=""> {{i18n "_reminder_documents" .language}}</div>
                 <div class="">{{i18n "_check_input" .language}}</div>
                 <div class="clearfix">
+
                     <p><div class="pull-right">
                         <a href="/index?appid={{.appid}}&{{if .csrffield}}{{.csrffield}}{{else}}csrf_token{{end}}={{.csrftoken}}"
-                           class="btn btn-primary">{{i18n "_input_ok" .language}}</a>
+                         id="submit" class="btn btn-primary">{{i18n "_input_ok" .language}}</a>
                         <a href="/register?appid={{.appid}}&{{if .csrffield}}{{.csrffield}}{{else}}csrf_token{{end}}={{.csrftoken}}"
                            class="btn btn-warning">{{i18n "_input_change" .language}}</a>
                     </div>
@@ -73,14 +73,56 @@
     </div>
 </div>
 {{end}}
-<form class="form-horizontal" data-toggle="validator" style="margin-right: 0;" method="POST" action="{{.action}}">
+<form id="regist" class="form-horizontal" data-toggle="validator" style="margin-right: 0;" method="POST" action="{{.action}}">
     {{template "csrf" . }}
     {{template "appid" . }}
     {{template "registrationfields" .}}
-    {{if .buttons}}
+    <div class="clearfix" style="margin-left: 120px">
+    <script type="text/javascript">
+
+        function check(f) {
+            cap = $('#cap').val()
+            if (cap.length == 6) {
+                $.ajax({
+                    url: "checkcaptcha",
+                    type: "get",
+                    data: {"cap": cap},
+                    success: function (result) {
+                        if (result == 'yes') {
+                            document.getElementById('capmessage').innerHTML = "<p style='color:green'>success</p>";
+                            document.getElementById('sub').disabled = false;
+                        }
+                        else {
+                            document.getElementById('capmessage').innerHTML = "<p style='color: red'>fail</p>";
+                            document.getElementById('sub').disabled = true;
+                            refresh();
+                        }
+                    }
+                })
+            }
+        }
+        function refresh(){
+            $.ajax({
+                url: "refresh",
+                type: "get",
+                success: function (result) {
+                    document.getElementById('imgcap').src = "/captcha/"+result+".png";
+                }
+            })
+        }
+    </script>
+    <img src="/captcha/{{ .captcha }}.png" id="imgcap">
+
+    <br>
+        <input id="cap" name="cap" onchange="check(this.form)">
+    <br>
+    <a onclick="refresh()">refresh</a><div id="capmessage"></div>
+    </div>
+
+        {{if .buttons}}
     <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">
         <button type="reset" class="btn btn-default">Reset</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button id="sub" type="submit" class="btn btn-primary" disabled>Submit</button>
     </div>
     {{end}}
 </form>

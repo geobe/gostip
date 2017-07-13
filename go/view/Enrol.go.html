@@ -188,3 +188,152 @@
 </div>
 {{end}}
 
+{{ define "work_edituser" }}
+
+<form  class="form-horizontal" style="margin-right: 0; margin-top: 15px;" type="POST" id="userform" action="Javascript:postUser()">
+    {{template "csrf" . }}
+    <div class="col-sm-6">
+        <div class=" form-group input-group">
+            <p id="passmess" style="color: #3c763d">Пароль должен иметь более 7 символов, обязательно иметь одну или несколько больших латынских букв,
+            одну или несколько маленьких латынских букв, одну или несколько цифр,
+            одну или несколько символических знаков и обязательно должен совпадать с проверкой.</p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <label for="fullname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+        Fullname:
+    </label>
+    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <input class="form-control" name="fullname" id="fullname" value="{{ .fullname }}" type="text" required >
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <label for="login" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+        Login:
+    </label>
+    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <input class="form-control" name="login" id="login" value="{{ .login }}" type="text" required >
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <label for="password" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+        Password:
+    </label>
+    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input class="form-control" name="password" id="password" type="password" required>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <label for="verify" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+    Verify:
+    </label>
+    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input class="form-control" name="verify" id="verify" type="password" required>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <script>
+        $(document).ready(function () {
+            $('#role').val($('#urole').val());
+        });
+
+        // submit the enrol form
+        function postUser() {
+            var formVars = $("#userform").serialize();
+            small = false
+            big = false
+            numb = false
+            sim = false
+            password = $('#password').val();
+            verify = $('#verify').val();
+            len = password.length
+            for (i = 0; i < len; i++) {
+                q = password.charCodeAt(i)
+                if (q > 64 && q < 91)big = true
+                else if (q > 96 && q < 123)small = true
+                else if (q > 47 && q < 58)numb = true
+                else sim = true
+            }
+            if (len > 7 && big && small && numb && sim) {
+                if (password == verify) {
+                    postSubmissionAndReload("/user/submit", formVars, "/user/show", "#usersarea");
+                }
+                else {
+                    document.getElementById('passmess').style.color = "Red";
+                }
+            }
+            else {
+                document.getElementById('passmess').style.color = "Red";
+            }
+
+        }
+
+    </script>
+    <label for="verify" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
+        Role:
+    </label>
+    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+        <div class=" form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                <select id="role" name="role" class="form-control">
+                    <option value="255" >Admin</option>
+                    <option value="9" >User Admin</option>
+                    <option value="7" >Project office member</option>
+                    <option value="3" >Student enrolment</option>
+                    <option value="1" >ein stino user</option>
+                </select>
+            </div>
+        <input type="text" value="{{ .role }}" id="urole" style="display: none">
+        </div>
+            <div class="clearfix"></div>
+    <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">
+        <button id="user_change" type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+{{ end }}
+
+{{ define "work_updated" }}
+    <table class="table">
+    <thead>
+    <tr>
+        <th>Lastname</th>
+        <th>Firstname</th>
+        <th>Fathersname</th>
+        <th>LastnameTx</th>
+        <th>FirstnameTx</th>
+        <th>FathersnameTx</th>
+        <th>E-mail</th>
+        <th>Phone</th>
+        <th>Updater</th>
+        <th>Date</th>
+    </tr>
+    </thead>
+        <tbody>
+    {{ range $key,$value := .updates }}
+    <tr>
+        <th>{{ $value.LastName }}</th>
+        <th>{{ $value.FirstName }}</th>
+        <th>{{ $value.FathersName }}</th>
+        <th>{{ $value.LastNameTx }}</th>
+        <th>{{ $value.FirstNameTx }}</th>
+        <th>{{ $value.FathersNameTx }}</th>
+        <th>{{ $value.Email }}</th>
+        <th>{{ $value.Phone }}</th>
+        <th>{{ $value.UpdatedBy }}</th>
+        <th><time>{{ $value.UpdatedAt }}</time></th>
+    </tr>
+
+    {{ end }}
+        </tbody>
+    </table>
+{{ end }}

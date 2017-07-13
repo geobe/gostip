@@ -39,7 +39,7 @@ func SetRouting() *mux.Router {
 	// Zugriff auf das Verzeichnis via Präfic /pages/
 	mux.PathPrefix("/pages/").Handler(requestLogging.Then(files))
 	// Zugriff auf die Resourcen-Verzeichnisse mit regular expression
-	mux.PathPrefix("/{dir:(?:css|fonts|js|images)}/").Handler(requestLogging.Then(resources))
+	mux.PathPrefix("/{dir:(?:css|fonts|js|images|captcha|list)}/").Handler(requestLogging.Then(resources))
 	// Zugriff auf *.htm[l] Dateien im /pages Verzeichnis
 	mux.Handle("/{dir:\\w+\\.html?}", requestLogging.Then(pages))
 	// error
@@ -73,5 +73,27 @@ func SetRouting() *mux.Router {
 	mux.Handle("/register", csrfChecking.ThenFunc(ShowRegistration))
 	// register
 	mux.Handle("/register/submit", csrfChecking.ThenFunc(SubmitRegistration))
+	// password change
+	mux.Handle("/passupdate", csrfChecking.ThenFunc(PasswordChange))
+	// fullname of user update
+	mux.Handle("/changefullname", csrfChecking.ThenFunc(UserFullnameChange))
+	// refresh captcha
+	mux.Handle("/refresh", csrfChecking.ThenFunc(Refresh))
+	// check captcha
+	mux.Handle("/checkcaptcha", csrfChecking.ThenFunc(CheckCaptcha))
+	// download csv
+	mux.Handle("/getcsv", csrfChecking.ThenFunc(DownloadCsv))
+	// set points to exam
+	mux.Handle("/gettasks", csrfChecking.ThenFunc(FindByYear))
+	// exam points submit
+	mux.HandleFunc("/examref", SubmitExamRef)
+	// find users
+	mux.Handle("/find/user", enroleChecking.ThenFunc(FindUser))
+	// show user
+	mux.Handle("/user/show", enroleChecking.ThenFunc(ShowUser))
+	// user submit
+	mux.Handle("/user/submit", enroleChecking.ThenFunc(SubmitUser))
+	// updated enrol
+	mux.Handle("/updated/applicant", enroleChecking.ThenFunc(ShowUpdatedEnrol))
 	return mux
 }

@@ -36,7 +36,7 @@ func FindApplicant(w http.ResponseWriter, r *http.Request) {
 	firstName := html.EscapeString(r.PostFormValue("firstname"))
 	action := html.EscapeString(r.PostFormValue("action"))
 	flag := html.EscapeString(r.PostFormValue("flag"))
-	enrol := action == "enrol"
+	enrol := action == "enrol" || action == "trace"
 	active := flag == ""
 	applicants := findApplicants(lastName, firstName, enrol, active)
 	view.Views().ExecuteTemplate(w, "qresult", applicantResultList(applicants, getKyr))
@@ -102,6 +102,7 @@ func findApplicants(ln, fn string, enrol bool, active bool) (apps []model.Applic
 			Where("applicant_data.first_name like ?", fn + "%").
 			Find(&apps)
 	}
+
 	return
 }
 
@@ -112,6 +113,7 @@ func addRoles(r *http.Request, data viewmodel) (err error) {
 		return
 	}
 	role, ok := session.Values["role"].(int)
+	login,_ := session.Values["login"].(string)
 	if !ok {
 		err = errors.New("no role defined")
 		return
@@ -134,5 +136,12 @@ func addRoles(r *http.Request, data viewmodel) (err error) {
 	if role & model.U_ALL != 0 {
 		data["authall"] = true
 	}
+
+
+	db := model.Db()
+	var user model.User
+	db.First(&user,"login = ?",login)
+	data["user"] = user
+
 	return
 }
