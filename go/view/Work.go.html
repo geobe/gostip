@@ -78,22 +78,6 @@
                         </div>
                     </div>
                 </form>
-                <script>
-                    function prepare() {
-                        $.ajax({
-                            url: "getcsv",
-                            type: "get",
-                            success: function () {
-                            var link = document.createElement('a');
-                                link.setAttribute('href','/list/resultlist.csv');
-                                link.setAttribute('download','resultlist.csv');
-                                link.click();
-
-                            }
-                        })
-                    }
-                </script>
-                <button onclick="prepare()">download</button>
         </div>
     </nav>
 </div>
@@ -161,10 +145,14 @@
         searchStates['admin'] = new SearchState('#qapps', '#search1', '#search2');
         searchStates['trace'] = new SearchState('#qapps', '#search1', '#search2');
         finderValues['trace'] = {findUrl: '/find/applicant', targetUrl: '/updated/applicant', target: '#tracearea'}
+
+        function loarea(url, area) {
+            $(area).load(url);
+        }
     </script>
 
     <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_admin" .language}}'>
-        <a data-toggle="tab" href="#admin"><span class="glyphicon glyphicon-wrench"></span></a>
+        <a data-toggle="tab" href="#admin" onclick="loarea('/examref', '#adminarea')"><span class="glyphicon glyphicon-wrench"></span></a>
     </li>
     <li data-toggle="tooltip" data-placement="top" title='{{i18n "_title_audit" .language}}'>
         <a data-toggle="tab" href="#trace"><span class="glyphicon glyphicon-eye-open"></span></a>
@@ -217,7 +205,7 @@
     </div>
     <div id="resultlist" class="tab-pane fade">
         <div id="resultlistarea" style="margin: 20px">
-            <p></p>
+            <p>{{template "downloadlist"}}</p>
         </div>
     </div>
     {{end}}
@@ -232,89 +220,6 @@
     <div id="admin" class="tab-pane fade">
         <div id="adminarea" style="margin: 20px">
             <p>
-            <script>
-                var empty;
-                var l;
-                var nquestion;
-                function gosub() {
-                    $('#examform').submit;
-                    document.getElementById('year').disabled = false;
-                    for (i=1;i<1000;i++){
-                        $('#ttt'+i).hide();
-                    }
-                }
-                function newtask() {
-                    n=l-empty;
-                    if(empty>0){
-                        $("<div class='col-sm-2' ><label for='task"+
-                            n+"'>Task"+n+": </label><input class='form-control' id='task"+
-                            n+"' placeholder='Task "+n+"' name='task"+n+"'></div><div class='clearfix'></div>").insertBefore('#task0');
-                        empty--;
-                    }
-                    if (empty<=0){
-                        $('#newtask').hide();
-                    }
-                }
-                function gettest() {
-                    yeah = $('#year').val();
-
-                    $.ajax({
-                        type: "get",
-                        url: "gettasks",
-                        dataType: "json",
-                        data: {"year": yeah},
-                        success: function (result) {
-                            document.getElementById('year').disabled = true;
-                            nquestion = result[0];
-                            l = result.length;
-                            empty = 0;
-                            for (i=l-1;i>0;i--){if(result[i]>0){break;}empty++;}
-                            for (i=1;i<l-empty;i++){
-                                $("<div id='ttt"+i+"' class='col-sm-2' ><label for='task"+
-                                        i+"'>Task"+i+": </label><input class='form-control' id='task"+
-                                        i+"' value='"+result[i]+"' name='task"+i+"'></div><div class='clearfix'></div>").insertBefore('#task0');
-                            }
-                            if (empty>0){
-                                $('#newtask').show();
-                            }
-                            document.getElementById('submit').disabled = false;
-                        }
-                    })
-                }
-            </script>
-                <form role="form" id="examform" method="post" class="form-horizontal" action="examref">
-                    <div class="form-group">
-                        <div class="row">
-                        <div class="col-sm-2">
-                            <label for="year">Year: </label>
-                            <select id="year" name="year" class="form-control" onchange="gettest()">
-                                <option >----------------</option>
-                                <option value="2017">2017</option>
-                                <option value="2018">2018</option>
-                                <option value="2019">2019</option>
-                                <option value="2020">2020</option>
-                                <option value="2021">2021</option>
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                            </select>
-                        </div>
-                            <div class="col-sm-3" style="margin-top: 30px"><button id="submit" onclick="gosub()" disabled>Submit</button></div>
-                    </div>
-                    </div>
-            <div class="clearfix"></div>
-                    <div class="form-group">
-                        <div id="task0"></div>
-
-                    </div>
-                </form>
-            <br>
-            <div class="col-sm-3 col-md-4" id="newtask" style="display: none">
-                <button onclick="newtask()">Add New Task</button>
-            </div>
-
             </p>
         </div>
     </div>
@@ -326,133 +231,13 @@
     {{end}}
     {{if .authall}}
     <div id="set" class="tab-pane fade">
-        <script type="text/javascript">
-            $(document).ready(function () {
-               $('#changepass').click(function () {
-                   $('#onchangepass').show();
-                   $('#onchangename').hide();
-                   $('#fullname').val("");
-               });
-                $('#changename').click(function () {
-                    $('#onchangename').show();
-                    $('#onchangepass').hide();
-                    $('#pass').val("");
-                    $('#verify').val("");
-                    document.getElementById('passmess').style.color = '#3c763d';
-                });
-            });
-            function checkUpdate(login) {
-                small = false
-                big = false
-                numb = false
-                sim = false
-                password = $('#pass').val();
-                verify = $('#verify').val();
-                len = password.length
-                for (i=0;i<len;i++){
-                    q = password.charCodeAt(i)
-                    if (q>64 && q<91)big = true
-                    else if (q>96 && q<123)small = true
-                    else if (q>47 && q<58)numb = true
-                    else sim = true
-                }
-                if (len>7 && big && small && numb && sim){
-                if (password==verify){
-                    $.ajax({
-                        url: "passupdate",
-                        data: {"login": login, "password": password},
-                        type: "get",
-                        success: function () {
-                            document.getElementById('passmess').innerHTML = "Пароль успешно изменен.";
-                            document.getElementById('passmess').style.color = '#3c763d';
-                            $('#pass').val("");
-                            $('#verify').val("");
-                            change('none');
-                        }
-                    })
-
-                }
-                else {
-                    document.getElementById('passmess').style.color = "Red";
-                }
-                }
-                else {
-                    document.getElementById('passmess').style.color = "Red";
-                }
-            }
-            function setname(login) {
-                var fullname = $('#fullname').val();
-                $.ajax({
-                    type : "get",
-                    url : "changefullname",
-                    data : {"fullname": fullname, "login": login},
-                    success : function (result) {
-                        document.getElementById('name').innerHTML = result;
-                        $('#fullname').val("");
-                    }
-                })
-            }
-        </script>
         <div id="setadminarea" style="margin: 20px">
             <p>
-                FullName : <p id="name">{{ .user.Fullname }}</p>
-                <br>
-                Login : {{ .user.Login }}
-            <br>
-            <div class="radio-inline">
-                <label for="changepass" class="control-label">
-                    <input id="changepass" type="radio" name="updateconf">
-                    Change Password
-                </label>
-            </div>
-            <div class="radio-inline">
-                <label for="changename" class="control-label">
-                    <input id="changename" type="radio" name="updateconf">
-                    Change Fullname
-                </label>
-            </div>
-                <div id="onchangepass" style="display: none">
-                 <form role="form" >
-                     <div class="form-group">
-                         <div class="col-sm-3">
-                             <p id="passmess" style="color: #3c763d">Пароль должен иметь более 7 символов, обязательно иметь одну или несколько больших латынских букв,
-                                 одну или несколько маленьких латынских букв, одну или несколько цифр,
-                                 одну или несколько символических знаков и обязательно должен совпадать с проверкой.</p>
-                         </div>
-                         <div class="clearfix"></div>
-                         <div class="col-sm-3">
-                            <label for="pass">Password: </label>
-                            <input class="form-control" type="password" name="password" id="pass">
-                         </div>
-                         <div class="clearfix"></div>
-                         <div class="col-sm-3">
-                            <label for="verify">Verify: </label>
-                            <input class="form-control" type="password" name="verify" id="verify"><div id="inc"></div>
-                         </div>
-                     </div>
-                     <div class="clearfix"></div>
-                 </form>
-                    <div class="col-sm-1">
-                        <button class="form-control" onclick="checkUpdate('{{ .user.Login }}')" >Submit</button>
-                    </div>
-                </div>
-            <div id="onchangename" style="display: none">
-                <form role="form" >
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            <label for="pass">Fullname: </label>
-                            <input class="form-control" type="text" name="fullname" id="fullname" >
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </form>
-                <div class="col-sm-1">
-                    <button class="form-control" onclick="setname('{{ .user.Login }}')" >Submit</button>
-                </div>
-            </div>
+               {{ template "setadminarea" .}}
             </p>
         </div>
     </div>
     {{end}}
 </div>
 {{end}}
+

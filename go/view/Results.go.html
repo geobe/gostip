@@ -97,3 +97,23 @@
 {{template "formselect" mergedict $base $lan}}
 
 {{end}}
+
+{{ define "downloadlist"}}
+<script>
+    function prepare() {
+        $.ajax({
+            url: "getcsv",
+            type: "get",
+            success: function () {
+                var link = document.createElement('a');
+                link.setAttribute('href','/list/resultlist.csv');
+                link.setAttribute('download','resultlist.csv');
+                link.click();
+            }
+        })
+    }
+</script>
+<div class="col-sm-2 col-md-2">
+    <button class="form-control" onclick="prepare()">Download ResultList</button>
+</div>
+{{ end }}

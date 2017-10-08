@@ -194,16 +194,14 @@
     {{template "csrf" . }}
     <div class="col-sm-6">
         <div class=" form-group input-group">
-            <p id="passmess" style="color: #3c763d">Пароль должен иметь более 7 символов, обязательно иметь одну или несколько больших латынских букв,
-            одну или несколько маленьких латынских букв, одну или несколько цифр,
-            одну или несколько символических знаков и обязательно должен совпадать с проверкой.</p>
+            <p id="passmess" style="color: #3c763d">{{i18n "_user_edit_message" .language}}</p>
         </div>
     </div>
     <div class="clearfix"></div>
     <label for="fullname" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
-        Fullname:
+        {{i18n "_user_fullname" .language}}:
     </label>
-    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+    <div class="col-xs-6 col-sm-4 col-sm-push-1 col-md-3 col-lg-2">
         <div class=" form-group input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
             <input class="form-control" name="fullname" id="fullname" value="{{ .fullname }}" type="text" required >
@@ -211,9 +209,9 @@
     </div>
     <div class="clearfix"></div>
     <label for="login" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
-        Login:
+        {{i18n "_user_login" .language}}:
     </label>
-    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+    <div class="col-xs-6 col-sm-4 col-sm-push-1 col-md-3 col-lg-2">
         <div class=" form-group input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
             <input class="form-control" name="login" id="login" value="{{ .login }}" type="text" required >
@@ -221,9 +219,9 @@
     </div>
     <div class="clearfix"></div>
     <label for="password" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
-        Password:
+        {{i18n "_user_password" .language}}:
     </label>
-    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+    <div class="col-xs-6 col-sm-4 col-sm-push-1 col-md-3 col-lg-2">
         <div class=" form-group input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
             <input class="form-control" name="password" id="password" type="password" required>
@@ -231,9 +229,9 @@
     </div>
     <div class="clearfix"></div>
     <label for="verify" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
-    Verify:
+        {{i18n "_user_verify" .language}}:
     </label>
-    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+    <div class="col-xs-6 col-sm-4 col-sm-push-1 col-md-3 col-lg-2">
         <div class=" form-group input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
             <input class="form-control" name="verify" id="verify" type="password" required>
@@ -279,9 +277,9 @@
 
     </script>
     <label for="verify" class="control-label col-xs-4 col-sm-2 col-md-2 col-lg-1">
-        Role:
+        {{i18n "_user_role" .language}}:
     </label>
-    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+    <div class="col-xs-6 col-sm-4 col-md-3 col-sm-push-1 col-lg-2">
         <div class=" form-group input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                 <select id="role" name="role" class="form-control">
@@ -295,8 +293,8 @@
         <input type="text" value="{{ .role }}" id="urole" style="display: none">
         </div>
             <div class="clearfix"></div>
-    <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-md-offset-2 col-lg-offset-1">
-        <button id="user_change" type="submit" class="btn btn-primary">Submit</button>
+    <div class="col-xs-8 col-xs-offset-4 col-sm-3 col-sm-offset-2 col-sm-push-2 col-md-offset-2 col-lg-offset-1">
+        <button id="user_change" type="submit" class="btn btn-primary">{{i18n "_submit" .language}}</button>
     </div>
 </form>
 
@@ -336,4 +334,350 @@
     {{ end }}
         </tbody>
     </table>
+{{ end }}
+
+
+{{ define "adminarea" }}
+<script>
+    currentyear = (new Date()).getFullYear();
+    $("#year option:contains("+currentyear+")").attr('selected', true);
+    showMaxValues();
+
+    function showMaxValues() {
+        results = $('#year').val();
+        l = results.length;
+        v = 0;
+        counter = 0;
+        for (i=0;i<l;i++){
+            if(results.charCodeAt(i)==32){
+                counter++;
+                $("#mr"+counter+"").val(v)
+                v = 0;
+                continue;
+            }
+            v=(v*10)+results.charCodeAt(i)-48;
+        }
+    }
+
+    function editMaxResults(nq) {
+        for (i=1;i<=nq;i++) {
+            $("#mr"+i+"").prop('readonly',false);
+        }
+        $('#editMR').hide();
+        $('#submitMR').show();
+    }
+
+    function submitMaxResults() {
+        if (!$('#yearTo').val()) {
+            str = $('#year option:selected').text();
+            $('#yearTo').val(str);
+        }
+        $('#examform').submit();
+    }
+
+    function addNew(nq) {
+        $('#addnewMR').hide();
+        $('#droppy').hide();
+        $('#forsubyear').show();
+        editMaxResults(nq);
+    }
+</script>
+<form role="form" id="examform" method="post" class="form-horizontal" action="submitexamref">
+    <div class="col-sm-2">
+        <input id="addnewMR" type="button" class="form-control" value="Add new year" onclick="addNew('{{.NQ}}')">
+    </div>
+    <div class="form-group">
+
+        <div class="clearfix"></div>
+        <div class="row">
+            <div id="forsubyear" class="col-sm-2" style="display: none">
+                <label for="yearTo">Year: </label>
+            <input id="yearTo" class="form-control" name="year">
+            </div>
+            <div class="clearfix"></div>
+            <div id="droppy" class="col-sm-2">
+                <label for="year">Year: </label>
+                <select id="year" class="form-control" onchange="showMaxValues()">
+                    {{ range $key,$value := .Examref }}
+                    <option value="{{$value.Resultsave}}">{{$value.Year}}</option>
+                    {{ end }}
+                </select>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div id="maxresults">
+                {{ range $key,$value := .Rescounter }}
+                <div class="form-group">
+                <label for="mr{{$value}}" class="col-sm-push-1">{{$value}}:</label>
+                    <div class="col-sm-1 col-sm-push-1">
+                        <input class="form-control" id="mr{{$value}}" name="mr{{$value}}" readonly>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                {{ end }}
+
+                </div>
+    </div>
+</form>
+
+
+<div id="submitMR" class="col-sm-2" hidden>
+    <button class="form-control" onclick="submitMaxResults()">
+        Submit
+    </button>
+</div>
+
+<div id="editMR" class="col-sm-2">
+    <button class="form-control" onclick="editMaxResults('{{.NQ}}')">
+        Edit
+    </button>
+</div>
+
+
+{{ end }}
+
+
+
+
+{{ define "setadminarea" }}
+
+<div class="form-group">
+    <div class="col-sm-3">
+        <label for="name" class="control-label">
+            {{i18n "_user_fullname" .language}}:
+        </label>
+        <input id="name" class="form-control" value="{{ .user.Fullname }}" readonly>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-sm-3">
+        <label for="user">
+            {{i18n "_user_login" .language}}:
+        </label>
+        <input id="user" class="form-control" value="{{ .user.Login }}" readonly>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    </div>
+<div class="radio-inline">
+    <label for="changepass" class="control-label">
+        <input id="changepass" type="radio" name="updateconf">
+        {{i18n "_user_change_password" .language}}
+    </label>
+</div>
+<div class="radio-inline">
+    <label for="changename" class="control-label">
+        <input id="changename" type="radio" name="updateconf">
+        {{i18n "_user_change_fullname" .language}}
+    </label>
+</div>
+<div id="onchangepass" style="display: none">
+    <form role="form" onsubmit="return false">
+        <div class="form-group">
+            <div class="col-sm-3">
+                <p id="passmessage" style="color: #3c763d">{{i18n "_user_edit_message" .language}}</p>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-3">
+                <label for="pass">{{i18n "_user_password" .language}}: </label>
+                <input class="form-control" type="password" name="password" id="pass">
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-3">
+                <label for="verify">{{i18n "_user_verify" .language}}: </label>
+                <input class="form-control" type="password" name="verify" id="passverify"><div id="inc"></div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+    <div class="col-sm-2">
+        <button class="form-control" onclick="submitconfirmation('{{ .user.Password }}','{{ .user.Login }}', true)" >
+            {{i18n "_submit" .language}}</button>
+    </div>
+</div>
+<div id="onchangename" style="display: none">
+    <form role="form" onsubmit="return false">
+        <div class="form-group">
+            <div class="col-sm-3">
+                <label for="pass">{{i18n "_user_fullname" .language}}: </label>
+                <input class="form-control" type="text" name="fullname" id="userfullname" >
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+    <div class="col-sm-2">
+        <button class="form-control" onclick="submitconfirmation('{{ .user.Password }}','{{ .user.Login }}', false)" >
+            {{i18n "_submit" .language}}</button>
+    </div>
+</div>
+
+<div id="passcheckform" style="display: none">
+<form role="form" onsubmit="return false">
+    <div class="form-group">
+    <div class="col-sm-3">
+        <label for="passcheck">{{i18n "_user_password" .language}}: </label>
+        <input class="form-control" type="password" name="password" id="passcheck">
+    </div>
+        </div>
+    <div class="clearfix"></div>
+</form>
+<div class="col-sm-2">
+    <button class="form-control" onclick="subcheckpassword('{{ .user.Password }}','{{ .user.Login }}')">
+        {{i18n "_submit" .language}}
+    </button>
+</div>
+</div>
+
+<script>
+    checkpass = false;
+    var ispass;
+    function checkpassword(password,password2,user) {
+        return $.ajax({
+            type : "get",
+            url : "getencryptedpassword",
+            data : {"password": password, "user": user, "password2": password2}
+        });
+    }
+
+    function showpasswordchange() {
+        $('#onchangepass').show();
+        $('#passcheckform').hide();
+        $('#onchangename').hide();
+        $('#userfullname').val("");
+    }
+
+    function showfullnamechange() {
+        $('#onchangename').show();
+        $('#passcheckform').hide();
+        $('#onchangepass').hide();
+        $('#pass').val("");
+        $('#passverify').val("");
+        document.getElementById('passmessage').style.color = '#3c763d';
+    }
+
+    function showpasswordcheck() {
+        $('#passcheckform').show();
+        $('#onchangepass').hide();
+        $('#onchangename').hide();
+        $('#userfullname').val("");
+    }
+
+    $(document).ready(function () {
+        $('#changepass').click(function () {
+            if (checkpass) {
+                showpasswordchange();
+            }
+            else {
+                showpasswordcheck();
+            }
+        });
+        $('#changename').click(function () {
+            showfullnamechange();
+        });
+    });
+
+    function checkUpdate(login) {
+        small = false
+        big = false
+        numb = false
+        sim = false
+        password = $('#pass').val();
+        verify = $('#passverify').val();
+        len = password.length
+        for (i=0;i<len;i++){
+            q = password.charCodeAt(i)
+            if (q>64 && q<91)big = true
+            else if (q>96 && q<123)small = true
+            else if (q>47 && q<58)numb = true
+            else sim = true
+        }
+        if (len>7 && big && small && numb && sim){
+            if (password==verify){
+                $.ajax({
+                    url: "passupdate",
+                    data: {"login": login, "password": password},
+                    type: "get",
+                    success: function () {
+                        document.getElementById('passmessage').innerHTML = "Пароль успешно изменен.";
+                        document.getElementById('passmessage').style.color = '#3c763d';
+                        $('#pass').val("");
+                        $('#passverify').val("");
+                        change('none');
+                    }
+                })
+
+            }
+            else {
+                document.getElementById('passmessage').style.color = "Red";
+            }
+        }
+        else {
+            document.getElementById('passmessage').style.color = "Red";
+        }
+    }
+
+    function setname(login) {
+        var fullname = $('#userfullname').val();
+        $.ajax({
+            type : "get",
+            url : "changefullname",
+            data : {"fullname": fullname, "login": login},
+            success : function (result) {
+                $('#name').val(result);
+                $('#userfullname').val("");
+            }
+        })
+    }
+
+    function subcheckpassword(password,user) {
+        password2 = $('#passcheck').val();
+        checkpassword(password, password2, user).done(
+                function (result) {
+                    if (result=="match") {
+                        showpasswordchange();
+                    }
+                }
+        );
+    }
+
+    function submitconfirmation(password, login, ip) {
+        ispass = ip;
+        $('#confModal').modal("show");
+        $('#subconfirm').click(function () {
+            password2 = $('#passconfirm').val();
+            checkpassword(password,password2,login).done(
+                    function (result) {
+                        if(result == "match"){
+                            if(ispass){checkUpdate(login);}
+                            else {
+                                alert(ispass);
+                                setname(login);
+                            }
+                            $('#confModal').modal("hide");
+                        }
+                    }
+            );
+
+        });
+    }
+</script>
+
+<div id="confModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{i18n "_user_password" .language}}:</h4>
+            </div>
+            <div class="modal-body"><input type="password" class="form-control" id="passconfirm"></div>
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" id="subconfirm">
+                    {{i18n "_submit" .language}}
+                </button>
+                <button class="btn btn-default" type="button" data-dismiss="modal">
+                    {{i18n "_cancel" .language}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 {{ end }}

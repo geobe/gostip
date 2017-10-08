@@ -113,3 +113,16 @@ func SubmitUser(w http.ResponseWriter, r *http.Request)  {
 	}
 	db.Save(&user)
 }
+
+func CheckPassword(w http.ResponseWriter, r *http.Request)  {
+	user := r.FormValue("user")
+	password2 := r.FormValue("password2")
+	password := r.FormValue("password")
+
+	result := "not";
+	if password == model.Encrypt(password2 + user){
+		result = "match";
+	}
+
+	w.Write([]byte(result))
+}

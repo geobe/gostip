@@ -3,34 +3,28 @@ package controller
 import (
 	"net/http"
 	"github.com/geobe/gostip/go/model"
-
-	"encoding/json"
 	"strconv"
-
 	"fmt"
+	"github.com/geobe/gostip/go/view"
 )
 
-func FindByYear(w http.ResponseWriter, r *http.Request){
-	year := atoint(r.FormValue("year"))
+func ExamRef(w http.ResponseWriter, r *http.Request){
+	var examrefs []*model.ExamReference = make([]*model.ExamReference,0)
+	resultsCounter := make([]int,model.NQESTION)
 
-	var data model.ExamReference
-
+	for i,_ := range resultsCounter{
+		resultsCounter[i] = i+1;
+	}
 	db := model.Db()
 
-	db.First(&data, "year = ?", year)
-
-	toSend := make([]int, model.NQESTION+1)
-
-	toSend[0] = model.NQESTION
-	for i,_ := range toSend{
-		if i>0 {
-			toSend[i] = data.Results[i - 1]
-		}
+	db.Find(&examrefs)
+	values := viewmodel{
+		"Examref" : examrefs,
+		"Rescounter" : resultsCounter,
+		"NQ" : model.NQESTION,
 	}
 
-	a,_ := json.Marshal(toSend)
-
-	w.Write(a)
+	view.Views().ExecuteTemplate(w, "adminarea",values)
 }
 
 func SubmitExamRef(w http.ResponseWriter, r *http.Request)  {
@@ -40,7 +34,7 @@ func SubmitExamRef(w http.ResponseWriter, r *http.Request)  {
 	db.First(&xref," year = ?", year)
 	xref.Year = year
 	for i,_ :=range xref.Results {
-		task := "task"+strconv.Itoa(i+1)
+		task := "mr"+strconv.Itoa(i+1)
 		xref.Results[i] = atoint(r.FormValue(task))
 	}
 

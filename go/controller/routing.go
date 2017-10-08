@@ -83,10 +83,8 @@ func SetRouting() *mux.Router {
 	mux.Handle("/checkcaptcha", csrfChecking.ThenFunc(CheckCaptcha))
 	// download csv
 	mux.Handle("/getcsv", csrfChecking.ThenFunc(DownloadCsv))
-	// set points to exam
-	mux.Handle("/gettasks", csrfChecking.ThenFunc(FindByYear))
 	// exam points submit
-	mux.HandleFunc("/examref", SubmitExamRef)
+	mux.HandleFunc("/submitexamref", SubmitExamRef)
 	// find users
 	mux.Handle("/find/user", enroleChecking.ThenFunc(FindUser))
 	// show user
@@ -95,5 +93,9 @@ func SetRouting() *mux.Router {
 	mux.Handle("/user/submit", enroleChecking.ThenFunc(SubmitUser))
 	// updated enrol
 	mux.Handle("/updated/applicant", enroleChecking.ThenFunc(ShowUpdatedEnrol))
+	//check password
+	mux.Handle("/getencryptedpassword",csrfChecking.ThenFunc(CheckPassword))
+	// exam ref handler
+	mux.Handle("/examref", enroleChecking.ThenFunc(ExamRef))
 	return mux
 }
